@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static  'bmw/css/base_style.css'%}">
+
+    <title>{% block title %} {% endblock %}</title>
+</head>
+<body>
+
+    <header>
+        <nav class="navMenu">
+            <a href="/">Home</a>
+            <a href="/jelkod">Jelkód</a>
+            <a href="/buildings">Épületek</a>
+        </nav>
+    </header>
+
+    {% block content %}
+
+    {% endblock %}
+
+</body>
+</html>
