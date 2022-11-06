@@ -94,15 +94,15 @@
 .radio_buttons{
     display: inline;
     color: grey;
-    font-size: 3rem;
+    font-size: 2rem;
 }
 
 #id_building_0{
-    width: 2.3rem;
-    height: 2.3rem;
+    width: 2rem;
+    height: 2rem;
 }
 
 #id_building_1{
-    width: 2.3rem;
-    height: 2.3rem;
+    width: 2rem;
+    height: 2rem;
 }
