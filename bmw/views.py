@@ -21,10 +21,11 @@ def jelkod(request):
 
 def buildings(request):
 
-    form = Buildings_form(request.POST)
+    form = Buildings_form()
     if "sorszam" in request.GET:
         building = request.GET["building"]
         sorszam = request.GET["sorszam"]
+        form = Buildings_form(initial={"building": building})
         result = get_length_building(sorszam=sorszam,
                                      building=building)
         return_str= f"{sorszam} - {building}: {result}"
