@@ -10,7 +10,6 @@ Fugro - Jelkód
 {% block content %}
 <link rel="stylesheet" href="{% static  'bmw/css/jelkod_style.css'%}">
 
-<section class="background">
     <div class="box">
         <span class="text-center" id="result">{{result}}</span>
         <form>
@@ -19,9 +18,8 @@ Fugro - Jelkód
                 {{ field }}
             </div>
             {% endfor %}
-            <button type="submit" class="btn button-37">Azanyját</button>
+            <button type="submit" class="btn button-37">Számol</button>
         </form>
     </div>
-</section>
 
 {% endblock %}

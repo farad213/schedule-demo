@@ -4,13 +4,14 @@ body{
 }
 
 header{
-    background: #272727;
+    background: linear-gradient(rgba(30, 30, 30, 0.7), rgba(30, 30, 30, 0.7));
     height: 100px;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
+
 }
 
 .navMenu {
