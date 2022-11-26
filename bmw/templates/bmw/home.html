@@ -1,26 +1,35 @@
 <!DOCTYPE html>
+{% extends "bmw/base.html" %}
 {% load static %}
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'bmw/css/home_style.css' %}">
-    <title>Fugro</title>
-</head>
+{% block title %}
+Fugro
+{% endblock %}
 
-<body>
+{% block content %}
 
-<a href="/jelkod">
-    <div class="image_button" id="jelkod">
-        <h2>JELKÓD</h2>
+<link rel="stylesheet" href="{% static 'bmw/css/home_style.css' %}">
+
+<section class="background">
+    <div id="body">
+        <a class="pic_link" href="{% url 'jelkod' %}">
+            <div class="promo" style="--overlay-color: yellow">
+              <div class="image-wrapper">
+                  <img src="{% static 'bmw/images/jelkod.jpg' %}"/>
+              </div>
+              <h2 class="title" data-cta="tovább →">Jelkód</h2>
+            </div>
+        </a>
+
+        <a class="pic_link" href="{% url 'buildings' %}">
+            <div class="promo" style="--overlay-color: hotpink">
+              <div class="image-wrapper">
+                  <img src="{% static 'bmw/images/buildings.jpg' %}"/>
+              </div>
+              <h2 class="title" data-cta="tovább →">Épületek</h2>
+            </div>
+        </a>
     </div>
-</a>
+</section>
 
-<a href="/buildings">
-    <div class="image_button" id="buildings">
-        <h2>ÉPÜLETEK</h2>
-    </div>
-</a>
-
-</body>
-</html>
+{% endblock %}
