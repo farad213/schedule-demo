@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% extends "bmw/base.html" %}
+{% load static %}
+
+{% block title %}
+Fugro - Beosztás - Admin
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'schedule/css/admin_style.css' %}">
+
+<section class="background">
+    <div class="calendar">
+        <div class="month">
+            {% now "m" as month %}
+            {% for week in cal %}
+                <div class="week">
+                    {% for day in week %}
+                        {% if day.2 == month %}
+                            <div class="day current_month">
+                                <div class="text">
+                                    <div class="date">{{ day.0 }}</div>
+                                    <div class="weekday">{{ day.1 }}</div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="day not_current_month">
+                                <div class="text">
+                                    <div class="date">{{ day.0 }}</div>
+                                    <div class="weekday">{{ day.1 }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,6 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 body{
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+    font-family: 'Raleway', sans-serif;
 }
 
 header{
@@ -11,13 +15,151 @@ header{
     display: flex;
     justify-content: center;
     align-items: center;
-
+    flex-direction: column;
 }
 
 .navMenu {
     position: absolute;
-
 }
+
+.log_out{
+    align-self: flex-end;
+    margin: 10px;
+    color: white;
+    display: flex;
+}
+
+.log_out a{
+    color: crimson;
+    text-decoration: none;
+}
+
+.log_out a:hover{
+    color: red;
+}
+
+
+
+
+.log_in{
+    margin: 10px;
+    align-self: flex-end;
+}
+
+.log_in a{
+    color: lightGreen;
+    text-decoration: none;
+}
+
+.log_in a:hover{
+    color: lime;
+}
+
+
+.button-68 {
+  appearance: none;
+  backface-visibility: hidden;
+  background-color: #27ae60;
+  border-radius: 3px;
+  border-style: none;
+  box-shadow: rgba(39, 174, 96, .15) 0 4px 9px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.5;
+  outline: none;
+  overflow: hidden;
+  padding: 13px 20px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transform: translate3d(0, 0, 0);
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.button-68:hover {
+  background-color: #1e8449;
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: .35s;
+}
+
+.button-68:active {
+  transform: translateY(2px);
+  transition-duration: .35s;
+}
+
+.button-68:hover {
+  box-shadow: rgba(39, 174, 96, .2) 0 6px 12px;
+}
+
+
+.username{
+    align-self: center;
+    margin: 10px;
+    font-size: 16px;
+}
+
+
+.button-69 {
+  appearance: none;
+  backface-visibility: hidden;
+  background-color: darkred;
+  border-radius: 3px;
+  border-style: none;
+  box-shadow: rgba(39, 174, 96, .15) 0 4px 9px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.5;
+  outline: none;
+  overflow: hidden;
+  padding: 13px 20px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transform: translate3d(0, 0, 0);
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.button-69:hover {
+  background-color: crimson;
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: .35s;
+}
+
+.button-69:active {
+  transform: translateY(2px);
+  transition-duration: .35s;
+}
+
+.button-69:hover {
+  box-shadow: rgba(39, 174, 96, .2) 0 6px 12px;
+}
+
+
+
+
+
 
 .navMenu a {
   color: #f6f4e6;
@@ -26,7 +168,6 @@ header{
   text-transform: uppercase;
   font-weight: 500;
   display: inline-block;
-  width: 80px;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
   margin: 0px 20px 0px 20px;

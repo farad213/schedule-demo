@@ -1,0 +1,31 @@
+
+
+<!DOCTYPE html>
+{% extends "bmw/base.html" %}
+{% load static %}
+
+{% block title %}
+Fugro - Bejelentkezés
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'schedule/css/login_style.css' %}">
+
+
+<section class="background">
+    <div class="box">
+        <span class="text-center" id="result">{{result}}</span>
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="input-container">
+                {{ field }}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn button-37">Bejelentkezés</button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
