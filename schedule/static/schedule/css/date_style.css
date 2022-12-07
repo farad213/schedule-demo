@@ -78,15 +78,25 @@ textarea{
 
 .title{
     font-size: 40px;
-    font-weight: 700;
+    font-weight: 500;
     background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
     width: 300px;
     text-align: center;
-    margin: 20px;
+    margin: 20px 0px 0px 0px;
     padding: 10px;
 }
 
 .title_parent{
     display: flex;
     justify-content: center;
+}
+
+.buttons_flex{
+    display: flex;
+}
+
+.nav_menu{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

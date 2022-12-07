@@ -46,25 +46,47 @@ def date(request, year, month, day):
     saved_projects_and_forms = zip(saved_projects, saved_project_forms)
 
     if request.method == "POST":
-        filled_form = DateBoundWithProjectForm(request.POST)
-        if filled_form.is_valid():
-            project = Project.objects.filter(project=request.POST.get("project_name")).get()
-            if project not in saved_projects:
-                filled_model = filled_form.save(commit=False)
-                filled_model.date = date
-                filled_model.project = project
-                filled_model.save()
-                filled_form.save_m2m()
-            else:
-                for saved_project in saved_projects_for_the_day:
-                    if saved_project.project == project:
-                        saved_project.employee.set(request.POST.getlist("employee"))
-                        saved_project.vehicle.set(request.POST.getlist("vehicle"))
-                        saved_project.comment = request.POST["comment"]
-                        saved_project.save()
 
+        if "delete" in request.POST:
+            project = Project.objects.filter(project=request.POST.get("delete")).get()
+            project_to_delete = DateBoundWithProject.objects.filter(date=date, project=project)
+            project_to_delete.delete()
             return redirect("date", year, month, day)
 
+        else:
+            filled_form = DateBoundWithProjectForm(request.POST)
+            if filled_form.is_valid():
+                project = Project.objects.filter(project=request.POST.get("project_name")).get()
+                if project not in saved_projects:
+                    filled_model = filled_form.save(commit=False)
+                    filled_model.date = date
+                    filled_model.project = project
+                    filled_model.save()
+                    filled_form.save_m2m()
+                else:
+                    for saved_project in saved_projects_for_the_day:
+                        if saved_project.project == project:
+                            saved_project.employee.set(request.POST.getlist("employee"))
+                            saved_project.vehicle.set(request.POST.getlist("vehicle"))
+                            saved_project.comment = request.POST["comment"]
+                            saved_project.save()
+
+                return redirect("date", year, month, day)
+            else:
+                message = "Invalid form"
+
+    else:
+        print(request.GET)
+        if "next_day" in request.GET:
+            that_day = datetime.date(year, month, day)
+            next_day = that_day + datetime.timedelta(1)
+
+            return redirect("date", next_day.year, next_day.month, next_day.day)
+        elif "previous_day" in request.GET:
+            that_day = datetime.date(year, month, day)
+            previous_day = that_day + datetime.timedelta(-1)
+
+            return redirect("date", previous_day.year, previous_day.month, previous_day.day)
 
     context = {"year_": year, "month_": month, "day_": day, "saved_projects_for_the_day": saved_projects_for_the_day,
                "untouched_projects": untouched_projects, "date_bound_project_form": date_bound_project_form,
