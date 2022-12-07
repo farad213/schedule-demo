@@ -12,28 +12,63 @@ Fugro - Beosztás - Admin
 <section class="background">
     <div class="calendar">
         <div class="month">
-            {% now "m" as month %}
             {% for week in cal %}
                 <div class="week">
                     {% for day in week %}
-                        {% if day.2 == month %}
-                            <div class="day current_month">
-                                <div class="text">
-                                    <div class="date">{{ day.0 }}</div>
-                                    <div class="weekday">{{ day.1 }}</div>
+                        {% if day.7 == month_str %}
+                            {% if day.3 in dates_in_database %}
+                                <a href="{% url 'date' year=day.6 month=day.5 day=day.4 %}">
+                                    <div class="day current_month">
+                                        <div class="text">
+                                            <div class="date">{{ day.0 }}</div>
+                                            <div class="weekday">{{ day.1 }}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% else %}
+                                 <div class="day current_month">
+                                    <div class="text">
+                                        <div class="date">{{ day.0 }}</div>
+                                        <div class="weekday">{{ day.1 }}</div>
+                                    </div>
                                 </div>
-                            </div>
+                            {% endif %}
                         {% else %}
-                            <div class="day not_current_month">
-                                <div class="text">
-                                    <div class="date">{{ day.0 }}</div>
-                                    <div class="weekday">{{ day.1 }}</div>
+                            {% if day.3 in dates_in_database %}
+                                <a href="{% url 'date' year=day.6 month=day.5 day=day.4 %}">
+                                    <div class="day not_current_month">
+                                        <div class="text">
+                                            <div class="date">{{ day.0 }}</div>
+                                            <div class="weekday">{{ day.1 }}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% else %}
+                                 <div class="day not_current_month">
+                                    <div class="text">
+                                        <div class="date">{{ day.0 }}</div>
+                                        <div class="weekday">{{ day.1 }}</div>
+                                    </div>
                                 </div>
-                            </div>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </div>
             {% endfor %}
+             <div class="nav_buttons">
+                 <div class="nav_button">
+                     <form method="GET">
+                         <input type="text" name="previous_month" id="previous_month" hidden value="true">
+                         <button class="button-69 backwards"><span>&#10229;</span></button>
+                     </form>
+                 </div>
+                 <div class="nav_button">
+                     <form method="GET">
+                         <input type="text" name="next_month" id="next_month" hidden value="true">
+                         <button class="button-68 forwards"><span>&#10230;</span></button>
+                     </form>
+                 </div>
+            </div>
         </div>
     </div>
 </section>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% extends "bmw/base.html" %}
+{% load static %}
+
+{% block title %}
+Fugro - Beosztás - Dátum
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'schedule/css/date_style.css' %}">
+
+<section class="background">
+    <div class="title_parent"><div class="title">{{ year_ }}.{{ month_ }}.{{ day_ }}</div></div>
+<div class="projects">
+    {% for project, project_form in saved_projects_and_forms %}
+    <div class="saved_project project">
+        <div class="project_title"><span>{{ project.project }}</span></div>
+        <form method="POST">
+            {% csrf_token %}
+                <input type="hidden" name="project_name" value="{{project}}">
+                {% for field in project_form %}
+                    <div class="field_wrapper">
+                        <div class="label">{{ field.label }}</div>
+                        <div class="field">{{ field }}</div>
+                    </div>
+                {% endfor %}
+
+            <button class="button-68 project_save" type="submit">Save</button>
+        </form>
+    </div>
+    <br>
+    {% endfor %}
+
+    {% for project in untouched_projects %}
+    <div class="unsaved_project project">
+        <div class="project_title"><span>{{ project.project }}</span></div>
+        <form method="POST">
+            {% csrf_token %}
+
+                <input type="hidden" name="project_name"  value="{{project}}">
+                {% for field in date_bound_project_form %}
+                    <div class="field_wrapper">
+                        <div class="label">{{ field.label }}</div>
+                        <div class="field">{{ field }}</div>
+                    </div>
+                {% endfor %}
+
+            <button class="button-68 project_save" type="submit">Save</button>
+        </form>
+    </div>
+    <br>
+    {% endfor %}
+</div>
+</section>
+{% endblock %}

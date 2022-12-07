@@ -59,7 +59,7 @@ header{
 .button-68 {
   appearance: none;
   backface-visibility: hidden;
-  background-color: #27ae60;
+  background-color: green;
   border-radius: 3px;
   border-style: none;
   box-shadow: rgba(39, 174, 96, .15) 0 4px 9px;
@@ -87,7 +87,7 @@ header{
 }
 
 .button-68:hover {
-  background-color: #1e8449;
+  background-color: #27ae60;
   opacity: 1;
   transform: translateY(0);
   transition-duration: .35s;

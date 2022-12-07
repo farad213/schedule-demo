@@ -51,4 +51,27 @@ body{
 
 .text{
     margin: 5px;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+.nav_buttons{
+    display: flex;
+    flex-direction: row;
+}
+
+.nav_button{
+    width: 200px;
+    text-align: center;
+}
+
+
+.backwards, .forwards{
+    width: 100%;
 }
