@@ -16,8 +16,18 @@ class Vehicle(models.Model):
     def __str__(self):
         return self.vehicle_name
 
+class SubProjectName(models.Model):
+    subproject = models.CharField(max_length=100)
+
+
+class SubProjectItem(models.Model):
+    sub_project_item = models.CharField(max_length=50)
+    sub_project_name = models.ForeignKey(SubProjectName, on_delete=models.CASCADE)
+
+
 class Project(models.Model):
     project = models.CharField(max_length=50)
+    subproject = models.ForeignKey
 
     def __str__(self):
         return self.project

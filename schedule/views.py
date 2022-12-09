@@ -76,7 +76,6 @@ def date(request, year, month, day):
                 message = "Invalid form"
 
     else:
-        print(request.GET)
         if "next_day" in request.GET:
             that_day = datetime.date(year, month, day)
             next_day = that_day + datetime.timedelta(1)
