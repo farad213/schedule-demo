@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .forms import Length_form, Buildings_form
 from .models import BuildingsTKB, BuildingsTU, BuildingsTEM, BuildingsTMO
 import pandas as pd
+import os
 
 
 
