@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .forms import Length_form, Buildings_form
-import os
+from .models import BuildingsTKB, BuildingsTU, BuildingsTEM, BuildingsTMO
 import pandas as pd
 
 
@@ -25,11 +25,14 @@ def buildings(request):
     if "sorszam" in request.GET:
         building = request.GET["building"]
         sorszam = request.GET["sorszam"]
-        form = Buildings_form(initial={"building": building})
-        result = get_length_building(sorszam=sorszam,
-                                     building=building)
-        return_str= f"{sorszam} - {building}: {result}"
-        return render(request, "bmw/buildings.html", {"form": form, "result": return_str})
+        if sorszam:
+            form = Buildings_form(initial={"building": building})
+            instance = globals()[f"Buildings{building}"].objects.filter(sorszam=sorszam)
+            if instance:
+                instance = instance[0]
+                szerkezeti_hossz = instance.szerkezeti_hossz
+                return_str= f"{sorszam} - {building}: {szerkezeti_hossz}"
+                return render(request, "bmw/buildings.html", {"form": form, "result": return_str})
 
     return render(request, "bmw/buildings.html", {"form": form})
 
@@ -76,22 +79,3 @@ def load_file():
                        names=["ccs notation", "ccs length", "vvs notation", "vvs length"])
     return df
 
-def get_length_building(sorszam, building):
-    assert building in ["TMO", "TKB"], "supported building types: TMO, TKB"
-    if not sorszam.isnumeric():
-        return None
-
-    sorszam = int(sorszam)
-
-    file_dir = os.path.join(os.path.dirname(__file__), f"BMW-{building}.xlsx")
-
-    df = pd.read_excel(file_dir)
-
-    index = df["Cölöp sorszáma"][df["Cölöp sorszáma"] == sorszam].index
-    value = df["Szerkezeti hossz"][index].values
-    if list(value):
-        float_value = float(value)
-        rounded_value = round(float_value, 2)
-        return rounded_value
-    else:
-        return None

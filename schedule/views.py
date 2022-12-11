@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Date, Project, DateBoundWithProject
+from .models import Date, Project, DateBoundWithProject, Subproject, Artifact, Profile
 from .forms import DateBoundWithProjectForm
 import datetime
 
@@ -32,6 +32,9 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
     return render(request=request, template_name="schedule/admin.html", context=context)
 
 
+
+
+
 @login_required
 def date(request, year, month, day):
     date = Date.objects.get(date=datetime.date(year, month, day))
@@ -41,6 +44,7 @@ def date(request, year, month, day):
     untouched_projects = [project for project in projects if project not in saved_projects]
 
     date_bound_project_form = DateBoundWithProjectForm()
+
     saved_project_forms = [DateBoundWithProjectForm(instance=project) for project in saved_projects_for_the_day]
 
     saved_projects_and_forms = zip(saved_projects, saved_project_forms)
@@ -48,6 +52,7 @@ def date(request, year, month, day):
     if request.method == "POST":
 
         if "delete" in request.POST:
+            # delete a project on that day
             project = Project.objects.filter(project=request.POST.get("delete")).get()
             project_to_delete = DateBoundWithProject.objects.filter(date=date, project=project)
             project_to_delete.delete()
@@ -55,27 +60,43 @@ def date(request, year, month, day):
 
         else:
             filled_form = DateBoundWithProjectForm(request.POST)
+            project = Project.objects.filter(project=request.POST.get("project_name")).get()
+            if not project.hasSubproject():
+                filled_form.profile = None
+                filled_form.artifact = None
+                filled_form.subproject = None
+
+
+            # create or update a project for that day
             if filled_form.is_valid():
                 project = Project.objects.filter(project=request.POST.get("project_name")).get()
                 if project not in saved_projects:
+                    # create a project for that day
                     filled_model = filled_form.save(commit=False)
                     filled_model.date = date
                     filled_model.project = project
                     filled_model.save()
                     filled_form.save_m2m()
                 else:
+                    # update a project for that day
                     for saved_project in saved_projects_for_the_day:
                         if saved_project.project == project:
                             saved_project.employee.set(request.POST.getlist("employee"))
                             saved_project.vehicle.set(request.POST.getlist("vehicle"))
                             saved_project.comment = request.POST["comment"]
+                            if "subproject" in request.POST or "artifact" in request.POST or "profile" in request.POST:
+                                saved_project.subproject = request.POST["subproject"]
+                                saved_project.artifact = request.POST["artifact"]
+                                saved_project.profile = request.POST["profile"]
                             saved_project.save()
 
                 return redirect("date", year, month, day)
             else:
-                message = "Invalid form"
+                print(filled_form.errors)
+
 
     else:
+        # changing dates within date.html being handled through GET requests
         if "next_day" in request.GET:
             that_day = datetime.date(year, month, day)
             next_day = that_day + datetime.timedelta(1)
@@ -91,6 +112,21 @@ def date(request, year, month, day):
                "untouched_projects": untouched_projects, "date_bound_project_form": date_bound_project_form,
                 "saved_projects_and_forms": saved_projects_and_forms}
     return render(request=request, template_name="schedule/date.html", context=context)
+
+
+
+def artifacts(request):
+    subproject_id = request.GET.get("subproject")
+    artifacts = Artifact.objects.filter(subproject_id=subproject_id)
+    context = {"artifacts": artifacts}
+    return render(request, "schedule/ajax/artifacts.html", context)
+
+
+def profiles(request):
+    artifact_id = request.GET.get('artifact')
+    profiles = Profile.objects.filter(artifact_id=artifact_id)
+    context = {'profiles': profiles}
+    return render(request, 'schedule/ajax/profiles.html', context)
 
 
 def get_calendar(year, month):

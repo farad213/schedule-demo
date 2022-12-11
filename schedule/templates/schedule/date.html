@@ -11,8 +11,6 @@ Fugro - Beosztás - Dátum
 
 <section class="background">
 
-
-
     <div class="title_parent"><div class="title">{{ year_ }}.{{ month_ }}.{{ day_ }}</div></div>
 <div class="nav_menu">
       <form method="GET">
@@ -29,15 +27,25 @@ Fugro - Beosztás - Dátum
     {% for project, project_form in saved_projects_and_forms %}
     <div class="saved_project project">
         <div class="project_title"><span>{{ project.project }}</span></div>
-        <form method="POST">
+        <form method="POST" class="project_form" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}">
             {% csrf_token %}
-                <input type="hidden" name="project_name" value="{{project}}">
-                {% for field in project_form %}
-                    <div class="field_wrapper">
-                        <div class="label">{{ field.label }}</div>
-                        <div class="field">{{ field }}</div>
-                    </div>
-                {% endfor %}
+
+            <input type="hidden" name="project_name" value="{{project}}">
+
+            {% if project.hasSubproject %}
+                <div class="label">{{ project_form.subproject.label }}</div>
+                <div class="field">{{ project_form.subproject }}</div>
+                <div class="label">{{ project_form.artifact.label }}</div>
+                <div class="field">{{ project_form.artifact }}</div>
+                <div class="label">{{ project_form.profile.label }}</div>
+                <div class="field">{{ project_form.profile }}</div>
+            {% endif %}
+            <div class="label">{{ project_form.employee.label }}</div>
+            <div class="field">{{ project_form.employee }}</div>
+            <div class="label">{{ project_form.vehicle.label }}</div>
+            <div class="field">{{ project_form.vehicle }}</div>
+            <div class="label">{{ project_form.comment.label }}</div>
+            <div class="field">{{ project_form.comment }}</div>
 
             <div class="buttons_flex"><button class="button-68 project_save" type="submit">Save</button>
         </form>
@@ -50,20 +58,29 @@ Fugro - Beosztás - Dátum
     <br>
     {% endfor %}
 
+
+
     {% for project in untouched_projects %}
     <div class="unsaved_project project">
         <div class="project_title"><span>{{ project.project }}</span></div>
-        <div calss="message"></div>
-        <form method="POST">
+        <form method="POST" class="project_form" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}">
             {% csrf_token %}
 
                 <input type="hidden" name="project_name"  value="{{project}}">
-                {% for field in date_bound_project_form %}
-                    <div class="field_wrapper">
-                        <div class="label">{{ field.label }}</div>
-                        <div class="field">{{ field }}</div>
-                    </div>
-                {% endfor %}
+                 {% if project.hasSubproject %}
+                    <div class="label">{{ date_bound_project_form.subproject.label }}</div>
+                    <div class="field">{{ date_bound_project_form.subproject }}</div>
+                    <div class="label">{{ date_bound_project_form.artifact.label }}</div>
+                    <div class="field">{{ date_bound_project_form.artifact }}</div>
+                    <div class="label">{{ date_bound_project_form.profile.label }}</div>
+                    <div class="field">{{ date_bound_project_form.profile }}</div>
+                {% endif %}
+                <div class="label">{{ date_bound_project_form.employee.label }}</div>
+                <div class="field">{{ date_bound_project_form.employee }}</div>
+                <div class="label">{{ date_bound_project_form.vehicle.label }}</div>
+                <div class="field">{{ date_bound_project_form.vehicle }}</div>
+                <div class="label">{{ date_bound_project_form.comment.label }}</div>
+                <div class="field">{{ date_bound_project_form.comment }}</div>
 
             <button class="button-68 project_save" type="submit">Save</button>
         </form>
@@ -71,5 +88,45 @@ Fugro - Beosztás - Dátum
     <br>
     {% endfor %}
 </div>
+
 </section>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $("#id_subproject").change(function () {
+      var url = $(".project_form").attr("data-artifacts-url");  // get the url of the `load_cities` view
+      var subprojectId = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'subproject': subprojectId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_artifact").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+
+
+        $("#id_artifact").change(function () {
+      var url = $(".project_form").attr("data-profiles-url");  // get the url of the `load_cities` view
+      var artifactId = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'artifact': artifactId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_profile").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+  </script>
+
+
 {% endblock %}
