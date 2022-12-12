@@ -92,7 +92,6 @@
 }
 
 .radio_buttons{
-    display: inline;
     color: grey;
     font-size: 2rem;
 }
@@ -115,4 +114,20 @@
 #id_building_2{
     width: 2rem;
     height: 2rem;
+}
+
+#id_building_3{
+    width: 2rem;
+    height: 2rem;
+}
+
+.radio_buttons_wrapper{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+label{
+    display: flex;
+    margin: 5px;
 }
