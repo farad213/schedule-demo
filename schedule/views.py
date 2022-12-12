@@ -59,40 +59,39 @@ def date(request, year, month, day):
             return redirect("date", year, month, day)
 
         else:
-            filled_form = DateBoundWithProjectForm(request.POST)
             project = Project.objects.filter(project=request.POST.get("project_name")).get()
-            if not project.hasSubproject():
-                filled_form.profile = None
-                filled_form.artifact = None
-                filled_form.subproject = None
+
+            filled_form = DateBoundWithProjectForm(request.POST)
 
 
             # create or update a project for that day
-            if filled_form.is_valid():
-                project = Project.objects.filter(project=request.POST.get("project_name")).get()
-                if project not in saved_projects:
-                    # create a project for that day
-                    filled_model = filled_form.save(commit=False)
-                    filled_model.date = date
-                    filled_model.project = project
-                    filled_model.save()
-                    filled_form.save_m2m()
-                else:
-                    # update a project for that day
-                    for saved_project in saved_projects_for_the_day:
-                        if saved_project.project == project:
-                            saved_project.employee.set(request.POST.getlist("employee"))
-                            saved_project.vehicle.set(request.POST.getlist("vehicle"))
-                            saved_project.comment = request.POST["comment"]
-                            if "subproject" in request.POST or "artifact" in request.POST or "profile" in request.POST:
-                                saved_project.subproject = request.POST["subproject"]
-                                saved_project.artifact = request.POST["artifact"]
-                                saved_project.profile = request.POST["profile"]
-                            saved_project.save()
-
-                return redirect("date", year, month, day)
+            # if filled_form.is_valid():
+            if project not in saved_projects:
+                # create a project for that day
+                filled_model = filled_form.save(commit=False)
+                filled_model.date = date
+                filled_model.project = project
+                # if not project.hasSubproject():
+                #     filled_model.project = None
+                #     filled_model.artifact = None
+                #     filled_model.subproject = None
+                filled_model.save()
+                filled_form.save_m2m()
             else:
-                print(filled_form.errors)
+                # update a project for that day
+                for saved_project in saved_projects_for_the_day:
+                    if saved_project.project == project:
+                        saved_project.employee.set(request.POST.getlist("employee"))
+                        saved_project.vehicle.set(request.POST.getlist("vehicle"))
+                        saved_project.comment = request.POST["comment"]
+                        if "subproject" in request.POST or "artifact" in request.POST or "profile" in request.POST:
+                            saved_project.subproject_id = request.POST["subproject"]
+                            saved_project.artifact_id = request.POST["artifact"]
+                            saved_project.profile.set(request.POST.getlist("profile"))
+                            print(*request.POST.getlist("profile"))
+                        saved_project.save()
+
+            return redirect("date", year, month, day)
 
 
     else:
