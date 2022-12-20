@@ -1,5 +1,6 @@
 from django import forms
-from .models import DateBoundWithProject, Employee, Vehicle, Artifact, Profile, Subproject
+from .models import DateBoundWithProject, Vehicle, Artifact, Profile, Subproject
+from django.contrib.auth.models import User
 
 
 
@@ -9,7 +10,7 @@ class DateBoundWithProjectForm(forms.ModelForm):
         model = DateBoundWithProject
         fields = ["subproject", "artifact", "profile", "employee", "vehicle", "comment"]
 
-    employee = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(), widget=forms.CheckboxSelectMultiple)
+    employee = forms.ModelMultipleChoiceField(queryset=User.objects.filter(groups__name="Monitoring"), widget=forms.CheckboxSelectMultiple)
     vehicle = forms.ModelMultipleChoiceField(queryset=Vehicle.objects.all(), widget=forms.CheckboxSelectMultiple)
     profile = forms.ModelMultipleChoiceField(queryset=Profile.objects.all(), widget=forms.SelectMultiple, required=False)
     artifact = forms.ModelChoiceField(queryset=Artifact.objects.all(), widget=forms.Select, required=True)

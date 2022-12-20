@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+{% extends "bmw/base.html" %}
+{% load static %}
+
+{% block title %}
+Fugro - Beosztás - {{ user }}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'schedule/css/user_calendar_style.css' %}">
+
+<section class="background">
+    <div class="calendar">
+        <div class="month">
+            {% for week in cal %}
+                <div class="week">
+                    {% for day in week %}
+                        {% if day.7 == month_str %}
+                            {% if day.3 in active_days %}
+                                <a href="{% url 'calendar_date' year=day.6 month=day.5 day=day.4 %}">
+                                    <div class="day current_month active">
+                                        <div class="text">
+                                            <div class="date">{{ day.0 }}</div>
+                                            <div class="weekday">{{ day.1 }}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% else %}
+                                 <div class="day current_month">
+                                    <div class="text">
+                                        <div class="date">{{ day.0 }}</div>
+                                        <div class="weekday">{{ day.1 }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            {% if day.3 in active_days %}
+                                <a href="{% url 'calendar_date' year=day.6 month=day.5 day=day.4 %}">
+                                    <div class="day not_current_month active">
+                                        <div class="text">
+                                            <div class="date">{{ day.0 }}</div>
+                                            <div class="weekday">{{ day.1 }}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% else %}
+                                 <div class="day not_current_month">
+                                    <div class="text">
+                                        <div class="date">{{ day.0 }}</div>
+                                        <div class="weekday">{{ day.1 }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+             <div class="nav_buttons">
+                 <div class="nav_button">
+                     <form method="GET">
+                         <input type="text" name="previous_month" id="previous_month" hidden value="true">
+                         <button class="button-69 backwards"><span>&#10229;</span></button>
+                     </form>
+                 </div>
+                 <div class="nav_button">
+                     <form method="GET">
+                         <input type="text" name="next_month" id="next_month" hidden value="true">
+                         <button class="button-68 forwards"><span>&#10230;</span></button>
+                     </form>
+                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

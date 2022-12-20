@@ -1,0 +1,80 @@
+
+
+
+
+<!DOCTYPE html>
+{% extends "bmw/base.html" %}
+{% load static %}
+
+{% block title %}
+Fugro - Beosztás - {{ user }}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'schedule/css/calendar_date_style.css' %}">
+
+
+<section class="background">
+    <div class="date">{{ date }}</div>
+    <div class="projects_wrapper">
+        {% for c in context %}
+            <div class="project">
+                {% if c.project_name %}
+                    <div class="project_title">
+                    {{ c.project_name }}
+                    </div>
+                {% endif %}
+                {% if c.vehicles %}
+                    <div class="vehicles info">
+                        <label>Autó:</label>
+                        <span>
+                            {% for vehicle in c.vehicles %}
+                                <li>{{ vehicle }}</li>
+                            {% endfor %}
+                        </span>
+                    </div>
+                {% endif %}
+                {% if c.employees %}
+                    <div class="employees info">
+                        <label>Munkatársak:</label>
+                        <span>
+                            {% for employee in c.employees %}
+                                <li>{{ employee }}</li>
+                            {% endfor %}
+                        </span>
+                    </div>
+                {% endif %}
+                {% if c.comment %}
+                    <div class="comment info">
+                        <label>Megjegyzés:</label>
+                        <p>{{ c.comment }}</p>
+                    </div>
+                {% endif %}
+                {% if c.subproject %}
+                    <div class="subproject info">
+                        <label>Projekt:</label>
+                        <span>{{ c.subproject }}</span>
+                    </div>
+                {% endif %}
+                {% if c.artifact %}
+                    <div class="artifact info">
+                        <label>Műtárgy:</label>
+                        <span>{{ c.artifact }}</span>
+                    </div>
+                {% endif %}
+                {% if c.profiles %}
+                    <div class="profiles info">
+                        <label>Szelvény:</label>
+                          <span>
+                            {% for profile in c.profiles %}
+                                <li>{{ profile }}</li>
+                            {% endfor %}
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

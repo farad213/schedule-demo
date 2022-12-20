@@ -1,0 +1,32 @@
+<table border="1">
+{% for subproject, subproject_info in context.items %}
+
+<tr class="project_data">
+    <th>{{ subproject }}</th>
+    <th>{{ subproject.name }}</th>
+    <th>{{ subproject.customer }}</th>
+</tr>
+<tr class="categories">
+    <th>műtárgy</th>
+    <th>szelvény</th>
+    <th>hossz</th>
+    <th>mérési oldal</th>
+</tr>
+    {% for artifact, artifact_info in subproject_info.items %}
+    <tr>
+        <th rowspan="{{ artifact_info|length|add:'1' }}">{{ artifact }}</th>
+        </tr>
+
+        {% for profile, profile_info in artifact_info.items %}
+        <tr class="{{ profile_info }}">
+                <td>{{ profile }}</td>
+                <td>{{ profile.length }}</td>
+                <td>{{ profile.measurement_side }}</td>
+    </tr>
+
+        {% endfor %}
+
+    {% endfor %}
+
+{% endfor %}
+</table>

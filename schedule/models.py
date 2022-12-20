@@ -1,12 +1,5 @@
 from django.db import models
-
-
-class Employee(models.Model):
-    employee_name = models.CharField(max_length=50, verbose_name="Munkavállaló neve")
-    nickname = models.CharField(max_length=30, verbose_name="Munkavállaló beceneve")
-
-    def __str__(self):
-        return self.nickname
+from django.contrib.auth.models import User
 
 
 class Vehicle(models.Model):
@@ -30,6 +23,8 @@ class Project(models.Model):
 class Subproject(models.Model):
     subproject = models.CharField(max_length=50, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, related_name="subproject")
+    name = models.CharField(max_length=100, null=True)
+    customer = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.subproject
@@ -43,9 +38,14 @@ class Artifact(models.Model):
         return self.artifact
 
 
+
 class Profile(models.Model):
     artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE)
-    profile = models.CharField(max_length=50, verbose_name="Szelvény", null=True, blank=True)
+    profile = models.CharField(max_length=50, verbose_name="Szelvény", null=True)
+    length = models.IntegerField(null=True)
+    measurement_side = models.CharField(max_length=10, null=True)
+    longitude = models.FloatField(null=True)
+    latitude = models.FloatField(null=True)
 
     def __str__(self):
         return self.profile
@@ -60,7 +60,7 @@ class Date(models.Model):
 class DateBoundWithProject(models.Model):
     date = models.ForeignKey(Date, on_delete=models.CASCADE, null=True)
     project = models.ForeignKey(Project, on_delete=models.DO_NOTHING)
-    employee = models.ManyToManyField(Employee)
+    employee = models.ManyToManyField(User)
     vehicle = models.ManyToManyField(Vehicle)
     comment = models.TextField(null=True, blank=True)
     subproject = models.ForeignKey(Subproject, on_delete=models.CASCADE, null=True)

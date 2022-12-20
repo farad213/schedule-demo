@@ -32,9 +32,6 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
     return render(request=request, template_name="schedule/admin.html", context=context)
 
 
-
-
-
 @login_required
 def date(request, year, month, day):
     date = Date.objects.get(date=datetime.date(year, month, day))
@@ -60,21 +57,14 @@ def date(request, year, month, day):
 
         else:
             project = Project.objects.filter(project=request.POST.get("project_name")).get()
-
             filled_form = DateBoundWithProjectForm(request.POST)
 
-
             # create or update a project for that day
-            # if filled_form.is_valid():
             if project not in saved_projects:
                 # create a project for that day
                 filled_model = filled_form.save(commit=False)
                 filled_model.date = date
                 filled_model.project = project
-                # if not project.hasSubproject():
-                #     filled_model.project = None
-                #     filled_model.artifact = None
-                #     filled_model.subproject = None
                 filled_model.save()
                 filled_form.save_m2m()
             else:
@@ -88,7 +78,6 @@ def date(request, year, month, day):
                             saved_project.subproject_id = request.POST["subproject"]
                             saved_project.artifact_id = request.POST["artifact"]
                             saved_project.profile.set(request.POST.getlist("profile"))
-                            print(*request.POST.getlist("profile"))
                         saved_project.save()
 
             return redirect("date", year, month, day)
@@ -109,9 +98,8 @@ def date(request, year, month, day):
 
     context = {"year_": year, "month_": month, "day_": day, "saved_projects_for_the_day": saved_projects_for_the_day,
                "untouched_projects": untouched_projects, "date_bound_project_form": date_bound_project_form,
-                "saved_projects_and_forms": saved_projects_and_forms}
+               "saved_projects_and_forms": saved_projects_and_forms}
     return render(request=request, template_name="schedule/date.html", context=context)
-
 
 
 def artifacts(request):
@@ -126,6 +114,100 @@ def profiles(request):
     profiles = Profile.objects.filter(artifact_id=artifact_id)
     context = {'profiles': profiles}
     return render(request, 'schedule/ajax/profiles.html', context)
+
+
+
+def partial_save(request):
+    date = request.GET.get("date").split(".")
+    date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+    date = Date.objects.get(date=date)
+    project = Project.objects.get(project=request.GET.get("project_name"))
+    project = DateBoundWithProject.objects.get(date=date, project=project)
+    project.profile.add(*request.GET.getlist("profile[]"))
+    artifacts = set()
+    subprojects = set()
+    for profile in project.profile.all():
+        artifacts.add(profile.artifact)
+        subprojects.add(profile.artifact.subproject)
+    context = {}
+    for subproject in subprojects:
+        context[subproject] = {}
+    for artifact in artifacts:
+        context[artifact.subproject].update({artifact: {}})
+    for profile in project.profile.all():
+        context[profile.artifact.subproject][profile.artifact].update({profile: "active"})
+    for artifact in artifacts:
+        for profile in artifact.profile_set.all():
+            if profile not in context[artifact.subproject][artifact]:
+                context[artifact.subproject][artifact].update({profile: "inactive"})
+
+    return render(request, 'schedule/ajax/partial_save.html', context={"context": context})
+
+
+
+@login_required()
+def user_calendar(request, year=datetime.date.year, month=datetime.date.month):
+    if request.method == "GET":
+        if "previous_month" in request.GET:
+            if month > 1:
+                month -= 1
+            else:
+                month = 12
+                year -= 1
+
+            return redirect(admin, year=year, month=month)
+        elif "next_month" in request.GET:
+            if month < 12:
+                month += 1
+            else:
+                month = 1
+                year += 1
+            return redirect(admin, year=year, month=month)
+
+    cal = get_calendar(year, month)
+
+    user = request.user
+    active_days = []
+    for week in cal:
+        for day in week:
+            date = Date.objects.get(date=day[8])
+            projects_for_specific_day = DateBoundWithProject.objects.filter(date=date)
+            for project in projects_for_specific_day:
+                if user in project.employee.all():
+                    active_days.append(day[3])
+                    print("sdf")
+
+    month_str = str(month)
+    context = {"cal": cal, "year": year, "month_str": month_str, "active_days": active_days}
+    return render(request=request, template_name="schedule/user_calendar.html", context=context)
+
+
+@login_required
+def user_date(request, year, month, day):
+    context = []
+    user = request.user
+    date = Date.objects.get(date=datetime.date(year, month, day))
+    projects_for_that_day = DateBoundWithProject.objects.filter(date=date)
+    for project in projects_for_that_day:
+        if user in project.employee.all():
+            project_name = project.project
+            vehicles = project.vehicle.all()
+            employees = project.employee.all()
+            comment = project.comment
+            if project.project.hasSubproject():
+                subproject = project.subproject
+                artifact = project.artifact
+                profiles = project.profile.all()
+                mini_context = {"project_name": project_name, "vehicles": vehicles, "employees": employees,
+                                "comment": comment, "subproject": subproject, "artifact": artifact,
+                                "profiles": profiles,}
+            else:
+                mini_context = {"project_name": project_name, "vehicles": vehicles, "employees": employees,
+                                "comment": comment}
+            context.append(mini_context)
+    context = {"context": context, "date": date}
+
+    return render(request=request, template_name="schedule/calendar_date.html", context=context)
 
 
 def get_calendar(year, month):
@@ -149,5 +231,5 @@ def get_calendar(year, month):
             month_int = date.month
             year_int = date.year
             month_str_from_int = str(date.month)
-            week[i] = [date_str, day, month_str, full_date_str, day_int, month_int, year_int, month_str_from_int]
+            week[i] = [date_str, day, month_str, full_date_str, day_int, month_int, year_int, month_str_from_int, date]
     return dates
