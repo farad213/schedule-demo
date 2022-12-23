@@ -11,16 +11,23 @@ Fugro - Beosztás - Dátum
 
 <section class="background">
 
-    <div class="title_parent"><div class="title" date="{{ year_ }}.{{ month_ }}.{{ day_ }}">{{ year_ }}.{{ month_ }}.{{ day_ }}</div></div>
+    <div class="title_parent">
+        <div class="title" date="{{ year_ }}.{{ month_ }}.{{ day_ }}">{{ year_ }}.{{ month_ }}.{{ day_ }}</div>
+    </div>
+
 <div class="nav_menu">
       <form method="GET">
         <input type="text" name="previous_day" id="previous_day" hidden value="true">
         <button class="button-69 backwards"><span>&#10229;</span></button>
     </form>
+    <button id="done" class="done_btn button-68 forwards" data-url="{% url 'ajax_done' %}"><span>Done</span></button>
     <form method="GET">
         <input type="text" name="next_day" id="next_day" hidden value="true">
         <button class="button-68 forwards"><span>&#10230;</span></button>
     </form>
+</div>
+<div class="title_parent">
+    <p id="ajax_done_show"></p>
 </div>
 
     <div class="projects">

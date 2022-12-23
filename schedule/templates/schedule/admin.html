@@ -10,6 +10,7 @@ Fugro - Beosztás - Admin
 <link rel="stylesheet" href="{% static 'schedule/css/admin_style.css' %}">
 
 <section class="background">
+    <div class="date_title_wrapper"><p class="date_title">Admin - {{request.resolver_match.kwargs.year}}.{{request.resolver_match.kwargs.month}}</p></div>
     <div class="calendar">
         <div class="month">
             {% for week in cal %}
@@ -18,7 +19,7 @@ Fugro - Beosztás - Admin
                         {% if day.7 == month_str %}
                             {% if day.3 in dates_in_database %}
                                 <a href="{% url 'date' year=day.6 month=day.5 day=day.4 %}">
-                                    <div class="day current_month">
+                                    <div class="day current_month {{day.9.state}}">
                                         <div class="text">
                                             <div class="date">{{ day.0 }}</div>
                                             <div class="weekday">{{ day.1 }}</div>

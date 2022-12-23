@@ -156,3 +156,11 @@ table, th, td{
 .add, .remove{
     cursor: pointer;
 }
+
+.done_btn{
+    background: olive;
+}
+
+#done_show{
+    visibility: hidden;
+}

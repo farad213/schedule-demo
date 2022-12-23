@@ -26,6 +26,20 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
 
     cal = get_calendar(year, month)
     dates_in_database = Date.objects.all()
+    for date in dates_in_database:
+        if DateBoundWithProject.objects.filter(date=date):
+            if date.state == "untouched":
+                date.state= "draft"
+                date.save()
+        else:
+            date.state = "untouched"
+            date.save()
+
+    for week in cal:
+        for day in week:
+            date = Date.objects.get(date=day[8])
+            day.append(date)
+
     dates_in_database = [date.__str__() for date in dates_in_database]
     month_str = str(month)
     context = {"cal": cal, "dates_in_database": dates_in_database, "year": year, "month_str": month_str}
@@ -121,10 +135,23 @@ def partial_save(request):
     date = request.GET.get("date").split(".")
     date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
     date = Date.objects.get(date=date)
+    if not DateBoundWithProject.objects.filter(date=date):
+        context = {}
+        return render(request, 'schedule/ajax/partial_save.html', context={"context": context})
     project = Project.objects.get(project=request.GET.get("project_name"))
     project = DateBoundWithProject.objects.get(date=date, project=project)
     if not request.GET.get("r_type"):
         project.profile.add(*request.GET.getlist("profile[]"))
+        if request.GET.get("employee[]"):
+            project.employee.set(request.GET.getlist("employee[]"))
+            project.save()
+        if request.GET.get("vehicle[]"):
+            project.vehicle.set(request.GET.getlist("vehicle[]"))
+            project.save()
+        if request.GET.get("comment"):
+            project.comment = request.GET.get("comment")
+            project.save()
+
     elif request.GET.get("r_type") == "add or remove":
         id = request.GET.get("id")
         id_list = id.split("_")
@@ -132,6 +159,8 @@ def partial_save(request):
             project.profile.add(id_list[-1])
         elif id_list[0] == "remove":
             project.profile.remove(id_list[-1])
+
+
     artifacts = set()
     subprojects = set()
     for profile in project.profile.all():
@@ -150,6 +179,19 @@ def partial_save(request):
                 context[artifact.subproject][artifact].update({profile: "inactive"})
 
     return render(request, 'schedule/ajax/partial_save.html', context={"context": context})
+
+
+def done(request):
+    date = datetime.date(*[int(d) for d in request.GET.get("date").split(".")])
+    date = Date.objects.get(date=date)
+    if DateBoundWithProject.objects.filter(date=date):
+        date.state = "done"
+        date.save()
+        context = {"msg": "Marked as done"}
+    else:
+        context = {"msg": "No projects saved for the day"}
+    return render(request=request, template_name="schedule/ajax/done_show.html", context=context)
+
 
 
 @login_required()

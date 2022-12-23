@@ -24,7 +24,6 @@ body{
     display: flex;
     flex-direction: column;
     background: linear-gradient(rgba(60,60,60,0.6), rgba(60,60,60,0.6));
-    margin: 70px;
     padding: 20px;
     align-items: center;
 }
@@ -74,4 +73,25 @@ a{
 
 .backwards, .forwards{
     width: 100%;
+}
+
+.draft{
+    background: linear-gradient(rgba(160,160,60,0.8), rgba(60,60,60,0.8));
+}
+
+.done{
+    background: linear-gradient(rgba(60,160,60,0.8), rgba(60,60,60,0.8));
+}
+
+.date_title_wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+.date_title{
+    font-size: 35px;
+    font-weight: 700;
+    background: linear-gradient(rgba(60,60,60,0.6), rgba(60,60,60,0.6));
+    width: fit-content;
+    padding: 10px;
 }

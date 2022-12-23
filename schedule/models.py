@@ -38,7 +38,6 @@ class Artifact(models.Model):
         return self.artifact
 
 
-
 class Profile(models.Model):
     artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE)
     profile = models.CharField(max_length=50, verbose_name="Szelvény", null=True)
@@ -53,9 +52,12 @@ class Profile(models.Model):
 
 class Date(models.Model):
     date = models.DateField(null=True)
+    state = models.CharField(max_length=15, choices=[("untouched", "untouched"), ("draft", "draft"), ("done", "done")],
+                             default="untouched")
 
     def __str__(self):
         return self.date.strftime("%Y.%m.%d")
+
 
 class DateBoundWithProject(models.Model):
     date = models.ForeignKey(Date, on_delete=models.CASCADE, null=True)

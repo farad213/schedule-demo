@@ -45,6 +45,16 @@ $("#id_artifact").change(function () {
       var subprojectId = $("#id_subproject").val();
       var artifactId = $("#id_artifact").val();
       var profileId = $("#id_profile").val();
+      var employeeId = $('input[name="employee"]:checkbox:checked').map(function() {
+            return this.value;
+        }).get();
+      var vehicleId = $('input[name="vehicle"]:checkbox:checked').map(function() {
+            return this.value;
+        }).get();
+      var comment = $("#id_comment").val();
+
+
+
 
       $.ajax({
         url: url,
@@ -55,6 +65,9 @@ $("#id_artifact").change(function () {
           'subproject': subprojectId,
           'artifact': artifactId,
           'profile': profileId,
+          "vehicle": vehicleId,
+          "employee": employeeId,
+          "comment": comment,
         },
         success: function (data) {
           $("#response_table").html(data);
@@ -101,5 +114,20 @@ $("#id_artifact").change(function () {
         }
       });
 
+    });
+
+    $("#done").click(function(){
+        var date = $(".title").attr("date");
+        var url = $("#done").attr("data-url");
+        console.log(date)
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: {"date": date},
+            success: function(data){
+                $("#ajax_done_show").text(data).css({'visibility': 'visible'}).fadeTo(2500, 0);
+            }
+        });
     });
 });
