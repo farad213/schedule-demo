@@ -1,28 +1,34 @@
-<table border="1">
+<table>
 {% for subproject, subproject_info in context.items %}
 
 <tr class="project_data">
     <th>{{ subproject }}</th>
-    <th>{{ subproject.name }}</th>
-    <th>{{ subproject.customer }}</th>
+    <th colspan="2">{{ subproject.name }}</th>
+    <th colspan="2">{{ subproject.customer }}</th>
 </tr>
 <tr class="categories">
     <th>műtárgy</th>
     <th>szelvény</th>
     <th>hossz</th>
     <th>mérési oldal</th>
+    <th></th>
 </tr>
     {% for artifact, artifact_info in subproject_info.items %}
     <tr>
-        <th rowspan="{{ artifact_info|length|add:'1' }}">{{ artifact }}</th>
+        <td class="artifact" rowspan="{{ artifact_info|length|add:'1' }}">{{ artifact }}</td>
         </tr>
 
         {% for profile, profile_info in artifact_info.items %}
-        <tr class="{{ profile_info }}">
-                <td>{{ profile }}</td>
-                <td>{{ profile.length }}</td>
-                <td>{{ profile.measurement_side }}</td>
-    </tr>
+        <tr class="{{ profile_info }} {% cycle 'odd' 'even' %}">
+                <td class="profile">{{ profile }}</td>
+                <td class="profile_length">{{ profile.length }}</td>
+                <td class="profile_measurement_side">{{ profile.measurement_side }}</td>
+                {% if profile_info == "active" %}
+                <td class="icon remove" id="remove_{{subproject}}_{{artifact}}_{{profile.id}}">&#10060;</td>
+                {% else %}
+                <td class="icon add" id="add_{{subproject}}_{{artifact}}_{{profile.id}}">&#9989;</td>
+                {% endif %}
+        </tr>
 
         {% endfor %}
 

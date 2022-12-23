@@ -50,28 +50,70 @@ Fugro - Beosztás - {{ user }}
                         <p>{{ c.comment }}</p>
                     </div>
                 {% endif %}
-                {% if c.subproject %}
-                    <div class="subproject info">
-                        <label>Projekt:</label>
-                        <span>{{ c.subproject }}</span>
-                    </div>
-                {% endif %}
-                {% if c.artifact %}
-                    <div class="artifact info">
-                        <label>Műtárgy:</label>
-                        <span>{{ c.artifact }}</span>
-                    </div>
-                {% endif %}
-                {% if c.profiles %}
-                    <div class="profiles info">
-                        <label>Szelvény:</label>
-                          <span>
-                            {% for profile in c.profiles %}
-                                <li>{{ profile }}</li>
-                            {% endfor %}
-                        </span>
-                    </div>
-                {% endif %}
+
+
+
+                <table>
+{% for subproject, subproject_info in c.hasSubproject.items %}
+
+<tr class="project_data">
+    <th>{{ subproject }}</th>
+    <th colspan="2">{{ subproject.name }}</th>
+    <th colspan="2">{{ subproject.customer }}</th>
+</tr>
+<tr class="categories">
+    <th>műtárgy</th>
+    <th>szelvény</th>
+    <th>hossz</th>
+    <th>mérési oldal</th>
+</tr>
+    {% for artifact, artifact_info in subproject_info.items %}
+    <tr>
+        <td class="artifact" rowspan="{{ artifact_info|length|add:'1' }}">{{ artifact }}</td>
+        </tr>
+
+        {% for profile, profile_info in artifact_info.items %}
+        <tr class="{{ profile_info }} {% cycle 'odd' 'even' %}">
+                <td class="profile">{{ profile }}</td>
+                <td class="profile_length">{{ profile.length }}</td>
+                <td class="profile_measurement_side">{{ profile.measurement_side }}</td>
+        </tr>
+
+        {% endfor %}
+
+    {% endfor %}
+
+{% endfor %}
+</table>
+
+
+
+
+
+
+
+<!--                {% if c.subproject %}-->
+<!--                    <div class="subproject info">-->
+<!--                        <label>Projekt:</label>-->
+<!--                        <span>{{ c.subproject }}</span>-->
+<!--                    </div>-->
+<!--                {% endif %}-->
+<!--                {% if c.artifact %}-->
+<!--                    <div class="artifact info">-->
+<!--                        <label>Műtárgy:</label>-->
+<!--                        <span>{{ c.artifact }}</span>-->
+<!--                    </div>-->
+<!--                {% endif %}-->
+<!--                {% if c.profiles %}-->
+<!--                    <div class="profiles info">-->
+<!--                        <label>Szelvény:</label>-->
+<!--                          <span>-->
+<!--                            {% for profile in c.profiles %}-->
+<!--                                <li>{{ profile }}</li>-->
+<!--                            {% endfor %}-->
+<!--                        </span>-->
+<!--                    </div>-->
+<!--                {% endif %}-->
             </div>
         {% endfor %}
     </div>

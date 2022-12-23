@@ -26,6 +26,7 @@ Fugro - Beosztás - Dátum
     <div class="projects">
     {% for project, project_form in saved_projects_and_forms %}
     <div class="saved_project project">
+        <div class="form_table_wrapper">
         <div class="project_title"><span>{{ project.project }}</span></div>
         <form method="POST" class="project_form" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}" data-partial_save-url="{% url 'ajax_partial_save' %}">
             {% csrf_token %}
@@ -46,7 +47,13 @@ Fugro - Beosztás - Dátum
             <div class="field">{{ project_form.vehicle }}</div>
             <div class="label">{{ project_form.comment.label }}</div>
             <div class="field">{{ project_form.comment }}</div>
-            <div class="buttons_flex">
+
+
+            {% if project.hasSubproject %}
+                <div id="response_table"></div>
+            {% endif %}
+            </div>
+                <div class="buttons_flex">
             {% if not project.hasSubproject %}
                 <button class="button-68 project_save" type="submit">Save</button>
             {% endif %}
@@ -57,7 +64,7 @@ Fugro - Beosztás - Dátum
             <button class="button-69 project_save delete_button" type="submit">Delete</button></div>
         </form>
         {% if project.hasSubproject %}
-          <button id="partial_save" class="button-68 project_save" type="submit" data-project-name="{{project}}" >Partial Save</button>
+          <button id="partial_save" class="button-68 project_save" type="submit" data-project-name="{{project}}" >Update</button>
         {% endif %}
     </div>
     <br>
@@ -94,14 +101,8 @@ Fugro - Beosztás - Dátum
     {% endfor %}
 </div>
 
-    <div id="response"></div>
-
 </section>
 
-
-
-
 <script src="{% static 'schedule/js/date.js' %}"></script>
-
 
 {% endblock %}

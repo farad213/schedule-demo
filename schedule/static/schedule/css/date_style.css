@@ -22,6 +22,7 @@ body{
 .project{
     background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
     margin: 20px;
+    height: fit-content;
 }
 
 .project_title{
@@ -120,4 +121,38 @@ textarea{
 
 button{
     display: inline;
+}
+
+table{
+    margin-top: 20px;
+}
+
+table, th, td{
+    border: 1px solid grey;
+    border-collapse: collapse;
+    color: white;
+}
+
+.project_data{
+    background: linear-gradient(rgba(60,160,60,0.4), rgba(60,160,60,0.4));
+}
+
+.categories{
+    background: linear-gradient(rgba(160,160,60,0.2), rgba(160,160,60,0.2));
+}
+
+.odd, .artifact{
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2));
+}
+
+.even{
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5));
+}
+
+.inactive td{
+    color: grey;
+}
+
+.add, .remove{
+    cursor: pointer;
 }

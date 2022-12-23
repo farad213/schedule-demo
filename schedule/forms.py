@@ -18,7 +18,8 @@ class DateBoundWithProjectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # self.fields['artifact'].queryset = Artifact.objects.none()
+        self.fields['artifact'].queryset = Artifact.objects.none()
+        self.fields['profile'].queryset = Profile.objects.none()
 
         self.fields['artifact'].required = False
         self.fields['profile'].required = False

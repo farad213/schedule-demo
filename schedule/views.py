@@ -123,7 +123,15 @@ def partial_save(request):
     date = Date.objects.get(date=date)
     project = Project.objects.get(project=request.GET.get("project_name"))
     project = DateBoundWithProject.objects.get(date=date, project=project)
-    project.profile.add(*request.GET.getlist("profile[]"))
+    if not request.GET.get("r_type"):
+        project.profile.add(*request.GET.getlist("profile[]"))
+    elif request.GET.get("r_type") == "add or remove":
+        id = request.GET.get("id")
+        id_list = id.split("_")
+        if id_list[0] == "add":
+            project.profile.add(id_list[-1])
+        elif id_list[0] == "remove":
+            project.profile.remove(id_list[-1])
     artifacts = set()
     subprojects = set()
     for profile in project.profile.all():
@@ -142,7 +150,6 @@ def partial_save(request):
                 context[artifact.subproject][artifact].update({profile: "inactive"})
 
     return render(request, 'schedule/ajax/partial_save.html', context={"context": context})
-
 
 
 @login_required()
@@ -175,7 +182,6 @@ def user_calendar(request, year=datetime.date.year, month=datetime.date.month):
             for project in projects_for_specific_day:
                 if user in project.employee.all():
                     active_days.append(day[3])
-                    print("sdf")
 
     month_str = str(month)
     context = {"cal": cal, "year": year, "month_str": month_str, "active_days": active_days}
@@ -184,7 +190,7 @@ def user_calendar(request, year=datetime.date.year, month=datetime.date.month):
 
 @login_required
 def user_date(request, year, month, day):
-    context = []
+    context_list = []
     user = request.user
     date = Date.objects.get(date=datetime.date(year, month, day))
     projects_for_that_day = DateBoundWithProject.objects.filter(date=date)
@@ -195,17 +201,33 @@ def user_date(request, year, month, day):
             employees = project.employee.all()
             comment = project.comment
             if project.project.hasSubproject():
-                subproject = project.subproject
-                artifact = project.artifact
-                profiles = project.profile.all()
+                # subproject = project.subproject
+                # artifact = project.artifact
+                # profiles = project.profile.all()
+                artifacts = set()
+                subprojects = set()
+                for profile in project.profile.all():
+                    artifacts.add(profile.artifact)
+                    subprojects.add(profile.artifact.subproject)
+                context = {}
+                for subproject in subprojects:
+                    context[subproject] = {}
+                for artifact in artifacts:
+                    context[artifact.subproject].update({artifact: {}})
+                for profile in project.profile.all():
+                    context[profile.artifact.subproject][profile.artifact].update({profile: "active"})
+                for artifact in artifacts:
+                    for profile in artifact.profile_set.all():
+                        if profile not in context[artifact.subproject][artifact]:
+                            context[artifact.subproject][artifact].update({profile: "inactive"})
                 mini_context = {"project_name": project_name, "vehicles": vehicles, "employees": employees,
-                                "comment": comment, "subproject": subproject, "artifact": artifact,
-                                "profiles": profiles,}
+                                "comment": comment, "hasSubproject": context}
             else:
                 mini_context = {"project_name": project_name, "vehicles": vehicles, "employees": employees,
                                 "comment": comment}
-            context.append(mini_context)
-    context = {"context": context, "date": date}
+            context_list.append(mini_context)
+    context = {"context": context_list, "date": date}
+    print(context)
 
     return render(request=request, template_name="schedule/calendar_date.html", context=context)
 
