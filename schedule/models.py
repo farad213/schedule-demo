@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from functools import partial
 
 
 class Vehicle(models.Model):
@@ -54,6 +55,17 @@ class Date(models.Model):
     date = models.DateField(null=True)
     state = models.CharField(max_length=15, choices=[("untouched", "untouched"), ("draft", "draft"), ("done", "done")],
                              default="untouched")
+
+    def hasProjectFunc(self, project):
+        if DateBoundWithProject.objects.filter(date=self, project=project):
+            return "true"
+        else:
+            return "false"
+
+    def hasProject(self):
+        self.hasProject = {f"{project.__str__()}": partial(self.hasProjectFunc, project=project) for project in
+                      Project.objects.all()}
+        return self.hasProject
 
     def __str__(self):
         return self.date.strftime("%Y.%m.%d")

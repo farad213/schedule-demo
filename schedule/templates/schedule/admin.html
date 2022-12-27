@@ -13,42 +13,61 @@ Fugro - Beosztás - Admin
     <div class="date_title_wrapper"><p class="date_title">Admin - {{request.resolver_match.kwargs.year}}.{{request.resolver_match.kwargs.month}}</p></div>
     <div class="calendar">
         <div class="month">
+            <div class="weekdays">
+                <div><span>Hétfő</span></div>
+                <div><span>Kedd</span></div>
+                <div><span>Szerda</span></div>
+                <div><span>Csütörtök</span></div>
+                <div><span>Péntek</span></div>
+                <div><span>Szombat</span></div>
+                <div><span>Vasárnap</span></div>
+            </div>
             {% for week in cal %}
                 <div class="week">
                     {% for day in week %}
                         {% if day.7 == month_str %}
                             {% if day.3 in dates_in_database %}
                                 <a href="{% url 'date' year=day.6 month=day.5 day=day.4 %}">
-                                    <div class="day current_month {{day.9.state}}">
+                                    <div class="day current_month {{day.1}} {{day.9.state}}">
                                         <div class="text">
                                             <div class="date">{{ day.0 }}</div>
-                                            <div class="weekday">{{ day.1 }}</div>
+                                            <div class="icons">
+                                                <div class="probaterheles {{day.9.hasProject.Próbaterhelés}}"></div>
+                                                <div class="sullyedesmeres {{day.9.hasProject.Süllyedésmérés}}"></div>
+                                                <div class="integritasvizsgalat {{day.9.hasProject.Integritásvizsgálat}}"></div>
+                                                <div class="inklinometer {{day.9.hasProject.Inklinométer}}"></div>
+                                                <div class="other {{day.9.hasProject.Other}}"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </a>
                             {% else %}
-                                 <div class="day current_month">
+                                 <div class="day current_month {{day.1}}">
                                     <div class="text">
                                         <div class="date">{{ day.0 }}</div>
-                                        <div class="weekday">{{ day.1 }}</div>
                                     </div>
                                 </div>
                             {% endif %}
                         {% else %}
                             {% if day.3 in dates_in_database %}
                                 <a href="{% url 'date' year=day.6 month=day.5 day=day.4 %}">
-                                    <div class="day not_current_month">
+                                    <div class="day not_current_month {{day.1}} {{day.9.state}}">
                                         <div class="text">
                                             <div class="date">{{ day.0 }}</div>
-                                            <div class="weekday">{{ day.1 }}</div>
+                                            <div class="icons">
+                                                <div class="probaterheles {{day.9.hasProject.Próbaterhelés}}"></div>
+                                                <div class="sullyedesmeres {{day.9.hasProject.Süllyedésmérés}}"></div>
+                                                <div class="integritasvizsgalat {{day.9.hasProject.Integritásvizsgálat}}"></div>
+                                                <div class="inklinometer {{day.9.hasProject.Inklinométer}}"></div>
+                                                <div class="other {{day.9.hasProject.Other}}"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </a>
                             {% else %}
-                                 <div class="day not_current_month">
+                                 <div class="day not_current_month {{day.1}}">
                                     <div class="text">
                                         <div class="date">{{ day.0 }}</div>
-                                        <div class="weekday">{{ day.1 }}</div>
                                     </div>
                                 </div>
                             {% endif %}

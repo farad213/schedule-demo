@@ -2,13 +2,20 @@ from django.shortcuts import render
 from .forms import Length_form, Buildings_form
 from .models import BuildingsTKB, BuildingsTU, BuildingsTEM, BuildingsTMO
 import pandas as pd
+from django.contrib.auth.decorators import user_passes_test, login_required
+
+def BMW_group_check(user):
+    return user.groups.filter(name='BMW').exists()
 
 
-
+@login_required
+@user_passes_test(BMW_group_check)
 def home(request):
     return render(request, "bmw/home.html", {})
 
 
+@login_required
+@user_passes_test(BMW_group_check)
 def jelkod(request):
 
     form = Length_form(request.POST)
@@ -19,6 +26,8 @@ def jelkod(request):
     return render(request, "bmw/jelkod.html", {"form": form})
 
 
+@login_required
+@user_passes_test(BMW_group_check)
 def buildings(request):
 
     form = Buildings_form()

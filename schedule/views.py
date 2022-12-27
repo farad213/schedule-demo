@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Date, Project, DateBoundWithProject, Subproject, Artifact, Profile
 from .forms import DateBoundWithProjectForm
 import datetime
 
+def Monitoring_group_check(user):
+    return user.groups.filter(name='Schedule - Monitoring').exists()
 
+@user_passes_test(Monitoring_group_check)
 @login_required
 def admin(request, year=datetime.date.year, month=datetime.date.month):
     if request.method == "GET":
@@ -29,7 +32,7 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
     for date in dates_in_database:
         if DateBoundWithProject.objects.filter(date=date):
             if date.state == "untouched":
-                date.state= "draft"
+                date.state= "done"
                 date.save()
         else:
             date.state = "untouched"
@@ -37,15 +40,16 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
 
     for week in cal:
         for day in week:
-            date = Date.objects.get(date=day[8])
-            day.append(date)
+            if Date.objects.filter(date=day[8]):
+                date = Date.objects.get(date=day[8])
+                day.append(date)
 
     dates_in_database = [date.__str__() for date in dates_in_database]
     month_str = str(month)
     context = {"cal": cal, "dates_in_database": dates_in_database, "year": year, "month_str": month_str}
     return render(request=request, template_name="schedule/admin.html", context=context)
 
-
+@user_passes_test(Monitoring_group_check)
 @login_required
 def date(request, year, month, day):
     date = Date.objects.get(date=datetime.date(year, month, day))
@@ -130,7 +134,6 @@ def profiles(request):
     return render(request, 'schedule/ajax/profiles.html', context)
 
 
-
 def partial_save(request):
     date = request.GET.get("date").split(".")
     date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
@@ -181,19 +184,19 @@ def partial_save(request):
     return render(request, 'schedule/ajax/partial_save.html', context={"context": context})
 
 
-def done(request):
-    date = datetime.date(*[int(d) for d in request.GET.get("date").split(".")])
-    date = Date.objects.get(date=date)
-    if DateBoundWithProject.objects.filter(date=date):
-        date.state = "done"
-        date.save()
-        context = {"msg": "Marked as done"}
-    else:
-        context = {"msg": "No projects saved for the day"}
-    return render(request=request, template_name="schedule/ajax/done_show.html", context=context)
+# def done(request):
+#     date = datetime.date(*[int(d) for d in request.GET.get("date").split(".")])
+#     date = Date.objects.get(date=date)
+#     if DateBoundWithProject.objects.filter(date=date):
+#         date.state = "done"
+#         date.save()
+#         context = {"msg": "Marked as done"}
+#     else:
+#         context = {"msg": "No projects saved for the day"}
+#     return render(request=request, template_name="schedule/ajax/done_show.html", context=context)
 
 
-
+@user_passes_test(Monitoring_group_check)
 @login_required()
 def user_calendar(request, year=datetime.date.year, month=datetime.date.month):
     if request.method == "GET":
@@ -229,7 +232,7 @@ def user_calendar(request, year=datetime.date.year, month=datetime.date.month):
     context = {"cal": cal, "year": year, "month_str": month_str, "active_days": active_days}
     return render(request=request, template_name="schedule/user_calendar.html", context=context)
 
-
+@user_passes_test(Monitoring_group_check)
 @login_required
 def user_date(request, year, month, day):
     context_list = []
@@ -285,7 +288,7 @@ def get_calendar(year, month):
     c = calendar.Calendar()
     dates = c.monthdatescalendar(year, month)
 
-    for week in dates:
+    for j, week in enumerate(dates):
         for i, date in enumerate(week):
             full_date_str = date.strftime("%Y.%m.%d")
             date_str = date.strftime("%m/%d")

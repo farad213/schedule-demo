@@ -49,10 +49,14 @@ body{
 }
 
 .text{
-    margin: 5px;
+    margin: 10px;
     color: white;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 22px;
+    display: flex;
+    height: 90%;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 a{
@@ -70,9 +74,13 @@ a{
     text-align: center;
 }
 
-
 .backwards, .forwards{
     width: 100%;
+}
+
+
+.Szombat, .Vasárnap{
+    background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
 }
 
 .draft{
@@ -94,4 +102,98 @@ a{
     background: linear-gradient(rgba(60,60,60,0.6), rgba(60,60,60,0.6));
     width: fit-content;
     padding: 10px;
+}
+
+.weekdays{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.weekdays div{
+    background: linear-gradient(rgba(30,30,30,0.8), rgba(30,30,30,0.8));
+    margin: 10px;
+    padding: 10px 0px 10px 0px;
+    width: max(170px, 11vw);
+    border-radius: 3px;
+}
+
+.weekdays div span{
+    margin: 10px;
+    font-size: 22px;
+}
+
+.probaterheles.false{
+    background-image:  url(../images/probaterheles.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.inklinometer.false{
+    background-image:  url(../images/inklinometer.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.integritasvizsgalat.false{
+    background-image:  url(../images/integritasvizsgalat.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.sullyedesmeres.false{
+    background-image:  url(../images/sullyedesmeres.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.other.false{
+    background-image:  url(../images/other.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.probaterheles.true{
+    background-image:  url(../images/probaterheles_green.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.inklinometer.true{
+    background-image:  url(../images/inklinometer_green.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.integritasvizsgalat.true{
+    background-image:  url(../images/integritasvizsgalat_green.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.sullyedesmeres.true{
+    background-image:  url(../images/sullyedesmeres_green.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.other.true{
+    background-image:  url(../images/other_green.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.icons{
+    display: flex;
+    justify-content: space-between;
 }

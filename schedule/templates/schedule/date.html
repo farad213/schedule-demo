@@ -20,7 +20,6 @@ Fugro - Beosztás - Dátum
         <input type="text" name="previous_day" id="previous_day" hidden value="true">
         <button class="button-69 backwards"><span>&#10229;</span></button>
     </form>
-    <button id="done" class="done_btn button-68 forwards" data-url="{% url 'ajax_done' %}"><span>Done</span></button>
     <form method="GET">
         <input type="text" name="next_day" id="next_day" hidden value="true">
         <button class="button-68 forwards"><span>&#10230;</span></button>
@@ -71,7 +70,7 @@ Fugro - Beosztás - Dátum
             <button class="button-69 project_save delete_button" type="submit">Delete</button></div>
         </form>
         {% if project.hasSubproject %}
-          <button id="partial_save" class="button-68 project_save" type="submit" data-project-name="{{project}}" >Update</button>
+          <button id="partial_save" class="button-68 project_save" type="submit" data-project-name="{{project}}">Update</button>
         {% endif %}
     </div>
     <br>

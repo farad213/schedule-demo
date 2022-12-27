@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 {% extends "bmw/base.html" %}
 {% load static %}
@@ -51,8 +47,6 @@ Fugro - Beosztás - {{ user }}
                     </div>
                 {% endif %}
 
-
-
                 <table>
 {% for subproject, subproject_info in c.hasSubproject.items %}
 
@@ -85,35 +79,6 @@ Fugro - Beosztás - {{ user }}
 
 {% endfor %}
 </table>
-
-
-
-
-
-
-
-<!--                {% if c.subproject %}-->
-<!--                    <div class="subproject info">-->
-<!--                        <label>Projekt:</label>-->
-<!--                        <span>{{ c.subproject }}</span>-->
-<!--                    </div>-->
-<!--                {% endif %}-->
-<!--                {% if c.artifact %}-->
-<!--                    <div class="artifact info">-->
-<!--                        <label>Műtárgy:</label>-->
-<!--                        <span>{{ c.artifact }}</span>-->
-<!--                    </div>-->
-<!--                {% endif %}-->
-<!--                {% if c.profiles %}-->
-<!--                    <div class="profiles info">-->
-<!--                        <label>Szelvény:</label>-->
-<!--                          <span>-->
-<!--                            {% for profile in c.profiles %}-->
-<!--                                <li>{{ profile }}</li>-->
-<!--                            {% endfor %}-->
-<!--                        </span>-->
-<!--                    </div>-->
-<!--                {% endif %}-->
             </div>
         {% endfor %}
     </div>

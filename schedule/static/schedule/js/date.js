@@ -116,18 +116,22 @@ $("#id_artifact").change(function () {
 
     });
 
-    $("#done").click(function(){
-        var date = $(".title").attr("date");
-        var url = $("#done").attr("data-url");
-        console.log(date)
+//    $("#done").click(function(){
+//        var date = $(".title").attr("date");
+//        var url = $("#done").attr("data-url");
+//        console.log(date)
+//
+//        $.ajax({
+//            url: url,
+//            type: "GET",
+//            data: {"date": date},
+//            success: function(data){
+//                $("#ajax_done_show").text(data).css({'visibility': 'visible'}).fadeTo(2500, 0);
+//            }
+//        });
+//    });
 
-        $.ajax({
-            url: url,
-            type: "GET",
-            data: {"date": date},
-            success: function(data){
-                $("#ajax_done_show").text(data).css({'visibility': 'visible'}).fadeTo(2500, 0);
-            }
-        });
-    });
+
+
+
 });
