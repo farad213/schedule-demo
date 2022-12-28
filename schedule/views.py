@@ -58,9 +58,9 @@ def date(request, year, month, day):
     saved_projects = [saved_project.project for saved_project in saved_projects_for_the_day]
     untouched_projects = [project for project in projects if project not in saved_projects]
 
-    date_bound_project_form = DateBoundWithProjectForm()
+    date_bound_project_form = DateBoundWithProjectForm(date=datetime.date(year, month, day))
 
-    saved_project_forms = [DateBoundWithProjectForm(instance=project) for project in saved_projects_for_the_day]
+    saved_project_forms = [DateBoundWithProjectForm(instance=project, date=datetime.date(year, month, day)) for project in saved_projects_for_the_day]
 
     saved_projects_and_forms = zip(saved_projects, saved_project_forms)
 
@@ -75,7 +75,8 @@ def date(request, year, month, day):
 
         else:
             project = Project.objects.filter(project=request.POST.get("project_name")).get()
-            filled_form = DateBoundWithProjectForm(request.POST)
+            print(request.POST, date)
+            filled_form = DateBoundWithProjectForm(data=request.POST, date=datetime.date(year, month, day))
 
             # create or update a project for that day
             if project not in saved_projects:
@@ -184,18 +185,6 @@ def partial_save(request):
     return render(request, 'schedule/ajax/partial_save.html', context={"context": context})
 
 
-# def done(request):
-#     date = datetime.date(*[int(d) for d in request.GET.get("date").split(".")])
-#     date = Date.objects.get(date=date)
-#     if DateBoundWithProject.objects.filter(date=date):
-#         date.state = "done"
-#         date.save()
-#         context = {"msg": "Marked as done"}
-#     else:
-#         context = {"msg": "No projects saved for the day"}
-#     return render(request=request, template_name="schedule/ajax/done_show.html", context=context)
-
-
 @user_passes_test(Monitoring_group_check)
 @login_required()
 def user_calendar(request, year=datetime.date.year, month=datetime.date.month):
@@ -275,6 +264,14 @@ def user_date(request, year, month, day):
     print(context)
 
     return render(request=request, template_name="schedule/calendar_date.html", context=context)
+
+
+
+@login_required()
+def vacation(request):
+    context = {}
+    return render(request=request, template_name="schedule/vacation.html", context=context)
+
 
 
 def get_calendar(year, month):

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html><!DOCTYPE html>
+{% extends "bmw/base.html" %}
+{% load static %}
+
+{% block title %}
+Fugro - Beosztás - {{ user }}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'schedule/css/vacation_style.css' %}">
+
+<section class="background">
+
+</section>
+
+{% endblock %}

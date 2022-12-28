@@ -55,6 +55,7 @@ class Date(models.Model):
     date = models.DateField(null=True)
     state = models.CharField(max_length=15, choices=[("untouched", "untouched"), ("draft", "draft"), ("done", "done")],
                              default="untouched")
+    employees_on_leave = models.ManyToManyField(User, blank=True)
 
     def hasProjectFunc(self, project):
         if DateBoundWithProject.objects.filter(date=self, project=project):

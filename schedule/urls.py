@@ -9,5 +9,5 @@ urlpatterns = [
     path('calendar/<int:year>/<int:month>', views.user_calendar, name="calendar"),
     path('calendar/<int:year>/<int:month>/<int:day>', views.user_date, name="calendar_date"),
     path('ajax/partial_save/', views.partial_save, name="ajax_partial_save"),
-    # path('ajax/done/', views.done, name="ajax_done"),
+    path("vacation", views.vacation, name="vacation"),
 ]

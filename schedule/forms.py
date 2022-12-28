@@ -1,7 +1,6 @@
 from django import forms
-from .models import DateBoundWithProject, Vehicle, Artifact, Profile, Subproject
+from .models import DateBoundWithProject, Vehicle, Artifact, Profile, Subproject, User, Date
 from django.contrib.auth.models import User
-
 
 
 class DateBoundWithProjectForm(forms.ModelForm):
@@ -15,9 +14,14 @@ class DateBoundWithProjectForm(forms.ModelForm):
     profile = forms.ModelMultipleChoiceField(queryset=Profile.objects.all(), widget=forms.SelectMultiple, required=False)
     artifact = forms.ModelChoiceField(queryset=Artifact.objects.all(), widget=forms.Select, required=True)
     subproject = forms.ModelChoiceField(queryset=Subproject.objects.all(), widget=forms.Select, required=True)
-    def __init__(self, *args, **kwargs):
+    def __init__(self, date, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        all_possible_employees = User.objects.filter(groups__name="Schedule - Monitoring")
+        employees_on_leave = Date.objects.get(date=date).employees_on_leave.all()
+        available_employees = [employee.id for employee in all_possible_employees if employee not in employees_on_leave]
+
+        self.fields["employee"].queryset = User.objects.filter(id__in=available_employees)
         self.fields['artifact'].queryset = Artifact.objects.none()
         self.fields['profile'].queryset = Profile.objects.none()
 

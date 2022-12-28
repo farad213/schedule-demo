@@ -28,7 +28,13 @@
                 </nav>
                 {% if user.is_authenticated %}
                     <div class="log_out">
-                        <div class="username">{{ user.username }}</div>
+                        <div class="dropdown">
+                          <div class="button-68">{{ user.username }}</div>
+                          <div class="dropdown-content">
+                            <a href="{% url 'password_change' %}">Change password</a>
+                            <a href="{% url 'vacation' %}">Vacation days</a>
+                          </div>
+                        </div>
                         <a href="{% url 'logout' %}">
                             <button class="button-69" role="button">Kijelentkezés</button>
                         </a>
