@@ -1,25 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html><!DOCTYPE html>
 {% extends "bmw/base.html" %}
 {% load static %}
 
 {% block title %}
-Fugro - Beosztás - {{ user }}
+Fugro - Vacation - {{ user }}
 {% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'schedule/css/vacation_style.css' %}">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="{% static 'schedule/css/jquery-ui.multidatespicker.css' %}">
+<!-- include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- include jQuery UI -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<!-- include jQuery MultiDatesPicker -->
+<script src="{% static 'schedule/js/jquery-ui.multidatespicker.js' %}"></script>
+
 
 <section class="background">
+<div id="box" class="box">
 
+        <div id="mdp-demo"></div>
+
+        {% if bad_dates_already_working %}
+    <div class="bad_dates">
+
+            <div>A következő dátumokon már be vagy osztva munkára,<br> nem lettek elmentve:</div>
+            <ul>
+                {% for date in bad_dates_already_working %}
+                <li>
+                    {{ date }}
+                </li>
+                {% endfor %}
+            </ul>
+</div>
+        {% endif %}
+
+        <button id="submit_vacation" type="submit" class="btn button-37">Mentés</button>
+</div>
 </section>
 
+{{ dates_when_user_is_on_leave|json_script:"dates_when_user_is_on_leave" }}
+
+<script>
+function initializeCalendar(dates_when_user_is_on_leave) {
+  $('#mdp-demo').multiDatesPicker({
+    dateFormat: 'yy-mm-dd',
+    firstDay: 1,
+    dayNamesMin: ['Vas', 'Hé ', 'Ke ', 'Sze', 'Csü', 'Pé ', 'Szo', ],
+    onSelect: function() {
+      $('.ui-datepicker').addClass('large-datepicker');
+    }
+  });
+  $('.ui-datepicker').addClass('large-datepicker');
+  var dates_when_user_is_on_leave = JSON.parse($("#dates_when_user_is_on_leave").text());
+  if (dates_when_user_is_on_leave.length > 0) {
+    $('#mdp-demo').multiDatesPicker('addDates', dates_when_user_is_on_leave);
+  }
+}
+
+$(document).ready(function() {
+  initializeCalendar(dates_when_user_is_on_leave);
+
+  $(document).on('click', '#submit_vacation', function() {
+    var dates = $('#mdp-demo').multiDatesPicker('getDates');
+
+    $.ajax({
+      method: 'GET',
+      url: '/schedule/ajax/vacation_set',
+      data: {
+        dates: dates
+      },
+      success: function(response) {
+        $("#box").html(response);
+        // Re-initialize the calendar after the ajax request completes
+        // Pass the list of dates when the user is on leave to the initializeCalendar function
+        initializeCalendar(dates_when_user_is_on_leave);
+
+      }
+    });
+  });
+});
+</script>
 {% endblock %}

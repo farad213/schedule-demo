@@ -3,9 +3,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Date, Project, DateBoundWithProject, Subproject, Artifact, Profile
 from .forms import DateBoundWithProjectForm
 import datetime
+from django.utils import timezone
+
 
 def Monitoring_group_check(user):
     return user.groups.filter(name='Schedule - Monitoring').exists()
+
 
 @user_passes_test(Monitoring_group_check)
 @login_required
@@ -32,7 +35,7 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
     for date in dates_in_database:
         if DateBoundWithProject.objects.filter(date=date):
             if date.state == "untouched":
-                date.state= "done"
+                date.state = "done"
                 date.save()
         else:
             date.state = "untouched"
@@ -49,6 +52,7 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
     context = {"cal": cal, "dates_in_database": dates_in_database, "year": year, "month_str": month_str}
     return render(request=request, template_name="schedule/admin.html", context=context)
 
+
 @user_passes_test(Monitoring_group_check)
 @login_required
 def date(request, year, month, day):
@@ -60,7 +64,8 @@ def date(request, year, month, day):
 
     date_bound_project_form = DateBoundWithProjectForm(date=datetime.date(year, month, day))
 
-    saved_project_forms = [DateBoundWithProjectForm(instance=project, date=datetime.date(year, month, day)) for project in saved_projects_for_the_day]
+    saved_project_forms = [DateBoundWithProjectForm(instance=project, date=datetime.date(year, month, day)) for project
+                           in saved_projects_for_the_day]
 
     saved_projects_and_forms = zip(saved_projects, saved_project_forms)
 
@@ -164,7 +169,6 @@ def partial_save(request):
         elif id_list[0] == "remove":
             project.profile.remove(id_list[-1])
 
-
     artifacts = set()
     subprojects = set()
     for profile in project.profile.all():
@@ -221,6 +225,7 @@ def user_calendar(request, year=datetime.date.year, month=datetime.date.month):
     context = {"cal": cal, "year": year, "month_str": month_str, "active_days": active_days}
     return render(request=request, template_name="schedule/user_calendar.html", context=context)
 
+
 @user_passes_test(Monitoring_group_check)
 @login_required
 def user_date(request, year, month, day):
@@ -266,12 +271,47 @@ def user_date(request, year, month, day):
     return render(request=request, template_name="schedule/calendar_date.html", context=context)
 
 
-
 @login_required()
 def vacation(request):
-    context = {}
+    dates_when_user_is_on_leave = Date.objects.filter(employees_on_leave=request.user)
+    dates_when_user_is_on_leave = [date.date.strftime("%Y-%m-%d") for date in dates_when_user_is_on_leave]
+    context = {"dates_when_user_is_on_leave": dates_when_user_is_on_leave}
     return render(request=request, template_name="schedule/vacation.html", context=context)
 
+
+def vacation_set_ajax(request):
+    dates = request.GET.getlist('dates[]')
+    dates_when_user_is_on_leave = Date.objects.filter(employees_on_leave=request.user)
+    date_objs_when_user_is_on_leave = [date.date for date in dates_when_user_is_on_leave]
+    dates_from_calendar = []
+    bad_dates_already_working = []
+    for date in dates:
+        date = date.split("-")
+        date_obj = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+        if Date.objects.filter(date=date_obj):
+            date_db = Date.objects.get(date=date_obj)
+            if DateBoundWithProject.objects.filter(date=date_db, employee=request.user):
+                bad_dates_already_working.append(date_obj)
+                continue
+
+        dates_from_calendar.append(date_obj)
+        if date_obj in date_objs_when_user_is_on_leave:
+            pass
+        else:
+            if Date.objects.filter(date=date_obj):
+                date_db = Date.objects.get(date=date_obj)
+                date_db.employees_on_leave.add(request.user)
+    dates_to_delete = [date for date in date_objs_when_user_is_on_leave if date not in dates_from_calendar]
+    for date in dates_to_delete:
+        Date.objects.get(date=date).employees_on_leave.remove(request.user)
+
+    dates_when_user_is_on_leave = Date.objects.filter(employees_on_leave=request.user)
+    dates_when_user_is_on_leave = [date.date.strftime("%Y-%m-%d") for date in dates_when_user_is_on_leave]
+    print(bad_dates_already_working, "bad")
+    print(dates_when_user_is_on_leave, "good")
+    context = {"dates_when_user_is_on_leave": dates_when_user_is_on_leave,
+               "bad_dates_already_working": bad_dates_already_working}
+    return render(request=request, template_name="schedule/ajax/vacation_ajax.html", context=context)
 
 
 def get_calendar(year, month):
