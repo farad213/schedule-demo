@@ -31,7 +31,9 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
             return redirect(admin, year=year, month=month)
 
     cal = get_calendar(year, month)
-    dates_in_database = Date.objects.all()
+    last_month = datetime.date(year=year, month=month, day=15) - datetime.timedelta(30)
+    next_month = datetime.date(year=year, month=month, day=15) + datetime.timedelta(30)
+    dates_in_database = Date.objects.filter(date__range=(last_month, next_month))
     for date in dates_in_database:
         if DateBoundWithProject.objects.filter(date=date):
             if date.state == "untouched":

@@ -1,15 +1,12 @@
+<div id="mdp-demo"></div>
 
+{% if bad_dates_already_working %}
+    <div class="bad_dates">
+        {% for date in bad_dates_already_working %}
+            <div>{{ date }} dátumon már be vagy osztva munkára,<br>így nem lett elmentve</div>
+        {% endfor %}
+    </div>
 
-        <div id="mdp-demo"></div>
-
-        {% if bad_dates_already_working %}
-            <div class="bad_dates">
-                {% for date in bad_dates_already_working %}
-                    <div>{{ date }} dátumon már be vagy osztva munkára,<br>így nem lett elmentve</div>
-                {% endfor %}
-            </div>
-
-        {% endif %}
-
+{% endif %}
 
 {{ dates_when_user_is_on_leave|json_script:"dates_when_user_is_on_leave" }}
