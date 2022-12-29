@@ -4,17 +4,12 @@
 
         {% if bad_dates_already_working %}
             <div class="bad_dates">
-                <div>A következő dátumokon már be vagy osztva munkára,<br> nem lettek elmentve:</div>
-                <ul>
-                    {% for date in bad_dates_already_working %}
-                    <li>
-                        {{ date }}
-                    </li>
-                    {% endfor %}
-                </ul>
+                {% for date in bad_dates_already_working %}
+                    <div>{{ date }} dátumon már be vagy osztva munkára,<br>így nem lett elmentve</div>
+                {% endfor %}
             </div>
 
         {% endif %}
 
-        <button id="submit_vacation" type="submit" class="btn button-37">Mentés</button>
+
 {{ dates_when_user_is_on_leave|json_script:"dates_when_user_is_on_leave" }}

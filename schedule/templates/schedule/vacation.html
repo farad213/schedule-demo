@@ -27,19 +27,12 @@ Fugro - Vacation - {{ user }}
 
         {% if bad_dates_already_working %}
     <div class="bad_dates">
-
-            <div>A következő dátumokon már be vagy osztva munkára,<br> nem lettek elmentve:</div>
-            <ul>
                 {% for date in bad_dates_already_working %}
-                <li>
-                    {{ date }}
-                </li>
+                    <div>{{ date }} dátumon már be vagy osztva munkára,így nem lett elmentve</div>
                 {% endfor %}
-            </ul>
 </div>
         {% endif %}
 
-        <button id="submit_vacation" type="submit" class="btn button-37">Mentés</button>
 </div>
 </section>
 
@@ -53,6 +46,21 @@ function initializeCalendar(dates_when_user_is_on_leave) {
     dayNamesMin: ['Vas', 'Hé ', 'Ke ', 'Sze', 'Csü', 'Pé ', 'Szo', ],
     onSelect: function() {
       $('.ui-datepicker').addClass('large-datepicker');
+      // Send the AJAX request here
+      var dates = $('#mdp-demo').multiDatesPicker('getDates');
+      $.ajax({
+        method: 'GET',
+        url: '/schedule/ajax/vacation_set',
+        data: {
+          dates: dates
+        },
+        success: function(response) {
+          $("#box").html(response);
+          // Re-initialize the calendar after the ajax request completes
+          // Pass the list of dates when the user is on leave to the initializeCalendar function
+          initializeCalendar(dates_when_user_is_on_leave);
+        }
+      });
     }
   });
   $('.ui-datepicker').addClass('large-datepicker');
@@ -64,25 +72,6 @@ function initializeCalendar(dates_when_user_is_on_leave) {
 
 $(document).ready(function() {
   initializeCalendar(dates_when_user_is_on_leave);
-
-  $(document).on('click', '#submit_vacation', function() {
-    var dates = $('#mdp-demo').multiDatesPicker('getDates');
-
-    $.ajax({
-      method: 'GET',
-      url: '/schedule/ajax/vacation_set',
-      data: {
-        dates: dates
-      },
-      success: function(response) {
-        $("#box").html(response);
-        // Re-initialize the calendar after the ajax request completes
-        // Pass the list of dates when the user is on leave to the initializeCalendar function
-        initializeCalendar(dates_when_user_is_on_leave);
-
-      }
-    });
-  });
 });
 </script>
 {% endblock %}
