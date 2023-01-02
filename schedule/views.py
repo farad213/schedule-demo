@@ -34,6 +34,16 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
     last_month = datetime.date(year=year, month=month, day=15) - datetime.timedelta(30)
     next_month = datetime.date(year=year, month=month, day=15) + datetime.timedelta(30)
     dates_in_database = Date.objects.filter(date__range=(last_month, next_month))
+
+    # appending Date model object to list
+    for week in cal:
+        for day in week:
+            if Date.objects.filter(date=day[8]):
+                date = Date.objects.get(date=day[8])
+                day.append(date)
+
+
+    # updating project status
     for date in dates_in_database:
         if DateBoundWithProject.objects.filter(date=date):
             if date.state == "untouched":
@@ -43,11 +53,31 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
             date.state = "untouched"
             date.save()
 
-    for week in cal:
-        for day in week:
-            if Date.objects.filter(date=day[8]):
-                date = Date.objects.get(date=day[8])
-                day.append(date)
+        # if Date has DateBoundWithProject, updating Date with DateBoundWithProject's info
+        if DateBoundWithProject.objects.filter(date=date):
+            for project in DateBoundWithProject.objects.filter(date=date):
+                for week in cal:
+                    for day in week:
+                        if day[8] == date.date:
+                            if len(day) < 11:
+                                day.append({})
+
+                            if project.project.hasSubproject():
+                                if project.project.project in day[10].keys():
+                                    day[10][project.project.project].append(f"{project.subproject.name} - {len(project.profile.all())} cső")
+                                else:
+                                    day[10].update({project.project.project: [f"{project.subproject.name} - {len(project.profile.all())} cső"]})
+
+                            else:
+                                if project.project.project in day[10].keys():
+                                    day[10][project.project.project].append(project.comment)
+                                else:
+                                    day[10].update({project.project.project: [project.comment]})
+
+                            break
+                        continue
+                    continue
+
 
     dates_in_database = [date.__str__() for date in dates_in_database]
     month_str = str(month)
@@ -61,8 +91,8 @@ def date(request, year, month, day):
     date = Date.objects.get(date=datetime.date(year, month, day))
     projects = list(Project.objects.all())
     saved_projects_for_the_day = DateBoundWithProject.objects.filter(date=date)
-    saved_projects = [saved_project.project for saved_project in saved_projects_for_the_day]
-    untouched_projects = [project for project in projects if project not in saved_projects]
+    saved_projects = [saved_project for saved_project in saved_projects_for_the_day]
+    untouched_projects = [project for project in projects]
 
     date_bound_project_form = DateBoundWithProjectForm(date=datetime.date(year, month, day))
 
@@ -76,27 +106,26 @@ def date(request, year, month, day):
         if "delete" in request.POST:
             # delete a project on that day
             project = Project.objects.filter(project=request.POST.get("delete")).get()
-            project_to_delete = DateBoundWithProject.objects.filter(date=date, project=project)
+            project_to_delete = DateBoundWithProject.objects.filter(pk=int(request.POST.get("project_id")))
             project_to_delete.delete()
             return redirect("date", year, month, day)
 
         else:
             project = Project.objects.filter(project=request.POST.get("project_name")).get()
-            print(request.POST, date)
             filled_form = DateBoundWithProjectForm(data=request.POST, date=datetime.date(year, month, day))
 
-            # create or update a project for that day
-            if project not in saved_projects:
+            # create a project for that day
+            if "untouched" in request.POST:
                 # create a project for that day
                 filled_model = filled_form.save(commit=False)
                 filled_model.date = date
                 filled_model.project = project
                 filled_model.save()
                 filled_form.save_m2m()
-            else:
-                # update a project for that day
+            # update a project for that day
+            elif "saved" in request.POST:
                 for saved_project in saved_projects_for_the_day:
-                    if saved_project.project == project:
+                    if saved_project.id == int(request.POST.get("project_id")):
                         saved_project.employee.set(request.POST.getlist("employee"))
                         saved_project.vehicle.set(request.POST.getlist("vehicle"))
                         saved_project.comment = request.POST["comment"]
@@ -121,6 +150,7 @@ def date(request, year, month, day):
             previous_day = that_day + datetime.timedelta(-1)
 
             return redirect("date", previous_day.year, previous_day.month, previous_day.day)
+
 
     context = {"year_": year, "month_": month, "day_": day, "saved_projects_for_the_day": saved_projects_for_the_day,
                "untouched_projects": untouched_projects, "date_bound_project_form": date_bound_project_form,

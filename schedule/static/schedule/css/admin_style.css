@@ -207,5 +207,8 @@ a{
   display: inline-block;
   width: auto;
   border-radius: 5px;
+  white-space: nowrap;
+  position: absolute;
+  z-index: 999;
 }
 

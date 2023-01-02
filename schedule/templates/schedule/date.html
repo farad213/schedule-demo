@@ -33,13 +33,14 @@ Fugro - Beosztás - Dátum
     {% for project, project_form in saved_projects_and_forms %}
     <div class="saved_project project">
         <div class="form_table_wrapper">
-        <div class="project_title"><span>{{ project.project }}</span></div>
+        <div class="project_title"><span>{{ project.project.project }}</span></div>
         <form method="POST" class="project_form" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}" data-partial_save-url="{% url 'ajax_partial_save' %}">
             {% csrf_token %}
+            <input type="hidden" name="saved">
+            <input type="hidden" name="project_name" value="{{project.project}}">
+            <input type="hidden" name="project_id" value="{{project.id}}">
 
-            <input type="hidden" name="project_name" value="{{project}}">
-
-            {% if project.hasSubproject %}
+            {% if project.project.hasSubproject %}
                 <div class="label">{{ project_form.subproject.label }}</div>
                 <div class="field">{{ project_form.subproject }}</div>
                 <div class="label">{{ project_form.artifact.label }}</div>
@@ -55,22 +56,23 @@ Fugro - Beosztás - Dátum
             <div class="field">{{ project_form.comment }}</div>
 
 
-            {% if project.hasSubproject %}
+            {% if project.project.hasSubproject %}
                 <div id="response_table"></div>
             {% endif %}
             </div>
                 <div class="buttons_flex">
-            {% if not project.hasSubproject %}
+            {% if not project.project.hasSubproject %}
                 <button class="button-68 project_save" type="submit">Save</button>
             {% endif %}
         </form>
         <form method="POST">
             {% csrf_token %}
-            <input type="hidden" name="delete" value="{{project}}">
+            <input type="hidden" name="delete" value="{{project.project}}">
+            <input type="hidden" name="project_id" value="{{project.id}}">
             <button class="button-69 project_save delete_button" type="submit">Delete</button></div>
         </form>
-        {% if project.hasSubproject %}
-          <button id="partial_save" class="button-68 project_save" type="submit" data-project-name="{{project}}">Update</button>
+        {% if project.project.hasSubproject %}
+          <button name="update" id="partial_save" class="button-68 project_save" type="submit" data-project-name="{{project.project}}">Update</button>
         {% endif %}
     </div>
     <br>
@@ -83,7 +85,7 @@ Fugro - Beosztás - Dátum
         <div class="project_title"><span>{{ project.project }}</span></div>
         <form method="POST" class="project_form" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}" data-partial_save-url="{% url 'ajax_partial_save' %}">
             {% csrf_token %}
-
+                <input type="hidden" name="untouched">
                 <input type="hidden" name="project_name"  value="{{project}}">
                  {% if project.hasSubproject %}
                     <div class="label">{{ date_bound_project_form.subproject.label }}</div>
