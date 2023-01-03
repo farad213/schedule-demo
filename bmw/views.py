@@ -3,6 +3,7 @@ from .forms import Length_form, Buildings_form
 from .models import BuildingsTKB, BuildingsTU, BuildingsTEM, BuildingsTMO
 import pandas as pd
 from django.contrib.auth.decorators import user_passes_test, login_required
+import os
 
 def BMW_group_check(user):
     return user.groups.filter(name='BMW').exists()
