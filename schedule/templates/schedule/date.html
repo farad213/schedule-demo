@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% extends "bmw/base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %}
 Fugro - Beosztás - Dátum
@@ -34,7 +35,7 @@ Fugro - Beosztás - Dátum
     <div class="saved_project project">
         <div class="form_table_wrapper">
         <div class="project_title"><span>{{ project.project.project }}</span></div>
-        <form method="POST" class="project_form" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}" data-partial_save-url="{% url 'ajax_partial_save' %}">
+        <form method="POST" class="project_form js_form" data-hasSubproject="{{project.project.hasSubproject}}" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}" data-partial_save-url="{% url 'ajax_partial_save' %}">
             {% csrf_token %}
             <input type="hidden" name="saved">
             <input type="hidden" name="project_name" value="{{project.project}}">
@@ -42,11 +43,11 @@ Fugro - Beosztás - Dátum
 
             {% if project.project.hasSubproject %}
                 <div class="label">{{ project_form.subproject.label }}</div>
-                <div class="field">{{ project_form.subproject }}</div>
+                <div class="field">{{ project_form.subproject|add_class:"select2" }}</div>
                 <div class="label">{{ project_form.artifact.label }}</div>
-                <div class="field">{{ project_form.artifact }}</div>
+                <div class="field">{{ project_form.artifact|add_class:"select2" }}</div>
                 <div class="label">{{ project_form.profile.label }}</div>
-                <div class="field">{{ project_form.profile }}</div>
+                <div class="field">{{ project_form.profile|add_class:"select2" }}</div>
             {% endif %}
             <div class="label">{{ project_form.employee.label }}</div>
             <div class="field">{{ project_form.employee }}</div>
@@ -83,17 +84,17 @@ Fugro - Beosztás - Dátum
     {% for project in untouched_projects %}
     <div class="unsaved_project project">
         <div class="project_title"><span>{{ project.project }}</span></div>
-        <form method="POST" class="project_form" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}" data-partial_save-url="{% url 'ajax_partial_save' %}">
+        <form method="POST" class="project_form js_form" data-hasSubproject="{{project.hasSubproject}}" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}" data-partial_save-url="{% url 'ajax_partial_save' %}">
             {% csrf_token %}
                 <input type="hidden" name="untouched">
                 <input type="hidden" name="project_name"  value="{{project}}">
                  {% if project.hasSubproject %}
                     <div class="label">{{ date_bound_project_form.subproject.label }}</div>
-                    <div class="field">{{ date_bound_project_form.subproject }}</div>
+                    <div class="field">{{ date_bound_project_form.subproject|add_class:"select2" }}</div>
                     <div class="label">{{ date_bound_project_form.artifact.label }}</div>
-                    <div class="field">{{ date_bound_project_form.artifact }}</div>
+                    <div class="field">{{ date_bound_project_form.artifact|add_class:"select2" }}</div>
                     <div class="label">{{ date_bound_project_form.profile.label }}</div>
-                    <div class="field">{{ date_bound_project_form.profile }}</div>
+                    <div class="field">{{ date_bound_project_form.profile|add_class:"select2" }}</div>
                 {% endif %}
                 <div class="label">{{ date_bound_project_form.employee.label }}</div>
                 <div class="field">{{ date_bound_project_form.employee }}</div>

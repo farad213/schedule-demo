@@ -70,15 +70,7 @@ textarea{
     margin: 5px;
 }
 
-#id_subproject{
-    width: 20ch;
-}
-
-#id_artifact{
-    width: 20ch;
-}
-
-#id_profile{
+.select2{
     width: 20ch;
 }
 

@@ -173,15 +173,12 @@ def profiles(request):
 
 
 def partial_save(request):
-    date = request.GET.get("date").split(".")
-    date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
-    date = Date.objects.get(date=date)
-    if not DateBoundWithProject.objects.filter(date=date):
-        context = {}
-        return render(request, 'schedule/ajax/partial_save.html', context={"context": context})
-    project = Project.objects.get(project=request.GET.get("project_name"))
-    project = DateBoundWithProject.objects.get(date=date, project=project)
+    project_id = int(request.GET.get("project_id"))
+    project = DateBoundWithProject.objects.get(pk=project_id)
+
+    # click on update button(can save profiles, employees, vehicles, comments)
     if not request.GET.get("r_type"):
+        print(request.GET)
         project.profile.add(*request.GET.getlist("profile[]"))
         if request.GET.get("employee[]"):
             project.employee.set(request.GET.getlist("employee[]"))
@@ -193,6 +190,7 @@ def partial_save(request):
             project.comment = request.GET.get("comment")
             project.save()
 
+    # clicks on add/remove icons
     elif request.GET.get("r_type") == "add or remove":
         id = request.GET.get("id")
         id_list = id.split("_")
@@ -201,6 +199,7 @@ def partial_save(request):
         elif id_list[0] == "remove":
             project.profile.remove(id_list[-1])
 
+    # building context dict
     artifacts = set()
     subprojects = set()
     for profile in project.profile.all():
@@ -217,7 +216,6 @@ def partial_save(request):
         for profile in artifact.profile_set.all():
             if profile not in context[artifact.subproject][artifact]:
                 context[artifact.subproject][artifact].update({profile: "inactive"})
-
     return render(request, 'schedule/ajax/partial_save.html', context={"context": context})
 
 
