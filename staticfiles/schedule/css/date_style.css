@@ -1,0 +1,157 @@
+
+body{
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    color: white;
+}
+
+.select2-container--default{
+   color: black;
+}
+
+.background{
+    background-image: linear-gradient(rgba(60,60,60,0.5), rgba(60,60,60,0.5)),
+        url(../images/background.jpg);
+    min-height: 100vh;
+    background-size: cover;
+    background-position: bottom;
+}
+
+.project{
+    background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
+    margin: 20px;
+    height: fit-content;
+}
+
+.project_title{
+    width: fit-content;
+    font-size: 40px;
+    font-weight: 500;
+    padding: 15px;
+    margin : 15px;
+}
+
+.saved_project .project_title{
+    background: linear-gradient(rgba(60,160,60,0.4), rgba(60,160,60,0.2));
+}
+
+.unsaved_project .project_title{
+    background: linear-gradient(rgba(160,60,60,0.4), rgba(160,60,60,0.2));
+}
+
+textarea{
+    width: 100%;
+    height: 50px;
+    padding: 5px 5px;
+    box-sizing: border-box;
+    color: white;
+    border: 0px;
+    border-radius: 4px;
+    background: linear-gradient(rgba(160,160,60,0.5), rgba(160,160,60,0.5));
+    font: inherit;
+    font-size: 15px;
+}
+
+.projects{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+
+#id_vehicle{
+    display: flex;
+    margin: 5px;
+}
+
+#id_employee{
+    display: flex;
+    margin: 5px;
+}
+
+.select2{
+    width: 20ch;
+}
+
+.label{
+    margin: 5px;
+    font-weight: 500;
+    font-size: 19px;
+}
+
+.project_save{
+    padding: 7px 18px;
+    margin: 3px;
+}
+
+.title{
+    font-size: 40px;
+    font-weight: 500;
+    background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
+    width: 300px;
+    text-align: center;
+    margin: 20px 0px 0px 0px;
+    padding: 10px;
+}
+
+.title_parent{
+    display: flex;
+    justify-content: center;
+}
+
+.buttons_flex{
+    display: flex;
+}
+
+.nav_menu{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button{
+    display: inline;
+}
+
+table{
+    margin-top: 20px;
+}
+
+table, th, td{
+    border: 1px solid grey;
+    border-collapse: collapse;
+    color: white;
+}
+
+.project_data{
+    background: linear-gradient(rgba(60,160,60,0.4), rgba(60,160,60,0.4));
+}
+
+.categories{
+    background: linear-gradient(rgba(160,160,60,0.2), rgba(160,160,60,0.2));
+}
+
+.odd, .artifact{
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2));
+}
+
+.even{
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5));
+}
+
+.inactive td{
+    color: grey;
+}
+
+.add, .remove{
+    cursor: pointer;
+}
+
+.done_btn{
+    background: olive;
+}
+
+#done_show{
+    visibility: hidden;
+}

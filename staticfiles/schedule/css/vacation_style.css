@@ -1,14 +1,14 @@
 .background{
     background-image: linear-gradient(rgba(60,60,60,0.5), rgba(60,60,60,0.5)),
-        url(../images/buildings.jpg);
+        url(../images/background.jpg);
+    min-height: 100vh;
     background-size: cover;
-    background-position: center;
-    height: 100vh;
+    background-position: bottom;
 }
 
 .text-center{
 	color:#fff;
-	text-transform:uppercase;
+
     font-size: 60px;
     margin: -50px 0 80px 0;
     display: block;
@@ -58,7 +58,6 @@
 }
 
 .button-37 {
-  display:block;
   background-color: #13aa52;
   border: 1px solid #13aa52;
   border-radius: 4px;
@@ -66,12 +65,11 @@
   box-sizing: border-box;
   color: #fff;
   cursor: pointer;
-  font-size: 40px;
+  font-size: 20px;
   font-weight: 400;
   outline: none;
   outline: 0;
   padding: 10px 25px;
-  margin-top: 15px;
   text-align: center;
   transform: translateY(0);
   transition: transform 150ms, box-shadow 150ms;
@@ -85,39 +83,34 @@
   transform: translateY(-2px);
 }
 
+.large-datepicker {
+  width: 400px!important;
+  height: 450px!important;
+  font-size: 24px!important;
+  line-height: 32px!important;
+}
+
+
+.bad_dates{
+    color: red;
+    padding: 20px;
+}
+
+.success{
+    color: green;
+    padding: 20px;
+    font-size: 20px;
+}
+
+
+
+#submit_vacation{
+     display: block;
+    margin: 20px auto;
+}
+
 @media (min-width: 768px) {
   .button-37 {
     padding: 10px 30px;
   }
-}
 
-.radio_buttons{
-    display: inline;
-    color: grey;
-    font-size: 2rem;
-}
-
-#id_building_0{
-    width: 2rem;
-    height: 2rem;
-}
-
-#id_building_1{
-    width: 2rem;
-    height: 2rem;
-}
-
-#id_building_0{
-    width: 2rem;
-    height: 2rem;
-}
-
-#id_building_2{
-    width: 2rem;
-    height: 2rem;
-}
-
-#id_building_3{
-    width: 2rem;
-    height: 2rem;
-}

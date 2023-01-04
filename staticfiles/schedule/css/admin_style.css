@@ -1,0 +1,214 @@
+
+body{
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    color: white;
+}
+
+.background{
+    background-image: linear-gradient(rgba(60,60,60,0.5), rgba(60,60,60,0.5)),
+        url(../images/background.jpg);
+    min-height: 100vh;
+    background-size: cover;
+    background-position: bottom;
+}
+
+.calendar{
+    display: flex;
+    justify-content: space-around;
+}
+
+.month{
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(rgba(60,60,60,0.6), rgba(60,60,60,0.6));
+    padding: 20px;
+    align-items: center;
+}
+
+.week{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.day{
+    margin: 10px;
+    width: max(170px, 11vw);
+    height: 100px;
+    border-radius: 3px;
+}
+
+.current_month{
+    background: linear-gradient(rgba(160,60,60,0.8), rgba(60,60,60,0.8));
+}
+
+.not_current_month{
+    background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
+}
+
+.text{
+    margin: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+    display: flex;
+    height: 90%;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+.nav_buttons{
+    display: flex;
+    flex-direction: row;
+}
+
+.nav_button{
+    width: 200px;
+    text-align: center;
+}
+
+.backwards, .forwards{
+    width: 100%;
+}
+
+
+.Szombat, .Vasárnap{
+    background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
+}
+
+.draft{
+    background: linear-gradient(rgba(160,160,60,0.8), rgba(60,60,60,0.8));
+}
+
+.done{
+    background: linear-gradient(rgba(60,160,60,0.8), rgba(60,60,60,0.8));
+}
+
+.date_title_wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+.date_title{
+    font-size: 35px;
+    font-weight: 700;
+    background: linear-gradient(rgba(60,60,60,0.6), rgba(60,60,60,0.6));
+    width: fit-content;
+    padding: 10px;
+}
+
+.weekdays{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.weekdays div{
+    background: linear-gradient(rgba(30,30,30,0.8), rgba(30,30,30,0.8));
+    margin: 10px;
+    padding: 10px 0px 10px 0px;
+    width: max(170px, 11vw);
+    border-radius: 3px;
+}
+
+.weekdays div span{
+    margin: 10px;
+    font-size: 22px;
+}
+
+.probaterheles.false{
+    background-image:  url(../images/probaterheles.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.inklinometer.false{
+    background-image:  url(../images/inklinometer.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.integritasvizsgalat.false{
+    background-image:  url(../images/integritasvizsgalat.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.sullyedesmeres.false{
+    background-image:  url(../images/sullyedesmeres.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.other.false{
+    background-image:  url(../images/other.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.probaterheles.true{
+    background-image:  url(../images/probaterheles_green.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.inklinometer.true{
+    background-image:  url(../images/inklinometer_green.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.integritasvizsgalat.true{
+    background-image:  url(../images/integritasvizsgalat_green.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.sullyedesmeres.true{
+    background-image:  url(../images/sullyedesmeres_green.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.other.true{
+    background-image:  url(../images/other_green.png);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+}
+
+.icons{
+    display: flex;
+    justify-content: space-between;
+}
+
+.bubble {
+  background-color: #333333;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  font-size: 12px;
+  padding: 5px;
+  margin-top: 25px;
+  display: inline-block;
+  width: auto;
+  border-radius: 5px;
+  white-space: nowrap;
+  position: absolute;
+  z-index: 999;
+}
+
