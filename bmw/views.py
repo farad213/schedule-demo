@@ -10,13 +10,11 @@ def BMW_group_check(user):
 
 
 @login_required
-@user_passes_test(BMW_group_check)
 def home(request):
     return render(request, "bmw/home.html", {})
 
 
 @login_required
-@user_passes_test(BMW_group_check)
 def jelkod(request):
 
     form = Length_form(request.POST)
@@ -28,7 +26,6 @@ def jelkod(request):
 
 
 @login_required
-@user_passes_test(BMW_group_check)
 def buildings(request):
 
     form = Buildings_form()
