@@ -86,7 +86,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = ["https://fugro.up.railway.app"]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 31536000
 STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
 LOGIN_REDIRECT_URL = "/"
