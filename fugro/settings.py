@@ -53,10 +53,10 @@ WSGI_APPLICATION = 'fugro.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': config("ENGINE"),
-        'NAME': config("NAME"),
-        "USER": config("USER"),
-        "PASSWORD": config("PASSWORD"),
-        "HOST": config("HOST"),
+        'NAME': config("PGNAME"),
+        "USER": config("PGUSER"),
+        "PASSWORD": config("PGPASSWORD"),
+        "HOST": config("PGHOST"),
         "PORT": config("PGPORT")
     }
 }
