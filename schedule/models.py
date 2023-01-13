@@ -80,7 +80,7 @@ class DateBoundWithProject(models.Model):
     comment = models.TextField(null=True, blank=True)
     subproject = models.ForeignKey(Subproject, on_delete=models.CASCADE, null=True)
     artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE, null=True)
-    profile = models.ManyToManyField(Profile, null=True, blank=True)
+    profile = models.ManyToManyField(Profile, blank=True)
 
     def __str__(self):
         return f'{self.date} {self.project}'

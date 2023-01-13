@@ -10,7 +10,7 @@ Fugro - Jelkód
 {% block content %}
 <link rel="stylesheet" href="{% static  'bmw/css/jelkod_style.css'%}">
 
-    <div class="box">
+    <div class="box" id="box" data-url="{% url 'jelkod_ajax' %}">
         <span class="text-center" id="result">{{result}}</span>
         <form>
             {% for field in form %}
@@ -18,8 +18,11 @@ Fugro - Jelkód
                 {{ field }}
             </div>
             {% endfor %}
-            <button type="submit" class="btn button-37">Számol</button>
+            <button id="calculate" type="submit" class="btn button-37">Számol</button>
         </form>
     </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'bmw/js/jelkod.js' %}"></script>
 
 {% endblock %}
