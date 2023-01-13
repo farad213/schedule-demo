@@ -1,8 +1,9 @@
 from pathlib import Path
 import os
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-l7rgj_+zs0z%$j4kd018z=qyy5@)4!8wzq$ki82bua3ral!(%v'
+SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
@@ -51,12 +52,12 @@ WSGI_APPLICATION = 'fugro.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "railway",
-        "USER": "postgres",
-        "PASSWORD": "7mdYeOtRQxFW05ri8UZC",
-        "HOST": "containers-us-west-119.railway.app",
-        "PORT": "7783"
+        'ENGINE': config("ENGINE"),
+        'NAME': config("NAME"),
+        "USER": config("USER"),
+        "PASSWORD": config("PASSWORD"),
+        "HOST": config("HOST"),
+        "PORT": config("PORT")
     }
 }
 
