@@ -4,7 +4,7 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
@@ -86,7 +86,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = ["https://fugro.up.railway.app"]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 31536000
 STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
