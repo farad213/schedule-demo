@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .forms import Length_form, Buildings_form
-from .models import BuildingsTKB, BuildingsTU, BuildingsTEM, BuildingsTMO
+from .models import BuildingsTKB, BuildingsTU, BuildingsTEM, BuildingsTMO, JelkodVVS, JelkodCCS
 import pandas as pd
 from django.contrib.auth.decorators import user_passes_test, login_required
 import os
@@ -16,34 +16,64 @@ def home(request):
 
 @login_required
 def jelkod(request):
-
     form = Length_form(request.POST)
-    if "ccs" in request.GET and "vvs" in request.GET:
-        result = get_result(ccs=request.GET["ccs"], vvs=request.GET["vvs"])
-        return render(request, "bmw/jelkod.html", {"form": form, "result": result})
-
     return render(request, "bmw/jelkod.html", {"form": form})
 
 
 @login_required
+def jelkod_ajax(request):
+    # ccs and vvs are in request
+    if request.GET["ccs"] and request.GET["vvs"]:
+        ccs = request.GET["ccs"]
+        vvs = request.GET["vvs"]
+        #both ccs and vvs are valid
+        if JelkodCCS.objects.filter(notation=ccs) and JelkodVVS.objects.filter(notation=vvs):
+            ccs_length = JelkodCCS.objects.get(notation=ccs).length
+            vvs_length = JelkodVVS.objects.get(notation=vvs).length
+            result_str = f"{ccs} - {vvs} = {round(vvs_length-ccs_length, 2)}"
+        # ccs and vvs are not valid
+        elif not JelkodCCS.objects.filter(notation=ccs) and not JelkodVVS.objects.filter(notation=vvs):
+            result_str = "Helytelen CCS és VVS"
+        # invalid ccs
+        elif not JelkodCCS.objects.filter(notation=ccs):
+            result_str = "Helytelen CCS"
+        # invalid vvs
+        elif not JelkodVVS.objects.filter(notation=vvs):
+            result_str = "Helytelen VVS"
+        return render(request, "bmw/ajax/jelkod.html",  {"result": result_str})
+
+    # ccs and vvs are not in request
+    elif not request.GET["ccs"] and not request.GET["vvs"]:
+        result_str = "Hiányzó CCS és VVS"
+    # ccs is not in request
+    elif not request.GET["ccs"]:
+        result_str = "Hiányzó CCS"
+    # vvs is not in request
+    elif not request.GET["vvs"]:
+        result_str = "Hiányzó VVS"
+    return render(request, "bmw/ajax/jelkod.html", {"result": result_str})
+
+@login_required
 def buildings(request):
-
     form = Buildings_form()
-    if "sorszam" in request.GET:
-        building = request.GET["building"]
-        sorszam = request.GET["sorszam"]
-        if sorszam:
-            form = Buildings_form(initial={"building": building})
-            instance = globals()[f"Buildings{building}"].objects.filter(sorszam=sorszam)
-            if instance:
-                instance = instance[0]
-                szerkezeti_hossz = instance.szerkezeti_hossz
-                return_str= f"{sorszam} - {building}: {szerkezeti_hossz}"
-                return render(request, "bmw/buildings.html", {"form": form, "result": return_str})
-
     return render(request, "bmw/buildings.html", {"form": form})
 
-
+@login_required
+def buildings_ajax(request):
+    print(request.GET)
+    if request.GET["sorszam"]:
+        building = request.GET["building"]
+        sorszam = request.GET["sorszam"]
+        instance = globals()[f"Buildings{building}"].objects.filter(sorszam=sorszam)
+        if instance:
+            instance = instance[0]
+            szerkezeti_hossz = instance.szerkezeti_hossz
+            return_str = f"{sorszam} - {building}: {szerkezeti_hossz}"
+        else:
+            return_str = "Helytelen sorszám"
+    else:
+        return_str = "Hiányzó sorszám"
+    return render(request, "bmw/ajax/buildings.html", {"result": return_str})
 
 #NOT VIEWS
 
