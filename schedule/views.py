@@ -7,7 +7,7 @@ from django.utils import timezone
 
 
 def Monitoring_group_check(user):
-    return user.groups.filter(name='Schedule - Monitoring').exists()
+    return user.groups.filter(name='Schedule - Monitoring').exists() or user.is_superuser
 
 
 @user_passes_test(Monitoring_group_check)
@@ -245,11 +245,12 @@ def user_calendar(request, year=datetime.date.year, month=datetime.date.month):
     active_days = []
     for week in cal:
         for day in week:
-            date = Date.objects.get(date=day[8])
-            projects_for_specific_day = DateBoundWithProject.objects.filter(date=date)
-            for project in projects_for_specific_day:
-                if user in project.employee.all():
-                    active_days.append(day[3])
+            if Date.objects.filter(date=day[8]):
+                date = Date.objects.get(date=day[8])
+                projects_for_specific_day = DateBoundWithProject.objects.filter(date=date)
+                for project in projects_for_specific_day:
+                    if user in project.employee.all():
+                        active_days.append(day[3])
 
     month_str = str(month)
     context = {"cal": cal, "year": year, "month_str": month_str, "active_days": active_days}

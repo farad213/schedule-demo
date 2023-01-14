@@ -58,7 +58,6 @@ def buildings(request):
 
 @login_required
 def buildings_ajax(request):
-    print(request.GET)
     if request.GET["sorszam"]:
         building = request.GET["building"]
         sorszam = request.GET["sorszam"]

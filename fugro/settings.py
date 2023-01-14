@@ -4,7 +4,7 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
@@ -53,11 +53,11 @@ WSGI_APPLICATION = 'fugro.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': config("ENGINE"),
-        'NAME': config("NAME"),
-        "USER": config("USER"),
-        "PASSWORD": config("PASSWORD"),
-        "HOST": config("HOST"),
-        "PORT": config("PORT")
+        'NAME': config("PGDATABASE"),
+        "USER": config("PGUSER"),
+        "PASSWORD": config("PGPASSWORD"),
+        "HOST": config("PGHOST"),
+        "PORT": config("PGPORT")
     }
 }
 
@@ -83,10 +83,10 @@ USE_I18N = True
 USE_TZ = True
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-CSRF_TRUSTED_ORIGINS = ["https://development-production.up.railway.app"]
+CSRF_TRUSTED_ORIGINS = ["https://fugro.up.railway.app"]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+SECURE_HSTS_SECONDS = 31536000
 STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"

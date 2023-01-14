@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'bmw/images/favicon.ico' %}">
     <link rel="stylesheet" href="{% static  'bmw/css/base_style.css'%}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -33,6 +34,9 @@
                           <div class="dropdown-content">
                             <a href="{% url 'password_change' %}">Change password</a>
                             <a href="{% url 'vacation' %}">Vacation days</a>
+                              {% if user.is_staff or user.is_superuser %}
+                              <a href="{% url 'admin:index' %}">Django admin</a>
+                              {% endif %}
                           </div>
                         </div>
                         <a href="{% url 'logout' %}">
