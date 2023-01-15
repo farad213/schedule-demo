@@ -194,7 +194,7 @@ header{
 /* Links inside the dropdown */
 .dropdown-content a {
   color: white;
-padding: 12px 16px;
+  padding: 12px 16px;
   text-decoration: none;
   display: block;
 }
@@ -208,4 +208,12 @@ color: black;
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
   display: block;
+}
+
+#dropdown_nav a{
+    margin: 0;
+}
+
+#dropdown_nav a:hover{
+    background-color: #fddb3a;
 }

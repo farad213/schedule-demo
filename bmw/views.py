@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from .forms import Length_form, Buildings_form, QuickReportForm
-from .models import BuildingsTKB, BuildingsTU, BuildingsTEM, BuildingsTMO, JelkodVVS, JelkodCCS, Technician, Customer
+from .models import JelkodVVS, JelkodCCS, Technician, Customer
 from django.contrib.auth.decorators import user_passes_test, login_required
-import datetime, os
+import datetime, shutil, os
 from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Mm
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse
 from concurrent.futures import ThreadPoolExecutor, wait
 
 
@@ -87,6 +87,18 @@ def quickreport(request):
     context = {"form": form}
     if request.method == "GET":
         if "quickreport" in request.GET:
+
+            directory = 'bmw/download'
+            for filename in os.listdir(directory):
+                file_path = os.path.join(directory, filename)
+                try:
+                    if os.path.isfile(file_path) or os.path.islink(file_path):
+                        os.unlink(file_path)
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)
+                except Exception as e:
+                    print('Failed to delete %s. Reason: %s' % (file_path, e))
+
             print(request.GET)
             language = request.GET["language"]
             customer = request.GET["customer"]
@@ -105,12 +117,17 @@ def quickreport(request):
                     profile_pair = list(reversed([min(profile_pair), max(profile_pair)]))
                 profiles_sorted.append(profile_pair)
 
+            if request.GET["building"] == "Other":
+                building = request.GET["custom_building"]
+            else:
+                building = request.GET["building"]
+
             context = {"company": customer_obj.company,
                        "customer": customer_obj.name,
                        "address_street": customer_obj.address_1,
                        "address_town": customer_obj.address_2,
                        "measurement_date": request.GET["date_of_measurement"].replace("-", "."),
-                       "building": request.GET["building"],
+                       "building": building,
                        "technician": technician_obj.name,
                        "technician_tel": technician_obj.phone_no,
                        "technician_email": technician_obj.email,
@@ -147,9 +164,6 @@ def quickreport(request):
                 response = FileResponse(file)
                 response['Content-Disposition'] = f'attachment; filename="{file_name}.docx"'
                 return response
-
-
-
 
 
             elif language == "EN":

@@ -9,20 +9,44 @@ Fugro - Gyorsjelentés
 
 {% block content %}
 <link rel="stylesheet" href="{% static  'bmw/css/quickreport_style.css'%}">
-
-<form id="form">
-    <input type="hidden" name="quickreport">
-    <div class="language_div">{{ form.language.label }}: {{ form.language }}</div>
-    <div class="customer_div">{{ form.customer.label }}: {{ form.customer }}</div>
-    <div class="date_of_measurement_div">{{ form.date_of_measurement.label }}: {{ form.date_of_measurement }}</div>
-    <div class="technician_div">{{ form.technician.label }}: {{ form.technician }}</div>
-    <div class="building_div">{{ form.building.label }}: {{ form.building }}</div>
-    <div class="comment_div">{{ form.comment }}</div>
-    <div class="profiles">{{ form.profile_from }} - {{ form.profile_to }}</div>
-    <input type="button" id="add_profile" value="Add Profile">
-    <button type="submit">Submit</button>
-</form>
-
+<div class="box_wrapper">
+<div class="box" id="box">
+    <form id="form">
+        <div class="wrapper">
+            <div class="form_wrapper">
+                <input type="hidden" name="quickreport">
+                <div class="language_div filed_wrapper">
+                    <div class="field">{{ form.language }}</div>
+                </div>
+                <div class="technician_div filed_wrapper">
+                    <div class="field">{{ form.technician }}</div>
+                </div>
+                <div class="customer_div filed_wrapper">
+                    <div class="field">{{ form.customer }}</div>
+                </div>
+                <div class="date_of_measurement_div filed_wrapper">
+                    <div class="field">{{ form.date_of_measurement }}</div>
+                </div>
+                <div class="building_div filed_wrapper">
+                    <div class="field">{{ form.building }}</div>
+                </div>
+                <div class="comment_div">{{ form.comment }}</div>
+                <div class="profiles">{{ form.profile_from }} - {{ form.profile_to }}</div>
+                <input class="button-3" type="button" id="add_profile" value="Add Profile">
+            </div>
+            <div class="dl_buttons">
+                <div class="word">
+                    <button type="submit"></button>
+                </div>
+                <div class="pdf">
+                    <button type="submit" disabled></button>
+                    <div class="wip-bubble">Work in progress, disabled</div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="{% static 'bmw/js/quickreport.js' %}"></script>

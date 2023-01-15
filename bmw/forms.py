@@ -27,10 +27,10 @@ class CustomerChoiceField(forms.ModelChoiceField):
         return obj.name
 
 class QuickReportForm(forms.Form):
-    language = forms.ChoiceField(choices=[("HU", "HU"), ("EN", "EN")])
+    language = forms.ChoiceField(choices=[("HU", "HU"), ("EN", "EN")], widget=forms.RadioSelect)
     customer = CustomerChoiceField(queryset=Customer.objects.all(), empty_label=None)
     date_of_measurement = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
-    technician = TechnicianChoiceField(queryset=Technician.objects.all(), empty_label=None)
+    technician = TechnicianChoiceField(queryset=Technician.objects.all(), widget=forms.RadioSelect)
     building = forms.ChoiceField(choices=[("TEM", "TEM"), ("TMO", "TMO"), ("TKB", "TKB"), ("TU", "TU"), ("Other", "Other")])
     comment = forms.CharField(required=False, widget=forms.Textarea)
     profile_from = forms.IntegerField(required=False)
@@ -39,3 +39,5 @@ class QuickReportForm(forms.Form):
 
     profile_from.widget.attrs = {"class": "profile_from"}
     profile_to.widget.attrs = {"class": "profile_to"}
+    comment.widget.attrs = {"placeholder": "Komment"}
+    date_of_measurement.widget.attrs = {"placegolder": "Mérés napja"}
