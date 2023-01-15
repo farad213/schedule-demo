@@ -1,0 +1,11 @@
+.background{
+    background-image: linear-gradient(rgba(60,60,60,0.5), rgba(60,60,60,0.5)),
+        url(../images/background.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+body{
+    color: white;
+}

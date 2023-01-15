@@ -18,6 +18,7 @@
                     <a href="{% url 'home' %}">Home</a>
                     <a href="{% url 'jelkod' %}">Jelkód</a>
                     <a href="{% url 'buildings' %}">Épületek</a>
+                    <a href="{% url 'quickreport' %}">Gyorsjelentés</a>
                     {% if user.is_authenticated %}
                         {% now "Y" as year %}
                         {% now "m" as month %}
