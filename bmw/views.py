@@ -19,6 +19,7 @@ def home(request):
 
 
 @login_required
+@user_passes_test(BMW_group_check)
 def jelkod(request):
     form = Length_form(request.POST)
     return render(request, "bmw/jelkod.html", {"form": form})
@@ -59,6 +60,7 @@ def jelkod_ajax(request):
 
 
 @login_required
+@user_passes_test(BMW_group_check)
 def buildings(request):
     form = Buildings_form()
     return render(request, "bmw/buildings.html", {"form": form})
@@ -81,6 +83,7 @@ def buildings_ajax(request):
     return render(request, "bmw/ajax/buildings.html", {"result": return_str})
 
 @login_required
+@user_passes_test(BMW_group_check)
 def quickreport(request):
 
     form = QuickReportForm()
@@ -132,8 +135,7 @@ def quickreport(request):
                        "technician_tel": technician_obj.phone_no,
                        "technician_email": technician_obj.email,
                        "date": datetime.date.today().strftime("%Y.%m.%d"),
-                       "comment": request.GET["comment"],
-                       "technician_title": technician_obj.position}
+                       "comment": request.GET["comment"]}
 
             if language == "HU":
                 template = DocxTemplate("bmw/quickreport/HU_template.docx")
@@ -153,7 +155,8 @@ def quickreport(request):
                 context.update({"technician_signature": technician_signature,
                                 "title": customer_obj.position_HU,
                                 "profiles": profiles_text,
-                                "no_of_profiles": profiles_counter})
+                                "no_of_profiles": profiles_counter,
+                                "technician_title": technician_obj.position_HU})
                 template.render(context)
                 file_name = f"FCH-20091_SIT_Debrecen_BMW - {context['building']}_{context['measurement_date'].replace('.', '')}_HBM_quickreport_{language}.docx"
                 path = f"bmw/download/{file_name}"
@@ -184,7 +187,8 @@ def quickreport(request):
                 context.update({"technician_signature": technician_signature,
                                 "title": customer_obj.position_EN,
                                 "profiles": profiles_text,
-                                "no_of_profiles": profiles_counter})
+                                "no_of_profiles": profiles_counter,
+                                "technician_title": technician_obj.position_EN})
                 template.render(context)
                 file_name = f"FCH-20091_SIT_Debrecen_BMW - {context['building']}_{context['measurement_date'].replace('.', '')}_HBM_quickreport_{language}.docx"
                 path = f"bmw/download/{file_name}"

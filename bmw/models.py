@@ -47,7 +47,8 @@ class Technician(models.Model):
     name = models.CharField(max_length=100)
     phone_no = models.CharField(max_length=25)
     email = models.CharField(max_length=100)
-    position = models.CharField(max_length=50)
+    position_HU = models.CharField(max_length=50)
+    position_EN = models.CharField(max_length=50)
     signature = models.ImageField(upload_to="images/")
 
     def __str__(self):
