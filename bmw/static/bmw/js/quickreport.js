@@ -17,7 +17,7 @@ $(document).ready(function() {
      // Add event listener to the add_profile button
     $("#add_profile").on("click", function() {
          $(this).before(`
-            <div>
+            <div class="profiles">
                 <input type="number" class="profile_from" name="profile_from"> - <input type="number" class="profile_to" name="profile_to">
             </div>
         `);

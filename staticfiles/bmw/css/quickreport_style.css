@@ -154,5 +154,9 @@ form input, form select, form option, form textarea{
 }
 
 .profile_from, .profile_to{
-    max-width: calc((100% - 3ch) / 2);
+    max-width: calc((100% - 1ch) / 2);
+}
+
+.profiles{
+    display: flex;
 }
