@@ -13,6 +13,7 @@ def Monitoring_group_check(user):
 @user_passes_test(Monitoring_group_check)
 @login_required
 def admin(request, year=datetime.date.year, month=datetime.date.month):
+
     if request.method == "GET":
         if "previous_month" in request.GET:
             if month > 1:
@@ -83,6 +84,7 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
     month_str = str(month)
     context = {"cal": cal, "dates_in_database": dates_in_database, "year": year, "month_str": month_str}
     return render(request=request, template_name="schedule/admin.html", context=context)
+    # return render(request=request, template_name="schedule/admin.html", context={"cal": cal})
 
 
 @user_passes_test(Monitoring_group_check)
