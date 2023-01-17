@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .forms import Length_form, Buildings_form, QuickReportForm
-from .models import JelkodVVS, JelkodCCS, Technician, Customer
+from .models import JelkodVVS, JelkodCCS, Technician, Customer, BuildingsTU, BuildingsTMO, BuildingsTEM, BuildingsTKB
 from django.contrib.auth.decorators import user_passes_test, login_required
 import datetime, shutil, os
 from docxtpl import DocxTemplate, InlineImage
@@ -66,7 +66,7 @@ def buildings(request):
     return render(request, "bmw/buildings.html", {"form": form})
 
 
-@login_required
+@login_required()
 def buildings_ajax(request):
     if request.GET["sorszam"]:
         building = request.GET["building"]
