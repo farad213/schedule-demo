@@ -218,9 +218,8 @@ color: black;
     background-color: #fddb3a;
 }
 
-@media only screen and (max-width: 700px) {
-    .navMenu{
+@media screen and (max-width: 1000px) {
+  .navMenu{
         align-self: start;
     }
 }
-
