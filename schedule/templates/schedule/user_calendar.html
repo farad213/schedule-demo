@@ -34,11 +34,13 @@ Fugro - Beosztás - {{ user }}
                                     </div>
                                 </a>
                             {% else %}
-                                 <div class="day_wrap day current_month">
+                                <a class="day_wrap disabled_a" href="">
+                                 <div class="day current_month">
                                     <div class="text">
                                         <div class="date">{{ day.0 }}</div>
                                     </div>
                                 </div>
+                                </a>
                             {% endif %}
                         {% else %}
                             {% if day.3 in active_days %}
@@ -50,11 +52,13 @@ Fugro - Beosztás - {{ user }}
                                     </div>
                                 </a>
                             {% else %}
-                                 <div class="day_wrap day not_current_month">
+                                <a class="day_wrap disabled_a" href="">
+                                 <div class="day not_current_month">
                                     <div class="text">
                                         <div class="date">{{ day.0 }}</div>
                                     </div>
                                 </div>
+                                </a>
                             {% endif %}
                         {% endif %}
                     {% endfor %}

@@ -232,14 +232,14 @@ def user_calendar(request, year=datetime.date.year, month=datetime.date.month):
                 month = 12
                 year -= 1
 
-            return redirect(admin, year=year, month=month)
+            return redirect(user_calendar, year=year, month=month)
         elif "next_month" in request.GET:
             if month < 12:
                 month += 1
             else:
                 month = 1
                 year += 1
-            return redirect(admin, year=year, month=month)
+            return redirect(user_calendar, year=year, month=month)
 
     cal = get_calendar(year, month)
 
