@@ -191,6 +191,14 @@ header{
   z-index: 1;
 }
 
+.log_out .dropdown-content{
+    right: 0;
+}
+
+#logout:hover{
+    background: rgba(250, 30, 30, 0.8);
+}
+
 /* Links inside the dropdown */
 .dropdown-content a {
   color: white;
@@ -216,6 +224,10 @@ color: black;
 
 #dropdown_nav a:hover{
     background-color: #fddb3a;
+}
+
+#BMW-dropdown{
+    cursor: pointer;
 }
 
 @media screen and (max-width: 1000px) {

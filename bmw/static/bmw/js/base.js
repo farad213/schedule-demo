@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $(".dropdown").click(function(){
+    $("#BMW-dropdown").click(function(){
       $("#dropdown_nav").toggle();
     });
 });

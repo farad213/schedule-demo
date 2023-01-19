@@ -16,7 +16,7 @@
             <header>
                 <nav class="navMenu">
                     <a href="{% url 'home' %}">Home</a>
-                    <div class="dropdown">
+                    <div id="BMW-dropdown" class="dropdown">
                           <a>BMW</a>
                           <div class="dropdown-content" id="dropdown_nav">
                             <a href="{% url 'jelkod' %}">Jelkód</a>
@@ -43,11 +43,9 @@
                               {% if user.is_staff or user.is_superuser %}
                               <a href="{% url 'admin:index' %}">Django admin</a>
                               {% endif %}
+                              <a id="logout" href="{% url 'logout' %}">Kijelentkezés</a>
                           </div>
                         </div>
-                        <a href="{% url 'logout' %}">
-                            <button class="button-69" role="button">Kijelentkezés</button>
-                        </a>
                     </div>
                 {% else %}
                     <div class="log_in">
