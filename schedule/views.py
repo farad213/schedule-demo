@@ -32,59 +32,59 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
             return redirect(admin, year=year, month=month)
 
     cal = get_calendar(year, month)
-    last_month = datetime.date(year=year, month=month, day=15) - datetime.timedelta(30)
-    next_month = datetime.date(year=year, month=month, day=15) + datetime.timedelta(30)
-    dates_in_database = Date.objects.filter(date__range=(last_month, next_month))
-
-    # appending Date model object to list
-    for week in cal:
-        for day in week:
-            if Date.objects.filter(date=day[8]):
-                date = Date.objects.get(date=day[8])
-                day.append(date)
-
-
-    # updating project status
-    for date in dates_in_database:
-        if DateBoundWithProject.objects.filter(date=date):
-            if date.state == "untouched":
-                date.state = "done"
-                date.save()
-        else:
-            date.state = "untouched"
-            date.save()
-
-        # if Date has DateBoundWithProject, updating Date with DateBoundWithProject's info
-        if DateBoundWithProject.objects.filter(date=date):
-            for project in DateBoundWithProject.objects.filter(date=date):
-                for week in cal:
-                    for day in week:
-                        if day[8] == date.date:
-                            if len(day) < 11:
-                                day.append({})
-
-                            if project.project.hasSubproject():
-                                if project.project.project in day[10].keys():
-                                    day[10][project.project.project].append(f"{project.subproject.name} - {len(project.profile.all())} cső")
-                                else:
-                                    day[10].update({project.project.project: [f"{project.subproject.name} - {len(project.profile.all())} cső"]})
-
-                            else:
-                                if project.project.project in day[10].keys():
-                                    day[10][project.project.project].append(project.comment)
-                                else:
-                                    day[10].update({project.project.project: [project.comment]})
-
-                            break
-                        continue
-                    continue
-
-
-    dates_in_database = [date.__str__() for date in dates_in_database]
-    month_str = str(month)
-    context = {"cal": cal, "dates_in_database": dates_in_database, "year": year, "month_str": month_str}
-    return render(request=request, template_name="schedule/admin.html", context=context)
-    # return render(request=request, template_name="schedule/admin.html", context={"cal": cal})
+    # last_month = datetime.date(year=year, month=month, day=15) - datetime.timedelta(30)
+    # next_month = datetime.date(year=year, month=month, day=15) + datetime.timedelta(30)
+    # dates_in_database = Date.objects.filter(date__range=(last_month, next_month))
+    #
+    # # appending Date model object to list
+    # for week in cal:
+    #     for day in week:
+    #         if Date.objects.filter(date=day[8]):
+    #             date = Date.objects.get(date=day[8])
+    #             day.append(date)
+    #
+    #
+    # # updating project status
+    # for date in dates_in_database:
+    #     if DateBoundWithProject.objects.filter(date=date):
+    #         if date.state == "untouched":
+    #             date.state = "done"
+    #             date.save()
+    #     else:
+    #         date.state = "untouched"
+    #         date.save()
+    #
+    #     # if Date has DateBoundWithProject, updating Date with DateBoundWithProject's info
+    #     if DateBoundWithProject.objects.filter(date=date):
+    #         for project in DateBoundWithProject.objects.filter(date=date):
+    #             for week in cal:
+    #                 for day in week:
+    #                     if day[8] == date.date:
+    #                         if len(day) < 11:
+    #                             day.append({})
+    #
+    #                         if project.project.hasSubproject():
+    #                             if project.project.project in day[10].keys():
+    #                                 day[10][project.project.project].append(f"{project.subproject.name} - {len(project.profile.all())} cső")
+    #                             else:
+    #                                 day[10].update({project.project.project: [f"{project.subproject.name} - {len(project.profile.all())} cső"]})
+    #
+    #                         else:
+    #                             if project.project.project in day[10].keys():
+    #                                 day[10][project.project.project].append(project.comment)
+    #                             else:
+    #                                 day[10].update({project.project.project: [project.comment]})
+    #
+    #                         break
+    #                     continue
+    #                 continue
+    #
+    #
+    # dates_in_database = [date.__str__() for date in dates_in_database]
+    # month_str = str(month)
+    # context = {"cal": cal, "dates_in_database": dates_in_database, "year": year, "month_str": month_str}
+    # return render(request=request, template_name="schedule/admin.html", context=context)
+    return render(request=request, template_name="schedule/admin.html", context={"cal": cal})
 
 
 @user_passes_test(Monitoring_group_check)

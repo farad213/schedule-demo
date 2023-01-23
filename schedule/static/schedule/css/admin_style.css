@@ -46,6 +46,10 @@ body{
     background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
 }
 
+#today{
+    background: linear-gradient(rgba(160,160,60,0.8), rgba(60,60,60,0.8));
+}
+
 .text{
     margin: 10px;
     color: white;
