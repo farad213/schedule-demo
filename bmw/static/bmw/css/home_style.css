@@ -17,7 +17,7 @@ body{
 
 :root {
   --src: url(https://images.unsplash.com/photo-1554620121-59e7f3f6e3a4?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy);
-  --size: 60vmin;
+  --size: 40vmin;
   --space: 8vmin;
   --duration: 300ms;
   --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
@@ -26,9 +26,10 @@ body{
 
 * {
   box-sizing: border-box;
+  color: white;
 }
 
-#body {
+.link-section {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -47,7 +48,6 @@ body{
 
 .title {
   --font-size: calc(var(--size) / 8);
-
   display: flex;
   align-items: center;
   position: absolute;

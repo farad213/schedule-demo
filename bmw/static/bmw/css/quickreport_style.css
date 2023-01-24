@@ -1,9 +1,9 @@
 .background{
     background-image: linear-gradient(rgba(60,60,60,0.5), rgba(60,60,60,0.5)),
-        url(../images/background.jpg);
+        url(../images/quickreport.jpg);
     min-height: 100vh;
     background-size: cover;
-    background-position: bottom;
+    background-position: center;
 }
 
 .box_wrapper{

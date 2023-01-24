@@ -11,7 +11,7 @@ Fugro
 <link rel="stylesheet" href="{% static 'bmw/css/home_style.css' %}">
 
 <section class="background">
-    <div id="body">
+    <div class="link-section">
         <a class="pic_link" href="{% url 'jelkod' %}">
             <div class="promo" style="--overlay-color: yellow">
               <div class="image-wrapper">
@@ -29,7 +29,16 @@ Fugro
               <h2 class="title" data-cta="tovább →">Épületek</h2>
             </div>
         </a>
-    </div>
+
+        <a class="pic_link" href="{% url 'quickreport' %}">
+            <div class="promo" style="--overlay-color: SpringGreen">
+              <div class="image-wrapper">
+                  <img src="{% static 'bmw/images/quickreport.jpg' %}"/>
+              </div>
+              <h2 class="title" data-cta="tovább →">Gyorsjelentés</h2>
+            </div>
+        </a>
+        </div>
 </section>
 
 {% endblock %}
