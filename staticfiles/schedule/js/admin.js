@@ -6,7 +6,7 @@ function isMobile() {
 
      $('.icons > div').on('click', function(event) {
   if (isMobile()) {
-    event.stopPropagation();
+    event.preventDefault();
   }
 });
 
