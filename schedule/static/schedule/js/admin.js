@@ -33,4 +33,15 @@ $('.day .date').each(function() {
         $(this).closest('.day').attr('id', 'today');
     }
 });
+
+ $(".toggle-days-displayed input[name='toggle-days-displayed']").click(function() {
+        if ($(this).val() === "5 nap") {
+            $(".weekend, .Szombat-display, .Vasárnap-display").css("display", "none");
+            $(".day_wrap, .weekdays div").css("margin", "10px 20px 10px 20px");
+        } else {
+            $(".weekend, .Szombat-display, .Vasárnap-display").css("display", "block");
+            $(".day_wrap, .weekdays div").css("margin", "10px");
+        }
+    });
+
 });
