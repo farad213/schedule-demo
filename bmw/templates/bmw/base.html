@@ -27,7 +27,7 @@
                     {% if user.is_authenticated %}
                         {% now "Y" as year %}
                         {% now "m" as month %}
-                        <a href="{% url 'calendar' year=year month=month %}">Calendar</a>
+                        <a href="{% url 'calendar' year=year month=month %}">Beosztás</a>
                     {% endif %}
                     {% if user.is_staff %}
                         <a href="{% url 'admin' year=year month=month %}">Admin</a>

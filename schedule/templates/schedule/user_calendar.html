@@ -10,7 +10,7 @@ Fugro - Beosztás - {{ user }}
 <link rel="stylesheet" href="{% static 'schedule/css/user_calendar_style.css' %}">
 
 <section class="background">
-    <div class="date_title_wrapper"><p class="date_title">{{request.resolver_match.kwargs.year}}.{{request.resolver_match.kwargs.month}}</p></div>
+    <div class="date_title_wrapper"><p class="date_title">Beosztás - {{request.resolver_match.kwargs.year}}.{{request.resolver_match.kwargs.month}}</p></div>
     <div class="toggle-days-displayed">
         <input type="button" name="toggle-days-displayed" value="5 nap">
         <input type="button" name="toggle-days-displayed" value="7 nap">
