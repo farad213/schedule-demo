@@ -35,9 +35,9 @@
                 </nav>
                 {% if user.is_authenticated %}
                     <div class="log_out">
-                        <div class="dropdown">
+                        <div id="user-dropdown" class="dropdown">
                           <div class="button-68">{{ user.username }}</div>
-                          <div class="dropdown-content">
+                          <div id="user-dropdown-content" class="dropdown-content">
                             <a href="{% url 'password_change' %}">Change password</a>
                             <a href="{% url 'vacation' %}">Vacation days</a>
                               {% if user.is_staff or user.is_superuser %}
