@@ -47,7 +47,7 @@ body{
 }
 
 #today{
-    background: linear-gradient(rgba(10,70,60,0.8), rgba(60,60,60,0.8));
+    background: linear-gradient(rgba(10,50,60,0.8), rgba(60,60,60,0.8));
 }
 
 .text{
@@ -155,74 +155,50 @@ input[type=button]:active {
     display: block;
 }
 
-.probaterheles.false{
-    background-image:  url(../images/probaterheles.png);
-    width: 20px;
+.probaterheles.false, .inklinometer.false, .integritasvizsgalat.false, .sullyedesmeres.false, .other.false, .probaterheles.true, .inklinometer.true, .integritasvizsgalat.true, .sullyedesmeres.true, .other.true{
+    width: 20%;
     height: 20px;
     background-size: contain;
+}
+
+.probaterheles.false{
+    background-image:  url(../images/probaterheles.png);
 }
 
 .inklinometer.false{
     background-image:  url(../images/inklinometer.png);
-    width: 20px;
-    height: 20px;
-    background-size: contain;
 }
 
 .integritasvizsgalat.false{
     background-image:  url(../images/integritasvizsgalat.png);
-    width: 20px;
-    height: 20px;
-    background-size: contain;
 }
 
 .sullyedesmeres.false{
     background-image:  url(../images/sullyedesmeres.png);
-    width: 20px;
-    height: 20px;
-    background-size: contain;
 }
 
 .other.false{
     background-image:  url(../images/other.png);
-    width: 20px;
-    height: 20px;
-    background-size: contain;
 }
 
 .probaterheles.true{
     background-image:  url(../images/probaterheles_green.png);
-    width: 20px;
-    height: 20px;
-    background-size: contain;
 }
 
 .inklinometer.true{
     background-image:  url(../images/inklinometer_green.png);
-    width: 20px;
-    height: 20px;
-    background-size: contain;
 }
 
 .integritasvizsgalat.true{
     background-image:  url(../images/integritasvizsgalat_green.png);
-    width: 20px;
-    height: 20px;
-    background-size: contain;
 }
 
 .sullyedesmeres.true{
     background-image:  url(../images/sullyedesmeres_green.png);
-    width: 20px;
-    height: 20px;
-    background-size: contain;
 }
 
 .other.true{
     background-image:  url(../images/other_green.png);
-    width: 20px;
-    height: 20px;
-    background-size: contain;
 }
 
 .probaterheles, .inklinometer, .integritasvizsgalat, .sullyedesmeres, .other{

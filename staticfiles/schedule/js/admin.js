@@ -1,4 +1,16 @@
 $( document ).ready(function() {
+
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+     $('.icons > div').on('click', function(event) {
+  if (isMobile()) {
+    event.stopPropagation();
+  }
+});
+
+
     $('.icons > div').hover(function() {
   if (this.classList.contains('true')) {
     // Get the value of the data-bubble attribute and parse it into a JavaScript array
@@ -19,6 +31,7 @@ $( document ).ready(function() {
 }, function() {
   // Remove the bubble when the mouse leaves the icon
   $(this).find('.bubble').remove();
+
 
 });
   var today = new Date();
@@ -45,3 +58,6 @@ $('.day .date').each(function() {
     });
 
 });
+
+
+
