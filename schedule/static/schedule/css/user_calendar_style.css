@@ -25,7 +25,7 @@ body{
     background: linear-gradient(rgba(60,60,60,0.6), rgba(60,60,60,0.6));
     padding: 20px;
     align-items: center;
-    width: 90%;
+    width: min(90%, 1400px);
 }
 
 .week{
@@ -41,17 +41,42 @@ body{
 .current_month{
     background: linear-gradient(rgba(160,60,60,0.8), rgba(60,60,60,0.8));
 }
+.current_month:hover{
+    background: linear-gradient(rgba(190,60,60,1), rgba(60,60,60,0.8));
+}
+
 
 .not_current_month{
     background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
 }
+.not_current_month:hover{
+    background: linear-gradient(rgba(30,30,30,1), rgba(60,60,60,0.8));
+}
+
+
 
 .active{
     background: linear-gradient(rgba(60,160,60,0.8), rgba(60,60,60,0.8));
 }
+.active:hover{
+    background: linear-gradient(rgba(60,190,60,1), rgba(60,60,60,0.8));
+}
+
+
 
 #today{
     background: linear-gradient(rgba(10,50,60,0.8), rgba(60,60,60,0.8));
+}
+#today:hover{
+    background: linear-gradient(rgba(10,90,60,1), rgba(60,60,60,0.8));
+}
+
+
+.Szombat, .Vasárnap{
+    background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
+}
+.Szombat:hover, .Vasárnap:hover{
+    background: linear-gradient(rgba(30,30,30,1), rgba(60,60,60,0.8));
 }
 
 .text{
@@ -149,10 +174,6 @@ a{
     font-size: 22px;
     width: 100%;
     display: block;
-}
-
-.disabled_a{
-    pointer-events: none;
 }
 
 .weekend, .Szombat-display, .Vasárnap-display{

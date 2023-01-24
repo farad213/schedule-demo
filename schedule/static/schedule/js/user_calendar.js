@@ -23,4 +23,8 @@ $( document ).ready(function() {
     }
 });
 
+$(".disabled_a").on("click", function(event) {
+  event.preventDefault();
+});
+
 });

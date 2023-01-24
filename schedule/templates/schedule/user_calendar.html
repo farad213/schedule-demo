@@ -34,7 +34,7 @@ Fugro - Beosztás - {{ user }}
                         {% if day.7 == month_str %}
                             {% if day.3 in active_days %}
                                 <a class="day_wrap {{day.1}}-display" href="{% url 'calendar_date' year=day.6 month=day.5 day=day.4 %}">
-                                    <div class="day current_month active">
+                                    <div class="day current_month {{day.1}} active">
                                         <div class="text">
                                             <div class="date">{{ day.0 }}</div>
                                         </div>
@@ -42,7 +42,7 @@ Fugro - Beosztás - {{ user }}
                                 </a>
                             {% else %}
                                 <a class="day_wrap {{day.1}}-display disabled_a" href="">
-                                 <div class="day current_month">
+                                 <div class="day {{day.1}} current_month">
                                     <div class="text">
                                         <div class="date">{{ day.0 }}</div>
                                     </div>
@@ -52,7 +52,7 @@ Fugro - Beosztás - {{ user }}
                         {% else %}
                             {% if day.3 in active_days %}
                                 <a class="day_wrap {{day.1}}-display" href="{% url 'calendar_date' year=day.6 month=day.5 day=day.4 %}">
-                                    <div class="day not_current_month active">
+                                    <div class="day {{day.1}} not_current_month active">
                                         <div class="text">
                                             <div class="date">{{ day.0 }}</div>
                                         </div>
@@ -60,7 +60,7 @@ Fugro - Beosztás - {{ user }}
                                 </a>
                             {% else %}
                                 <a class="day_wrap {{day.1}}-display disabled_a" href="">
-                                 <div class="day not_current_month">
+                                 <div class="day {{day.1}} not_current_month">
                                     <div class="text">
                                         <div class="date">{{ day.0 }}</div>
                                     </div>
