@@ -34,7 +34,6 @@ body{
 }
 
 .day{
-    margin: 10px;
     height: 100px;
     border-radius: 3px;
 }
@@ -51,6 +50,10 @@ body{
     background: linear-gradient(rgba(60,160,60,0.8), rgba(60,60,60,0.8));
 }
 
+#today{
+    background: linear-gradient(rgba(10,50,60,0.8), rgba(60,60,60,0.8));
+}
+
 .text{
     margin: 10px;
     color: white;
@@ -62,8 +65,50 @@ body{
     justify-content: space-between;
 }
 
+.date_title_wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+.date_title{
+    font-size: 35px;
+    font-weight: 700;
+    background: linear-gradient(rgba(60,60,60,0.6), rgba(60,60,60,0.6));
+    width: fit-content;
+    padding: 10px;
+    margin-bottom: 0px;
+}
+
+input[type=button]{
+    background-color: rgba(10,70,60,0.8);
+    font-size: 18px;
+    font-weight: 700;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+input[type=button]:hover{
+    background-color: rgba(10,70,60,1);
+}
+
+input[type=button]:active {
+    transform: translateY(2px);
+    box-shadow: inset 0 0 5px #ccc;
+}
+
+.toggle-days-displayed{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+
 .day_wrap{
-    width: calc(100% / 7);
+    flex: 1;
 }
 
 a{
@@ -95,7 +140,7 @@ a{
 .weekdays div{
     background: linear-gradient(rgba(30,30,30,0.8), rgba(30,30,30,0.8));
     margin: 0px 10px 0px 10px;
-    width: calc(100% / 7);
+    flex: 1;
     border-radius: 3px;
 }
 
@@ -108,4 +153,12 @@ a{
 
 .disabled_a{
     pointer-events: none;
+}
+
+.weekend, .Szombat-display, .Vasárnap-display{
+    display: none;
+}
+
+.day_wrap, .weekdays div{
+    margin: 10px 20px 10px 20px;
 }

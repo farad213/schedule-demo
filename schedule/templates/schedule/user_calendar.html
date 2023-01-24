@@ -10,6 +10,13 @@ Fugro - Beosztás - {{ user }}
 <link rel="stylesheet" href="{% static 'schedule/css/user_calendar_style.css' %}">
 
 <section class="background">
+    <div class="date_title_wrapper"><p class="date_title">{{request.resolver_match.kwargs.year}}.{{request.resolver_match.kwargs.month}}</p></div>
+    <div class="toggle-days-displayed">
+        <input type="button" name="toggle-days-displayed" value="5 nap">
+        <input type="button" name="toggle-days-displayed" value="7 nap">
+    </div>
+
+
     <div class="calendar">
         <div class="month">
             <div class="weekdays">
@@ -18,15 +25,15 @@ Fugro - Beosztás - {{ user }}
                 <div><span>Szerda</span></div>
                 <div><span>Csütörtök</span></div>
                 <div><span>Péntek</span></div>
-                <div><span>Szombat</span></div>
-                <div><span>Vasárnap</span></div>
+                <div class="weekend"><span>Szombat</span></div>
+                <div class="weekend"><span>Vasárnap</span></div>
             </div>
             {% for week in cal %}
                 <div class="week">
                     {% for day in week %}
                         {% if day.7 == month_str %}
                             {% if day.3 in active_days %}
-                                <a class="day_wrap" href="{% url 'calendar_date' year=day.6 month=day.5 day=day.4 %}">
+                                <a class="day_wrap {{day.1}}-display" href="{% url 'calendar_date' year=day.6 month=day.5 day=day.4 %}">
                                     <div class="day current_month active">
                                         <div class="text">
                                             <div class="date">{{ day.0 }}</div>
@@ -34,7 +41,7 @@ Fugro - Beosztás - {{ user }}
                                     </div>
                                 </a>
                             {% else %}
-                                <a class="day_wrap disabled_a" href="">
+                                <a class="day_wrap {{day.1}}-display disabled_a" href="">
                                  <div class="day current_month">
                                     <div class="text">
                                         <div class="date">{{ day.0 }}</div>
@@ -44,7 +51,7 @@ Fugro - Beosztás - {{ user }}
                             {% endif %}
                         {% else %}
                             {% if day.3 in active_days %}
-                                <a class="day_wrap" href="{% url 'calendar_date' year=day.6 month=day.5 day=day.4 %}">
+                                <a class="day_wrap {{day.1}}-display" href="{% url 'calendar_date' year=day.6 month=day.5 day=day.4 %}">
                                     <div class="day not_current_month active">
                                         <div class="text">
                                             <div class="date">{{ day.0 }}</div>
@@ -52,7 +59,7 @@ Fugro - Beosztás - {{ user }}
                                     </div>
                                 </a>
                             {% else %}
-                                <a class="day_wrap disabled_a" href="">
+                                <a class="day_wrap {{day.1}}-display disabled_a" href="">
                                  <div class="day not_current_month">
                                     <div class="text">
                                         <div class="date">{{ day.0 }}</div>
@@ -81,5 +88,7 @@ Fugro - Beosztás - {{ user }}
         </div>
     </div>
 </section>
+
+<script src="{% static 'schedule/js/user_calendar.js' %}"></script>
 
 {% endblock %}
