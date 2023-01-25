@@ -54,3 +54,7 @@ class DateBoundWithProjectForm(forms.ModelForm):
 
     def label_from_instance_vehicle(self, obj):
         return f"{obj.vehicle_name}({obj.license_plate})"
+
+class ExportDates(forms.Form):
+    start = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+    end = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))

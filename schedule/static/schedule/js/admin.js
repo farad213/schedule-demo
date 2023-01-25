@@ -59,5 +59,9 @@ $('.day .date').each(function() {
 
 });
 
-
-
+$( document ).ready(function() {
+    $("#export").click(function() {
+        start = $("#id_start").val();
+        end = $("#id_end").val();
+    });
+});

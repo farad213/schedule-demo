@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Date, Project, DateBoundWithProject, Subproject, Artifact, Profile
-from .forms import DateBoundWithProjectForm
+from .forms import DateBoundWithProjectForm, ExportDates
 import datetime
 from django.utils import timezone
 
@@ -13,7 +13,6 @@ def Monitoring_group_check(user):
 @user_passes_test(Monitoring_group_check)
 @login_required
 def admin(request, year=datetime.date.year, month=datetime.date.month):
-
     if request.method == "GET":
         if "previous_month" in request.GET:
             if month > 1:
@@ -43,7 +42,6 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
                 date = Date.objects.get(date=day[8])
                 day.append(date)
 
-
     # updating project status
     for date in dates_in_database:
         if DateBoundWithProject.objects.filter(date=date):
@@ -65,9 +63,11 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
 
                             if project.project.hasSubproject():
                                 if project.project.project in day[10].keys():
-                                    day[10][project.project.project].append(f"{project.subproject.name} - {len(project.profile.all())} cső")
+                                    day[10][project.project.project].append(
+                                        f"{project.subproject.name} - {len(project.profile.all())} cső")
                                 else:
-                                    day[10].update({project.project.project: [f"{project.subproject.name} - {len(project.profile.all())} cső"]})
+                                    day[10].update({project.project.project: [
+                                        f"{project.subproject.name} - {len(project.profile.all())} cső"]})
 
                             else:
                                 if project.project.project in day[10].keys():
@@ -79,10 +79,16 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
                         continue
                     continue
 
-
     dates_in_database = [date.__str__() for date in dates_in_database]
     month_str = str(month)
-    context = {"cal": cal, "dates_in_database": dates_in_database, "year": year, "month_str": month_str}
+
+
+    today = datetime.datetime.today()
+    start = today - datetime.timedelta(days=today.weekday())
+    end = start + datetime.timedelta(days=6)
+    export_dates = ExportDates(initial={"start": start, "end": end})
+    context = {"cal": cal, "dates_in_database": dates_in_database, "year": year, "month_str": month_str,
+               "export_dates": export_dates}
     return render(request=request, template_name="schedule/admin.html", context=context)
     # return render(request=request, template_name="schedule/admin.html", context={"cal": cal})
 
@@ -152,7 +158,6 @@ def date(request, year, month, day):
             previous_day = that_day + datetime.timedelta(-1)
 
             return redirect("date", previous_day.year, previous_day.month, previous_day.day)
-
 
     context = {"year_": year, "month_": month, "day_": day, "saved_projects_for_the_day": saved_projects_for_the_day,
                "untouched_projects": untouched_projects, "date_bound_project_form": date_bound_project_form,
