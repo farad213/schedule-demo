@@ -25,7 +25,7 @@ Fugro - Beosztás - {{ user }}
                         <label>Autó:</label>
                         <span>
                             {% for vehicle in c.vehicles %}
-                                <li>{{ vehicle }}</li>
+                                <li>{{ vehicle }} ({{ vehicle.license_plate }})</li>
                             {% endfor %}
                         </span>
                     </div>
@@ -35,7 +35,7 @@ Fugro - Beosztás - {{ user }}
                         <label>Alkalmazottak:</label>
                         <span>
                             {% for employee in c.employees %}
-                                <li>{{ employee }}</li>
+                                <li>{{ employee.first_name }} {{employee.last_name}}</li>
                             {% endfor %}
                         </span>
                     </div>

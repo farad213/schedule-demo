@@ -19,14 +19,14 @@
 
 .projects_wrapper{
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
 .project{
     color: white;
     background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
-    margin: 20px;
+    margin: 50px;
     width: fit-content;
     min-width: 350px;
     height: fit-content;
