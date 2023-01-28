@@ -20,8 +20,9 @@ body{
 
 .project{
     background: linear-gradient(rgba(60,60,60,0.8), rgba(60,60,60,0.8));
-    margin: 20px;
+    margin: 50px;
     height: fit-content;
+    max-width: 500px;
 }
 
 .project_title{
@@ -56,18 +57,28 @@ textarea{
 .projects{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: center;
 }
 
 
 #id_vehicle{
     display: flex;
-    margin: 5px;
+    margin: 10px;
+    flex-wrap: wrap;
+}
+
+#id_vehicle div{
+    padding: 2px;
 }
 
 #id_employee{
     display: flex;
     margin: 5px;
+    flex-wrap: wrap;
+}
+
+#id_employee div{
+    padding: 2px;
 }
 
 .select2{

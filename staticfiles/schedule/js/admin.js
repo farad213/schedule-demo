@@ -59,5 +59,26 @@ $('.day .date').each(function() {
 
 });
 
-
-
+//$( document ).ready(function() {
+//    $("#export").click(function() {
+//        var start = $("#id_start").val();
+//        var end = $("#id_end").val();
+//        var url = $(this).data("export-url")
+//
+//
+//        $.ajax({
+//    url: url,
+//    data: {
+//        'start': start,
+//        'end': end,
+//    },
+//    success: function(response) {
+//        var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+//        var link = document.createElement('a');
+//        link.href = window.URL.createObjectURL(blob);
+//        link.download = "my_file.xlsx";
+//        link.click();
+//    }
+//});
+//    });
+//});

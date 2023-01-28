@@ -23,6 +23,7 @@ body{
     flex-direction: column;
     background: linear-gradient(rgba(60,60,60,0.6), rgba(60,60,60,0.6));
     padding: 20px;
+    margin-bottom: 50px;
     align-items: center;
     width: min(90%, 1400px);
 }
@@ -125,7 +126,7 @@ a{
     margin-bottom: 0px;
 }
 
-input[type=button]{
+.cyan-button{
     background-color: rgba(10,70,60,0.8);
     font-size: 18px;
     font-weight: 700;
@@ -137,11 +138,11 @@ input[type=button]{
     cursor: pointer;
 }
 
-input[type=button]:hover{
+.cyan-button:hover{
     background-color: rgba(10,70,60,1);
 }
 
-input[type=button]:active {
+.cyan-button:active {
     transform: translateY(2px);
     box-shadow: inset 0 0 5px #ccc;
 }
@@ -248,4 +249,14 @@ input[type=button]:active {
 
 .day_wrap, .weekdays div{
     margin: 10px 20px 10px 20px;
+}
+
+input[type="date"]{
+    font-size: 1.1rem;
+    margin: 0.7rem 0.3rem 0.3rem 0.3rem
+}
+
+.export_wrapper div{
+    display: flex;
+    justify-content: center;
 }

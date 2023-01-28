@@ -12,8 +12,8 @@ Fugro - Beosztás - Admin
 <section class="background">
     <div class="date_title_wrapper"><p class="date_title">Admin - {{request.resolver_match.kwargs.year}}.{{request.resolver_match.kwargs.month}}</p></div>
     <div class="toggle-days-displayed">
-        <input type="button" name="toggle-days-displayed" value="5 nap">
-        <input type="button" name="toggle-days-displayed" value="7 nap">
+        <input class="cyan-button" type="button" name="toggle-days-displayed" value="5 nap">
+        <input class="cyan-button" type="button" name="toggle-days-displayed" value="7 nap">
     </div>
     <div class="calendar">
         <div class="month">
@@ -93,14 +93,18 @@ Fugro - Beosztás - Admin
                      </form>
                  </div>
             </div>
+                 <form action="{% url 'export_dates' %}" class="export_wrapper">
+                    {{export_dates.start}}
+                    {{export_dates.end}}
+                     <div>
+                         <button class="cyan-button" id="export" type="submit">Export</button>
+                     </div>
+                </form>
         </div>
+
     </div>
 
-    <div class="export_wrapper">
-        {{export_dates.start}}
-        {{export_dates.end}}
-        <input id="export" type="button" value="Export">
-    </div>
+
 </section>
 
 <script src="{% static 'schedule/js/admin.js' %}"></script>
