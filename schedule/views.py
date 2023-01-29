@@ -196,7 +196,7 @@ def export_dates(request):
 def date(request, year, month, day):
     date = Date.objects.get(date=datetime.date(year, month, day))
     projects = list(Project.objects.all())
-    saved_projects_for_the_day = DateBoundWithProject.objects.filter(date=date)
+    saved_projects_for_the_day = DateBoundWithProject.objects.filter(date=date).order_by("project")
     saved_projects = [saved_project for saved_project in saved_projects_for_the_day]
     untouched_projects = [project for project in projects]
 
