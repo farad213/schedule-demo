@@ -35,6 +35,14 @@ Fugro - Beosztás - Dátum
     <div class="saved_project project">
         <div class="form_table_wrapper">
         <div class="project_title"><span>{{ project.project.project }}</span></div>
+            <form class="re_date" action="{% url 're_date_project' %}">
+                <input type="hidden" name="project_id" value="{{project.id}}">
+                <input type="hidden" name="year" value="{{ year_ }}">
+                <input type="hidden" name="month" value="{{ month_ }}">
+                <input type="hidden" name="day" value="{{ day_ }}">
+                <input type="date" name="new_date">
+                <button type="submit" class="cyan-button">Át dátumoz</button>
+            </form>
         <form method="POST" class="project_form js_form" data-hasSubproject="{{project.project.hasSubproject}}" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}" data-partial_save-url="{% url 'ajax_partial_save' %}">
             {% csrf_token %}
             <input type="hidden" name="saved">

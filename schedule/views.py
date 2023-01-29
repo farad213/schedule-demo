@@ -324,6 +324,18 @@ def partial_save(request):
     return render(request, 'schedule/ajax/partial_save.html', context={"context": context})
 
 
+def re_date_project(request):
+    project = DateBoundWithProject.objects.get(pk=request.GET["project_id"])
+    new_date = datetime.datetime.strptime(request.GET["new_date"], "%Y-%m-%d")
+    project.date = Date.objects.get(date=new_date)
+    project.save()
+
+    year = request.GET["year"]
+    month = request.GET["month"]
+    day = request.GET["day"]
+
+    return redirect(date, year, month, day)
+
 @user_passes_test(Monitoring_group_check)
 @login_required()
 def user_calendar(request, year=datetime.date.year, month=datetime.date.month):

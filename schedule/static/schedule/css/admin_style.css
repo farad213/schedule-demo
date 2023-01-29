@@ -253,7 +253,7 @@ a{
 
 input[type="date"]{
     font-size: 1.1rem;
-    margin: 0.7rem 0.3rem 0.3rem 0.3rem
+    margin: 0.7rem 0.3rem 0.3rem 0.3rem;
 }
 
 .export_wrapper div{

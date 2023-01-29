@@ -166,3 +166,30 @@ table, th, td{
 #done_show{
     visibility: hidden;
 }
+
+input[type="date"]{
+    font-size: 1.1rem;
+    margin: 5px;
+    padding: 2px;
+}
+
+.cyan-button{
+    background-color: rgba(10,70,60,0.8);
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-decoration: none;
+    margin: 4px;
+    cursor: pointer;
+}
+
+.cyan-button:hover{
+    background-color: rgba(10,70,60,1);
+}
+
+.cyan-button:active {
+    transform: translateY(2px);
+    box-shadow: inset 0 0 5px #ccc;
+}
