@@ -419,7 +419,7 @@ def user_date(request, year, month, day):
     return render(request=request, template_name="schedule/calendar_date.html", context=context)
 
 
-@login_required()
+@login_required
 def vacation(request):
     dates_when_user_is_on_leave = Date.objects.filter(employees_on_leave=request.user)
     dates_when_user_is_on_leave = [date.date.strftime("%Y-%m-%d") for date in dates_when_user_is_on_leave]
