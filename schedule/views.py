@@ -485,3 +485,34 @@ def get_calendar(year, month):
             month_str_from_int = str(date.month)
             week[i] = [date_str, day, month_str, full_date_str, day_int, month_int, year_int, month_str_from_int, date]
     return dates
+
+@login_required
+def repeat_project(request):
+    year = int(request.GET["year"])
+    month = int(request.GET["month"])
+    day = int(request.GET["day"])
+    project_id = request.GET["project_id"]
+    repeat = request.GET["repeat"]
+    date = datetime.date(year, month, day)
+    project = DateBoundWithProject.objects.get(pk=int(project_id))
+
+    if repeat == "Soha":
+        pass
+    elif repeat == "Egy hétig":
+        for index in range(1, 8):
+            new_date = date + datetime.timedelta(index)
+            if Date.objects.filter(date=date):
+                if new_date.weekday() in [0, 1, 2, 3, 4]:
+                    new_date = Date.objects.get(date=new_date)
+                    new = DateBoundWithProject.objects.create(project = project.project,
+                                                              date = new_date,
+                                                              comment = project.comment)
+                    new.employee.set(project.employee.all())
+                    new.vehicle.set(project.vehicle.all())
+                    if project.subproject:
+                        new.subproject = project.subproject
+                        new.artifact = project.artifact
+                        new.profile.set(project.profile.all())
+                    new.save()
+
+    return redirect("date", year, month, day)
