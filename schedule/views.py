@@ -122,7 +122,7 @@ def export_dates(request):
 
         profiles = project.profile.all()
         for profile in profiles:
-            hid_jele = project.artifact.artifact
+            hid_jele = profile.artifact.artifact
             szelvenyszam = profile.profile
             cso_hossza = f"{profile.length} m"
 
