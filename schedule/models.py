@@ -21,6 +21,8 @@ class Project(models.Model):
         return self.project
 
 
+
+
 class Subproject(models.Model):
     subproject = models.CharField(max_length=50, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, related_name="subproject")

@@ -419,7 +419,7 @@ def user_date(request, year, month, day):
     return render(request=request, template_name="schedule/calendar_date.html", context=context)
 
 
-@login_required()
+@login_required
 def vacation(request):
     dates_when_user_is_on_leave = Date.objects.filter(employees_on_leave=request.user)
     dates_when_user_is_on_leave = [date.date.strftime("%Y-%m-%d") for date in dates_when_user_is_on_leave]
@@ -485,3 +485,78 @@ def get_calendar(year, month):
             month_str_from_int = str(date.month)
             week[i] = [date_str, day, month_str, full_date_str, day_int, month_int, year_int, month_str_from_int, date]
     return dates
+
+@login_required
+def repeat_project(request):
+    year = int(request.GET["year"])
+    month = int(request.GET["month"])
+    day = int(request.GET["day"])
+    project_id = request.GET["project_id"]
+    repeat = request.GET["repeat"]
+    date = datetime.date(year, month, day)
+    project = DateBoundWithProject.objects.get(pk=int(project_id))
+
+    dates = []
+    if repeat == "Soha":
+        pass
+    elif repeat == "Egy hétig":
+        for index in range(1, 8):
+            date_to_check = date + datetime.timedelta(index)
+            if date_to_check.weekday() in [0, 1, 2, 3, 4]:
+                dates.append(date_to_check)
+
+    elif repeat == "Hetente":
+        for index in [7, 14, 21, 28]:
+            date_to_check = date + datetime.timedelta(index)
+            # if weekday
+            if date_to_check.weekday() in [0, 1, 2, 3, 4]:
+                dates.append(date_to_check)
+            # if Sunday
+            elif date + datetime.timedelta(index+1).weekday() in [0, 1, 2, 3, 4]:
+                dates.append(date + datetime.timedelta(index+1))
+            # if Saturday
+            else:
+                dates.append(date + datetime.timedelta(index + 2))
+
+    elif repeat == "Kéthetente":
+        for index in [14, 28, 42, 56]:
+            date_to_check = date + datetime.timedelta(index)
+            # if weekday
+            if date_to_check.weekday() in [0, 1, 2, 3, 4]:
+                dates.append(date_to_check)
+            # if Sunday
+            elif date + datetime.timedelta(index+1).weekday() in [0, 1, 2, 3, 4]:
+                dates.append(date + datetime.timedelta(index+1))
+            # if Saturday
+            else:
+                dates.append(date + datetime.timedelta(index + 2))
+
+    elif repeat == "Négy hetente":
+        for index in [28, 56]:
+            date_to_check = date + datetime.timedelta(index)
+            # if weekday
+            if date_to_check.weekday() in [0, 1, 2, 3, 4]:
+                dates.append(date_to_check)
+            # if Sunday
+            elif date + datetime.timedelta(index+1).weekday() in [0, 1, 2, 3, 4]:
+                dates.append(date + datetime.timedelta(index+1))
+            # if Saturday
+            else:
+                dates.append(date + datetime.timedelta(index + 2))
+
+    for new_date in dates:
+        if Date.objects.filter(date=date):
+            if new_date.weekday() in [0, 1, 2, 3, 4]:
+                new_date = Date.objects.get(date=new_date)
+                new = DateBoundWithProject.objects.create(project = project.project,
+                                                          date = new_date,
+                                                          comment = project.comment)
+                new.employee.set(project.employee.all())
+                new.vehicle.set(project.vehicle.all())
+                if project.subproject:
+                    new.subproject = project.subproject
+                    new.artifact = project.artifact
+                    new.profile.set(project.profile.all())
+                new.save()
+
+    return redirect("date", year, month, day)

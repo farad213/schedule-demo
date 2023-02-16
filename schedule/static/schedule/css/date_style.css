@@ -63,7 +63,7 @@ textarea{
 
 #id_vehicle{
     display: flex;
-    margin: 10px;
+    margin: 5px;
     flex-wrap: wrap;
 }
 
@@ -171,6 +171,15 @@ input[type="date"]{
     font-size: 1.1rem;
     margin: 5px;
     padding: 2px;
+}
+
+.repeat_project{
+    margin: 5px;
+}
+
+#repeat{
+    padding: 5px;
+    font-size: 15px;
 }
 
 .cyan-button{

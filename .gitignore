@@ -1,6 +1,4 @@
 .env
-bmw/migrations
-bmw/__pycache__
-schedule/migrations
-schedule/__pycache__
 fugro/__pycache__
+schedule/__pycache__
+bmw/__pycache__
