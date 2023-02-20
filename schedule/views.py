@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import FileResponse, HttpResponse
-from .models import Date, Project, DateBoundWithProject, Subproject, Artifact, Profile
-from .forms import DateBoundWithProjectForm, ExportDates
+from .models import Date, Project, DateBoundWithProject, Subproject, Artifact, Profile, SIT_with_date, SIT_project
+from .forms import DateBoundWithProjectForm, ExportDates, SIT_with_date_form
 import datetime
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Font, Border, Side, Alignment
@@ -105,6 +105,8 @@ def export_dates(request):
                                                          date__date__range=[start, end]).order_by("date__date")
 
     wb = Workbook()
+
+    # Süllyedésmérés
     ws = wb.active
     ws.title = "Süllyedésmérés"
     ws.append(["Iktatószám", "Megrendelő", "Helyszín", "Híd jele", "Szelvényszám", "Cső hossza", "Mérés dátuma"])
@@ -117,17 +119,26 @@ def export_dates(request):
         megrendelo = project.subproject.customer
         helyszin = project.subproject.name
 
-        if index> 0 and meres_datuma != ws[f"G{row_no}"] and iktatoszam != ws[f"A{row_no}"]:
+        if index > 0 and meres_datuma != ws[f"G{row_no}"] and iktatoszam != ws[f"A{row_no}"]:
             breaklines.append(row_no)
 
-        profiles = project.profile.all()
-        for profile in profiles:
-            hid_jele = profile.artifact.artifact
-            szelvenyszam = profile.profile
-            cso_hossza = f"{profile.length} m"
+        artifacts = None
+        profiles = project.profile.all().order_by("profile")
+        artifacts = {profile.artifact.artifact: [] for profile in profiles}
+        sorted_artifact_keys = sorted(artifacts)
 
-            row_no += 1
-            ws.append([iktatoszam, megrendelo, helyszin, hid_jele, szelvenyszam, cso_hossza, meres_datuma])
+        for profile in profiles:
+            artifacts[profile.artifact.artifact].append(profile)
+
+        for artifact in sorted_artifact_keys:
+            profiles = artifacts[artifact]
+            hid_jele = artifact
+            for profile in profiles:
+                szelvenyszam = profile.profile
+                cso_hossza = f"{profile.length} m"
+
+                row_no += 1
+                ws.append([iktatoszam, megrendelo, helyszin, hid_jele, szelvenyszam, cso_hossza, meres_datuma])
 
     thin_border = Border(left=Side(style='thin', color="000000"),
                          right=Side(style='thin', color="000000"),
@@ -166,7 +177,6 @@ def export_dates(request):
         new_style.right = thick_side
         ws[f"G{row}"].border = new_style
 
-
     bold_font = Font(bold=True, name="Arial")
     grey_fill = PatternFill(start_color="D3D3D3", end_color="D3D3D3", fill_type="solid")
     for cell in ws[1]:
@@ -178,6 +188,57 @@ def export_dates(request):
         adjusted_width = (max_length + 1.4)
         ws.column_dimensions[get_column_letter(col[0].column)].width = adjusted_width
 
+    # Integritásvizsgálat
+    ws = wb.create_sheet(title="Integritásvizsgálat")
+    SITs = SIT_with_date.objects.filter(date_bound_with_project_object__date__date__range=[start, end]).order_by(
+        "date_bound_with_project_object__date__date")
+    ws.append(["Iktatószám", "Megrendelő", "Szerződés", "Helyszín", "Híd jele", "Támasz/Épület", "Cölöpök száma", "Mérés dátuma"])
+
+    for sit in SITs:
+        iktatoszam= sit.project_no.project_no
+        megrendelo = sit.project_no.customer
+        szerzodes = sit.project_no.contract
+        helyszin = sit.project_no.location
+        hid_jele = sit.bridge
+        tamasz_epulet = sit.building
+        no_of_piles = sit.no_of_piles
+        meres_datuma = sit.date_bound_with_project_object.date.date
+
+        ws.append([iktatoszam, megrendelo, szerzodes, helyszin, hid_jele, tamasz_epulet, f"{no_of_piles} db", meres_datuma])
+
+    for row in ws.iter_rows():
+        for cell in row:
+            cell.border = thin_border
+            cell.font = Font(name="Arial")
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+
+        for cell in ws[1]:
+            cell.font = bold_font
+            cell.fill = grey_fill
+
+        for col in ws.columns:
+            max_length = max(len(str(cell.value)) for cell in col)
+            adjusted_width = (max_length + 1.8)
+            ws.column_dimensions[get_column_letter(col[0].column)].width = adjusted_width
+
+        for col in ["A", "B", "C", "D", "E", "F", "G", "H"]:
+            new_style = ws[f"{col}1"].border.copy()
+            new_style.top = thick_side
+            new_style.bottom = thick_side
+            ws[f"{col}1"].border = new_style
+
+            new_style = ws[f"{col}{ws.max_row}"].border.copy()
+            new_style.bottom = thick_side
+            ws[f"{col}{ws.max_row}"].border = new_style
+
+        for row in range(1, ws.max_row + 1):
+            new_style = ws[f"A{row}"].border.copy()
+            new_style.left = thick_side
+            ws[f"A{row}"].border = new_style
+
+            new_style = ws[f"H{row}"].border.copy()
+            new_style.right = thick_side
+            ws[f"H{row}"].border = new_style
 
     file_name = f"fugro_export_from_{request.GET['start']}_to_{request.GET['end']}.xlsx"
     buffer = BytesIO()
@@ -206,6 +267,14 @@ def date(request, year, month, day):
                            in saved_projects_for_the_day]
 
     saved_projects_and_forms = zip(saved_projects, saved_project_forms)
+
+    SIT_form = SIT_with_date_form()
+
+    saved_sit_objects = list(SIT_with_date.objects.filter(
+        date_bound_with_project_object__date__date=datetime.date(year, month, day)))
+
+    saved_sit_forms = {object.date_bound_with_project_object.pk: SIT_with_date_form(instance=object) for object in
+                       saved_sit_objects}
 
     if request.method == "POST":
 
@@ -259,7 +328,8 @@ def date(request, year, month, day):
 
     context = {"year_": year, "month_": month, "day_": day, "saved_projects_for_the_day": saved_projects_for_the_day,
                "untouched_projects": untouched_projects, "date_bound_project_form": date_bound_project_form,
-               "saved_projects_and_forms": saved_projects_and_forms}
+               "saved_projects_and_forms": saved_projects_and_forms, "SIT_form": SIT_form,
+               "saved_SIT_forms": saved_sit_forms}
     return render(request=request, template_name="schedule/date.html", context=context)
 
 
@@ -283,7 +353,6 @@ def partial_save(request):
 
     # click on update button(can save profiles, employees, vehicles, comments)
     if not request.GET.get("r_type"):
-        print(request.GET)
         project.profile.add(*request.GET.getlist("profile[]"))
         if request.GET.get("employee[]"):
             project.employee.set(request.GET.getlist("employee[]"))
@@ -335,6 +404,7 @@ def re_date_project(request):
     day = request.GET["day"]
 
     return redirect(date, year, month, day)
+
 
 @user_passes_test(Monitoring_group_check)
 @login_required()
@@ -388,9 +458,6 @@ def user_date(request, year, month, day):
             employees = project.employee.all()
             comment = project.comment
             if project.project.hasSubproject():
-                # subproject = project.subproject
-                # artifact = project.artifact
-                # profiles = project.profile.all()
                 artifacts = set()
                 subprojects = set()
                 for profile in project.profile.all():
@@ -414,7 +481,6 @@ def user_date(request, year, month, day):
                                 "comment": comment}
             context_list.append(mini_context)
     context = {"context": context_list, "date": date}
-    print(context)
 
     return render(request=request, template_name="schedule/calendar_date.html", context=context)
 
@@ -486,6 +552,7 @@ def get_calendar(year, month):
             week[i] = [date_str, day, month_str, full_date_str, day_int, month_int, year_int, month_str_from_int, date]
     return dates
 
+
 @login_required
 def repeat_project(request):
     year = int(request.GET["year"])
@@ -512,8 +579,8 @@ def repeat_project(request):
             if date_to_check.weekday() in [0, 1, 2, 3, 4]:
                 dates.append(date_to_check)
             # if Sunday
-            elif date + datetime.timedelta(index+1).weekday() in [0, 1, 2, 3, 4]:
-                dates.append(date + datetime.timedelta(index+1))
+            elif date + datetime.timedelta(index + 1).weekday() in [0, 1, 2, 3, 4]:
+                dates.append(date + datetime.timedelta(index + 1))
             # if Saturday
             else:
                 dates.append(date + datetime.timedelta(index + 2))
@@ -525,21 +592,22 @@ def repeat_project(request):
             if date_to_check.weekday() in [0, 1, 2, 3, 4]:
                 dates.append(date_to_check)
             # if Sunday
-            elif date + datetime.timedelta(index+1).weekday() in [0, 1, 2, 3, 4]:
-                dates.append(date + datetime.timedelta(index+1))
+            elif date + datetime.timedelta(index + 1).weekday() in [0, 1, 2, 3, 4]:
+                dates.append(date + datetime.timedelta(index + 1))
             # if Saturday
             else:
                 dates.append(date + datetime.timedelta(index + 2))
 
-    elif repeat == "Négy hetente":
+    elif repeat == "Havonta":
+        # every 28 days
         for index in [28, 56]:
             date_to_check = date + datetime.timedelta(index)
             # if weekday
             if date_to_check.weekday() in [0, 1, 2, 3, 4]:
                 dates.append(date_to_check)
             # if Sunday
-            elif date + datetime.timedelta(index+1).weekday() in [0, 1, 2, 3, 4]:
-                dates.append(date + datetime.timedelta(index+1))
+            elif date + datetime.timedelta(index + 1).weekday() in [0, 1, 2, 3, 4]:
+                dates.append(date + datetime.timedelta(index + 1))
             # if Saturday
             else:
                 dates.append(date + datetime.timedelta(index + 2))
@@ -548,9 +616,9 @@ def repeat_project(request):
         if Date.objects.filter(date=date):
             if new_date.weekday() in [0, 1, 2, 3, 4]:
                 new_date = Date.objects.get(date=new_date)
-                new = DateBoundWithProject.objects.create(project = project.project,
-                                                          date = new_date,
-                                                          comment = project.comment)
+                new = DateBoundWithProject.objects.create(project=project.project,
+                                                          date=new_date,
+                                                          comment=project.comment)
                 new.employee.set(project.employee.all())
                 new.vehicle.set(project.vehicle.all())
                 if project.subproject:
@@ -558,5 +626,28 @@ def repeat_project(request):
                     new.artifact = project.artifact
                     new.profile.set(project.profile.all())
                 new.save()
+
+    return redirect("date", year, month, day)
+
+
+def SIT_details(request):
+    year = int(request.GET["year"])
+    month = int(request.GET["month"])
+    day = int(request.GET["day"])
+    project_id = request.GET["project_id"]
+    project = DateBoundWithProject.objects.get(pk=int(project_id))
+    if SIT_with_date.objects.filter(date_bound_with_project_object=project):
+        sit_object = SIT_with_date.objects.get(date_bound_with_project_object=project)
+        sit_object.bridge = request.GET["bridge"]
+        sit_object.building = request.GET["building"]
+        sit_object.no_of_piles = int(request.GET["no_of_piles"])
+        sit_object.project_no = SIT_project.objects.get(pk=request.GET["project_no"])
+        sit_object.save()
+    else:
+        form = SIT_with_date_form(request.GET)
+        if form.is_valid():
+            sit_object = form.save(commit=False)
+            sit_object.date_bound_with_project_object = project
+            sit_object.save()
 
     return redirect("date", year, month, day)

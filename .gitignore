@@ -1,1 +1,4 @@
 .env
+bmw/__pycache__
+schedule/__pycache__
+fugro/__pycache__

@@ -1,5 +1,5 @@
 from django import forms
-from .models import DateBoundWithProject, Vehicle, Artifact, Profile, Subproject, User, Date
+from .models import DateBoundWithProject, Vehicle, Artifact, Profile, Subproject, Date, SIT_with_date
 from django.contrib.auth.models import User
 
 
@@ -58,3 +58,16 @@ class DateBoundWithProjectForm(forms.ModelForm):
 class ExportDates(forms.Form):
     start = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
     end = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+
+
+class SIT_with_date_form(forms.ModelForm):
+    class Meta:
+        model = SIT_with_date
+        fields = ["project_no", "building", "bridge", "no_of_piles"]
+
+        widgets = {
+            "project_no": forms.Select(attrs={"class": "select2"}),
+            'building': forms.TextInput(attrs={'placeholder': 'Épület'}),
+            'bridge': forms.TextInput(attrs={'placeholder': 'Híd jele'}),
+            'no_of_piles': forms.NumberInput(attrs={'placeholder': 'Cölöpök száma'}),
+        }

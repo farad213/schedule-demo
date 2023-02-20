@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Vehicle, Project, Date, DateBoundWithProject, Profile, Artifact, Subproject
+from .models import Vehicle, Project, Date, DateBoundWithProject, Profile, Artifact, Subproject, SIT_project, SIT_with_date
 
 
 admin.site.register(Vehicle)
@@ -10,3 +10,6 @@ admin.site.register(DateBoundWithProject)
 admin.site.register(Profile)
 admin.site.register(Artifact)
 admin.site.register(Subproject)
+
+admin.site.register(SIT_project)
+admin.site.register(SIT_with_date)
