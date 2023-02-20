@@ -2,6 +2,7 @@
 {% extends "bmw/base.html" %}
 {% load static %}
 {% load widget_tweaks %}
+{% load custom_filters %}
 
 {% block title %}
 Fugro - Beosztás - Dátum
@@ -49,14 +50,36 @@ Fugro - Beosztás - Dátum
                     <option value="Egy hétig">Egy hétig</option>
                     <option value="Hetente">Hetente</option>
                     <option value="Kéthetente">Kéthetente</option>
-                    <option value="Négy hetente">Négy hetente</option>
+                    <option value="Havonta">Havonta</option>
                 </select>
                 <input type="hidden" name="project_id" value="{{project.id}}">
                 <input type="hidden" name="year" value="{{ year_ }}">
                 <input type="hidden" name="month" value="{{ month_ }}">
                 <input type="hidden" name="day" value="{{ day_ }}">
-                <button type="submit" class="cyan-button">Ment</button>
+                <button type="submit" class="cyan-button">Ismétlés</button>
             </form>
+
+            {% if project.project.project == "Integritásvizsgálat" %}
+            <form class="sit-form" action="{% url 'SIT_details' %}">
+                <input type="hidden" name="project_id" value="{{project.id}}">
+                <input type="hidden" name="year" value="{{ year_ }}">
+                <input type="hidden" name="month" value="{{ month_ }}">
+                <input type="hidden" name="day" value="{{ day_ }}">
+                <div class="sit-wrapper">
+                    {% if project.pk in saved_SIT_forms %}
+                        {% for field in saved_SIT_forms|get_item:project.pk %}
+                            <div class="field-sit field-{{ field.label }}">{{ field }}</div>
+                        {% endfor %}
+                    {% else %}
+                        {% for field in SIT_form %}
+                            <div class="field-sit field-{{ field.label }}">{{ field }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <button id="save-sit" type="submit" class="cyan-button">Ment</button>
+            </form>
+            {% endif %}
+
         <form method="POST" class="project_form js_form" data-hasSubproject="{{project.project.hasSubproject}}" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}" data-partial_save-url="{% url 'ajax_partial_save' %}">
             {% csrf_token %}
             <input type="hidden" name="saved">
@@ -88,6 +111,7 @@ Fugro - Beosztás - Dátum
                 <button class="button-68 project_save" type="submit">Save</button>
             {% endif %}
         </form>
+
         <form method="POST">
             {% csrf_token %}
             <input type="hidden" name="delete" value="{{project.project}}">

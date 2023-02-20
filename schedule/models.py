@@ -7,12 +7,20 @@ class Vehicle(models.Model):
     license_plate = models.CharField(max_length=20, verbose_name="Rendszám")
     vehicle_name = models.CharField(max_length=30, verbose_name="Autó neve")
 
+    class Meta:
+        verbose_name = "Jármű"
+        verbose_name_plural = "Járművek"
+
     def __str__(self):
         return self.vehicle_name
 
 
 class Project(models.Model):
     project = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Munkatípus"
+        verbose_name_plural = "Munkatípusok"
 
     def hasSubproject(self):
         return self.subproject.exists()
@@ -29,6 +37,10 @@ class Subproject(models.Model):
     name = models.CharField(max_length=100, null=True)
     customer = models.CharField(max_length=100, null=True)
 
+    class Meta:
+        verbose_name = "Süllyedésmérés projekt"
+        verbose_name_plural = "Süllyedésmérés projektek"
+
     def __str__(self):
         return self.subproject
 
@@ -36,6 +48,10 @@ class Subproject(models.Model):
 class Artifact(models.Model):
     subproject = models.ForeignKey(Subproject, on_delete=models.CASCADE)
     artifact = models.CharField(max_length=50, verbose_name="Műtárgy", null=True)
+
+    class Meta:
+        verbose_name = "Műtárgy"
+        verbose_name_plural = "Műtárgyak"
 
     def __str__(self):
         return self.artifact
@@ -48,6 +64,10 @@ class Profile(models.Model):
     measurement_side = models.CharField(max_length=10, null=True)
     longitude = models.FloatField(null=True)
     latitude = models.FloatField(null=True)
+
+    class Meta:
+        verbose_name = "Cölöp"
+        verbose_name_plural = "Cölöpök"
 
     def __str__(self):
         return self.profile
@@ -86,3 +106,31 @@ class DateBoundWithProject(models.Model):
 
     def __str__(self):
         return f'{self.date} {self.project}'
+
+class SIT_project(models.Model):
+    project_no = models.CharField(max_length=30)
+    customer = models.CharField(max_length=50)
+    contract = models.IntegerField()
+    location = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "SIT iktatószám"
+        verbose_name_plural = "SIT iktatószámok"
+
+    def __str__(self):
+        return self.project_no
+
+
+class SIT_with_date(models.Model):
+    date_bound_with_project_object = models.ForeignKey(DateBoundWithProject, on_delete=models.CASCADE)
+    project_no = models.ForeignKey(SIT_project, on_delete=models.CASCADE, verbose_name="Iktatószám")
+    bridge = models.CharField(max_length=100, verbose_name="Híd jele")
+    building = models.CharField(max_length=100, verbose_name="Épület/Támasz")
+    no_of_piles = models.IntegerField(verbose_name="Cölöpök száma")
+
+    class Meta:
+        verbose_name = "Rögzített SIT projekt"
+        verbose_name_plural = "Rögzített SIT projektek"
+
+    def __str__(self):
+        return f"{self.project_no} - {self.date_bound_with_project_object.date.date}"
