@@ -56,6 +56,9 @@ header{
     color: lime;
 }
 
+#django_admin:hover{
+    background-color: goldenrod;
+}
 
 .button-68 {
   appearance: none;

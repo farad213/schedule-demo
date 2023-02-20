@@ -41,7 +41,7 @@
                             <a href="{% url 'password_change' %}">Change password</a>
                             <a href="{% url 'vacation' %}">Vacation days</a>
                               {% if user.is_staff or user.is_superuser %}
-                              <a href="{% url 'admin:index' %}" target="_blank">Django admin</a>
+                              <a id="django_admin" href="{% url 'admin:index' %}" target="_blank">Django admin</a>
                               {% endif %}
                               <a id="logout" href="{% url 'logout' %}">Kijelentkezés</a>
                           </div>
