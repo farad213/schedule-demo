@@ -15,6 +15,14 @@ $(document).ready(function() {
     // Update the id attribute of the response_table element
     $(this).find('#response_table').attr("id", $(this).find('#response_table').attr("id") + index);
     });
+
+    var SIT_forms = $('.sit-form');
+    console.log(SIT_forms);
+
+    SIT_forms.each(function(index){
+    $(this).find('[name="project_no"]').attr("id", $(this).find('[name="project_no"]').attr("id") + index);
+    });
+
    });
 
 $(document).ready(function() {
