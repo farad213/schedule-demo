@@ -73,9 +73,11 @@ $(document).ready(function() {
       success: function(response) {
         if (response.length === 0) {
           $("#check").show();
+          $("#warning").hide();
         } else {
           // Update the data-bubble attribute with the new response
           $("#warning").show().attr('data-bubble', JSON.stringify(response));
+          $("#check").hide();
         }
       }
     });
