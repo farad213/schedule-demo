@@ -96,8 +96,10 @@ Fugro - Beosztás - Admin
                  <form action="{% url 'export_dates' %}" class="export_wrapper">
                     {{export_dates.start}}
                     {{export_dates.end}}
-                     <div>
-                         <button class="cyan-button" id="export" type="submit">Export</button>
+                     <div class="export-line">
+                         <button class="cyan-button" id="export" type="submit" data-check-sit-url="{% url 'ajax_check_SIT' %}">Export</button>
+                         <span id="warning" class="feedback">&#9888;</span>
+                         <span id="check" class="feedback">&#10003;</span>
                      </div>
                 </form>
         </div>

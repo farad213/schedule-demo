@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 from .models import Date, Project, DateBoundWithProject, Subproject, Artifact, Profile, SIT_with_date, SIT_project
 from .forms import DateBoundWithProjectForm, ExportDates, SIT_with_date_form
 import datetime
@@ -94,16 +94,31 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
     context = {"cal": cal, "dates_in_database": dates_in_database, "year": year, "month_str": month_str,
                "export_dates": export_dates}
     return render(request=request, template_name="schedule/admin.html", context=context)
-    # return render(request=request, template_name="schedule/admin.html", context={"cal": cal})
 
+
+def check_SIT(request):
+    start = datetime.datetime.strptime(request.GET["start"], "%Y-%m-%d")
+    end = datetime.datetime.strptime(request.GET["end"], "%Y-%m-%d")
+    integritasvizsgalat_project = Project.objects.get(project="Integritásvizsgálat")
+    integritasvizsgalat = DateBoundWithProject.objects.filter(project=integritasvizsgalat_project,
+                                                         date__date__range=[start, end]).order_by("date__date")
+
+    dates_without_sit_details = set()
+    for sit in integritasvizsgalat:
+        if not sit.sit_with_date_set.exists():
+            dates_without_sit_details.add(sit.date.date.strftime("%Y/%m/%d"))
+    dates_without_sit_details = sorted(dates_without_sit_details)
+
+    return JsonResponse(dates_without_sit_details, safe=False)
 
 def export_dates(request):
     start = datetime.datetime.strptime(request.GET["start"], "%Y-%m-%d")
     end = datetime.datetime.strptime(request.GET["end"], "%Y-%m-%d")
+
+
     sullyedesmeres_project = Project.objects.get(project="Süllyedésmérés")
     sullyedesmeres = DateBoundWithProject.objects.filter(project=sullyedesmeres_project,
                                                          date__date__range=[start, end]).order_by("date__date")
-
     wb = Workbook()
 
     # Süllyedésmérés
@@ -190,8 +205,10 @@ def export_dates(request):
 
     # Integritásvizsgálat
     ws = wb.create_sheet(title="Integritásvizsgálat")
+
     SITs = SIT_with_date.objects.filter(date_bound_with_project_object__date__date__range=[start, end]).order_by(
         "date_bound_with_project_object__date__date")
+
     ws.append(["Iktatószám", "Megrendelő", "Szerződés", "Helyszín", "Híd jele", "Támasz/Épület", "Cölöpök száma", "Mérés dátuma"])
 
     for sit in SITs:

@@ -14,5 +14,6 @@ urlpatterns = [
     path("export_dates", views.export_dates, name="export_dates"),
     path("re_date_project", views.re_date_project, name="re_date_project"),
     path("repeat_project", views.repeat_project, name="repeat_project"),
-    path("SIT_details", views.SIT_details, name="SIT_details")
+    path("SIT_details", views.SIT_details, name="SIT_details"),
+    path("ajax/check_SIT", views.check_SIT, name="ajax_check_SIT")
 ]

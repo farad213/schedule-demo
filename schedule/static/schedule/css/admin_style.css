@@ -260,3 +260,25 @@ input[type="date"]{
     display: flex;
     justify-content: center;
 }
+
+.feedback{
+    font-size: 40px;
+    align-self: center;
+}
+
+#warning{
+    color: crimson;
+    display: none;
+    cursor: pointer;
+}
+
+#check{
+    color: green;
+    display: none;
+    cursor: default;
+}
+
+.export-line{
+    gap: 10px;
+}
+
