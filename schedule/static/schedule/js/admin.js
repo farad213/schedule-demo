@@ -58,47 +58,48 @@ $('.day .date').each(function() {
 
 });
 
-$( document ).ready(function() {
+$(document).ready(function() {
+  function updateWarning() {
     var start = $("#id_start").val();
     var end = $("#id_end").val();
     var url = $("#export").data("check-sit-url");
 
     $.ajax({
-        url: url,
-        data: {
-            'start': start,
-            'end': end,
-        },
-        success: function(response) {
-            if (response.length === 0) {
-                $("#check").show();
-            } else {
-                 $("#warning").show().attr('data-bubble', JSON.stringify(response));
-
-            }
+      url: url,
+      data: {
+        'start': start,
+        'end': end,
+      },
+      success: function(response) {
+        if (response.length === 0) {
+          $("#check").show();
+        } else {
+          // Update the data-bubble attribute with the new response
+          $("#warning").show().attr('data-bubble', JSON.stringify(response));
         }
+      }
     });
-
-
-$('#warning').hover(function(e) {
-
-  // Get the value of the data-bubble attribute and parse it into a JavaScript array
-  const bubbleList = $(this).data('bubble');
-
-  // Create an empty bubble element
-  const bubble = $('<div>').addClass('bubble');
-
-  // Loop through the array and create a new <div> element for each item
-  for (let i = 0; i < bubbleList.length; i++) {
-    const bubbleItem = $('<div>').text(bubbleList[i]);
-    // Append the bubbleItem to the bubble
-    bubble.append(bubbleItem);
   }
 
-  // Append the bubble to the document body
+  // Initial call to update the warning on page load
+  updateWarning();
+
+  // Add event listeners to update the warning when the input fields change
+  $("#id_start, #id_end").on("change", function() {
+    updateWarning();
+  });
+
+$('#warning').mouseover(function(e) {
+  var bubbleList = JSON.parse($(this).attr('data-bubble'));
+  var bubble = $('<div>').addClass('bubble');
+
+  for (let i = 0; i < bubbleList.length; i++) {
+    var bubbleItem = $('<div>').text(bubbleList[i]);
+    bubble.append(bubbleItem);
+  }
+    console.log(bubbleList)
   $('body').append(bubble);
 
-  // Position the bubble relative to the cursor
   const bubbleWidth = bubble.outerWidth();
   const bubbleHeight = bubble.outerHeight();
   const windowWidth = $(window).width();
@@ -117,10 +118,11 @@ $('#warning').hover(function(e) {
   } else {
     bubble.css('top', posY);
   }
+});
 
-}, function() {
-  // Remove the bubble when the mouse leaves the icon
+$('#warning').mouseout(function() {
   $('.bubble').remove();
 });
 
 });
+
