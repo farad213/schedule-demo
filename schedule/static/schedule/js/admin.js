@@ -14,7 +14,6 @@ function isMobile() {
     $('.icons > div').hover(function() {
   if (this.classList.contains('true')) {
     // Get the value of the data-bubble attribute and parse it into a JavaScript array
-    console.log($(this).data('bubble'))
     const bubbleList = JSON.parse($(this).data('bubble').replace(/'/g, '"'));
 
     // Create an empty bubble element
@@ -59,26 +58,69 @@ $('.day .date').each(function() {
 
 });
 
-//$( document ).ready(function() {
-//    $("#export").click(function() {
-//        var start = $("#id_start").val();
-//        var end = $("#id_end").val();
-//        var url = $(this).data("export-url")
-//
-//
-//        $.ajax({
-//    url: url,
-//    data: {
-//        'start': start,
-//        'end': end,
-//    },
-//    success: function(response) {
-//        var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-//        var link = document.createElement('a');
-//        link.href = window.URL.createObjectURL(blob);
-//        link.download = "my_file.xlsx";
-//        link.click();
-//    }
-//});
-//    });
-//});
+$( document ).ready(function() {
+    var start = $("#id_start").val();
+    var end = $("#id_end").val();
+    var url = $("#export").data("check-sit-url");
+
+    $.ajax({
+        url: url,
+        data: {
+            'start': start,
+            'end': end,
+        },
+        success: function(response) {
+            if (response.length === 0) {
+                $("#check").show();
+            } else {
+                 $("#warning").show().attr('data-bubble', JSON.stringify(response));
+
+            }
+        }
+    });
+
+
+$('#warning').hover(function(e) {
+
+  // Get the value of the data-bubble attribute and parse it into a JavaScript array
+  const bubbleList = $(this).data('bubble');
+
+  // Create an empty bubble element
+  const bubble = $('<div>').addClass('bubble');
+
+  // Loop through the array and create a new <div> element for each item
+  for (let i = 0; i < bubbleList.length; i++) {
+    const bubbleItem = $('<div>').text(bubbleList[i]);
+    // Append the bubbleItem to the bubble
+    bubble.append(bubbleItem);
+  }
+
+  // Append the bubble to the document body
+  $('body').append(bubble);
+
+  // Position the bubble relative to the cursor
+  const bubbleWidth = bubble.outerWidth();
+  const bubbleHeight = bubble.outerHeight();
+  const windowWidth = $(window).width();
+  const windowHeight = $(window).height();
+  const posX = e.pageX + 10;
+  const posY = e.pageY + 10;
+
+  if (posX + bubbleWidth > windowWidth) {
+    bubble.css('left', e.pageX - bubbleWidth - 10);
+  } else {
+    bubble.css('left', posX);
+  }
+
+  if (posY + bubbleHeight > windowHeight) {
+    bubble.css('top', e.pageY - bubbleHeight - 10);
+  } else {
+    bubble.css('top', posY);
+  }
+
+}, function() {
+  // Remove the bubble when the mouse leaves the icon
+  $('.bubble').remove();
+});
+
+});
