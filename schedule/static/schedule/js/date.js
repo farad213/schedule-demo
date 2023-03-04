@@ -178,9 +178,6 @@ $("input[name='employee']:checked, input[name='vehicle']:checked").each(function
   }).add($("label[for='" + id + "']")).addClass("greyed-out");
 });
 
-
-
-
 });
 
 

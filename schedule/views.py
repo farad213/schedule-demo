@@ -584,7 +584,7 @@ def repeat_project(request):
     if repeat == "Soha":
         pass
     elif repeat == "Egy hétig":
-        for index in range(1, 8):
+        for index in range(1, 7):
             date_to_check = date + datetime.timedelta(index)
             if date_to_check.weekday() in [0, 1, 2, 3, 4]:
                 dates.append(date_to_check)
