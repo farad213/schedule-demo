@@ -168,6 +168,19 @@ if (partialSaveButton.data("project-name")) {
   });
 }
 });
+
+$("input[name='employee']:checked, input[name='vehicle']:checked").each(function() {
+  var id = $(this).attr("id");
+  var labelText = $("label[for='" + id + "']").text().trim();
+  console.log(labelText);
+  $("label").filter(function() {
+    return $(this).text().trim() === labelText;
+  }).add($("label[for='" + id + "']")).addClass("greyed-out");
+});
+
+
+
+
 });
 
 
