@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
 from django.http import FileResponse, HttpResponse, JsonResponse
 from .models import Date, Project, DateBoundWithProject, Subproject, Artifact, Profile, SIT_with_date, SIT_project
 from .forms import DateBoundWithProjectForm, ExportDates, SIT_with_date_form
@@ -40,6 +41,7 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
     next_month = datetime.date(year=year, month=month, day=15) + datetime.timedelta(30)
     dates_in_database = Date.objects.filter(date__range=(last_month, next_month))
 
+    free_employees = dict()
     # appending Date model object to list
     for week in cal:
         for day in week:
@@ -47,6 +49,22 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
                 date = Date.objects.get(date=day[8])
                 day.append(date)
 
+                all_possible_employees = User.objects.filter(groups__name="Schedule - Monitoring")
+                employees_on_leave = date.employees_on_leave.all()
+                available_employees = [employee.id for employee in all_possible_employees if
+                                       employee not in employees_on_leave]
+
+                projects = DateBoundWithProject.objects.filter(date=date)
+                employees_working = set()
+                for project in projects:
+                    for employee in project.employee.all():
+                        employees_working.add(employee.id)
+
+                free_employees_on_date = [
+                    f"{User.objects.get(pk=employee).first_name} {User.objects.get(pk=employee).last_name}" for employee
+                    in available_employees if
+                    employee not in employees_working]
+                free_employees[day[3]] = free_employees_on_date
     # updating project status
     for date in dates_in_database:
         if DateBoundWithProject.objects.filter(date=date):
@@ -92,7 +110,7 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
     end = start + datetime.timedelta(days=6)
     export_dates = ExportDates(initial={"start": start, "end": end})
     context = {"cal": cal, "dates_in_database": dates_in_database, "year": year, "month_str": month_str,
-               "export_dates": export_dates}
+               "export_dates": export_dates, "free_employees": free_employees}
     return render(request=request, template_name="schedule/admin.html", context=context)
 
 
@@ -101,7 +119,7 @@ def check_SIT(request):
     end = datetime.datetime.strptime(request.GET["end"], "%Y-%m-%d")
     integritasvizsgalat_project = Project.objects.get(project="Integritásvizsgálat")
     integritasvizsgalat = DateBoundWithProject.objects.filter(project=integritasvizsgalat_project,
-                                                         date__date__range=[start, end]).order_by("date__date")
+                                                              date__date__range=[start, end]).order_by("date__date")
 
     dates_without_sit_details = set()
     for sit in integritasvizsgalat:
@@ -111,10 +129,10 @@ def check_SIT(request):
 
     return JsonResponse(dates_without_sit_details, safe=False)
 
+
 def export_dates(request):
     start = datetime.datetime.strptime(request.GET["start"], "%Y-%m-%d")
     end = datetime.datetime.strptime(request.GET["end"], "%Y-%m-%d")
-
 
     sullyedesmeres_project = Project.objects.get(project="Süllyedésmérés")
     sullyedesmeres = DateBoundWithProject.objects.filter(project=sullyedesmeres_project,
@@ -209,10 +227,11 @@ def export_dates(request):
     SITs = SIT_with_date.objects.filter(date_bound_with_project_object__date__date__range=[start, end]).order_by(
         "date_bound_with_project_object__date__date")
 
-    ws.append(["Iktatószám", "Megrendelő", "Szerződés", "Helyszín", "Híd jele", "Támasz/Épület", "Cölöpök száma", "Mérés dátuma"])
+    ws.append(["Iktatószám", "Megrendelő", "Szerződés", "Helyszín", "Híd jele", "Támasz/Épület", "Cölöpök száma",
+               "Mérés dátuma"])
 
     for sit in SITs:
-        iktatoszam= sit.project_no.project_no
+        iktatoszam = sit.project_no.project_no
         megrendelo = sit.project_no.customer
         szerzodes = sit.project_no.contract
         helyszin = sit.project_no.location
@@ -221,7 +240,8 @@ def export_dates(request):
         no_of_piles = sit.no_of_piles
         meres_datuma = sit.date_bound_with_project_object.date.date
 
-        ws.append([iktatoszam, megrendelo, szerzodes, helyszin, hid_jele, tamasz_epulet, f"{no_of_piles} db", meres_datuma])
+        ws.append(
+            [iktatoszam, megrendelo, szerzodes, helyszin, hid_jele, tamasz_epulet, f"{no_of_piles} db", meres_datuma])
 
     for row in ws.iter_rows():
         for cell in row:

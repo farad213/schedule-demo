@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% extends "bmw/base.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}
 Fugro - Beosztás - Admin
@@ -34,7 +35,11 @@ Fugro - Beosztás - Admin
                                 <a class="day_wrap {{day.1}}-display" href="{% url 'date' year=day.6 month=day.5 day=day.4 %}">
                                     <div class="day current_month {{day.1}} {{day.9.state}}">
                                         <div class="text">
-                                            <div class="date">{{ day.0 }}</div>
+                                            <div class="upper-row"  data-free-employees="{{ free_employees|get_item:day.3 }}">
+                                                <div class="date">{{ day.0 }}</div>
+                                                <div class="ppl-image"></div>
+                                                <div class="ppl-image-green"></div>
+                                            </div>
                                             <div class="icons">
                                                 <div class="probaterheles {{day.9.hasProject.Próbaterhelés}}" data-bubble="{{day.10.Próbaterhelés}}"></div>
                                                 <div class="sullyedesmeres {{day.9.hasProject.Süllyedésmérés}}" data-bubble="{{day.10.Süllyedésmérés}}"></div>
@@ -57,7 +62,11 @@ Fugro - Beosztás - Admin
                                 <a class="day_wrap {{day.1}}-display" href="{% url 'date' year=day.6 month=day.5 day=day.4 %}">
                                     <div class="day not_current_month {{day.1}} {{day.9.state}}">
                                         <div class="text">
-                                            <div class="date">{{ day.0 }}</div>
+                                            <div class="upper-row"  data-free-employees="{{ free_employees|get_item:day.3 }}">
+                                                <div class="date">{{ day.0 }}</div>
+                                                <div class="ppl-image"></div>
+                                                <div class="ppl-image-green"></div>
+                                            </div>
                                             <div class="icons">
                                                 <div class="probaterheles {{day.9.hasProject.Próbaterhelés}}" data-bubble="{{day.10.Próbaterhelés}}"></div>
                                                 <div class="sullyedesmeres {{day.9.hasProject.Süllyedésmérés}}" data-bubble="{{day.10.Süllyedésmérés}}"></div>

@@ -219,8 +219,32 @@ a{
     background-image:  url(../images/other_green.png);
 }
 
-.probaterheles, .inklinometer, .integritasvizsgalat, .sullyedesmeres, .other{
+.ppl-image{
+    background-image:  url(../images/people.png);
+}
+
+.ppl-image-green{
+    background-image:  url(../images/people_green.png);
+}
+
+.no-display{
+    display: none;
+}
+
+.probaterheles, .inklinometer, .integritasvizsgalat, .sullyedesmeres, .other, .ppl-image{
     background-repeat: no-repeat;
+}
+
+.upper-row{
+    display: flex;
+    justify-content: space-between;
+}
+
+.ppl-image, .ppl-image-green{
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    margin: 5px;
 }
 
 .icons{

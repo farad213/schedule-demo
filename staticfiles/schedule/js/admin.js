@@ -126,5 +126,37 @@ $('#warning').mouseout(function() {
   $('.bubble').remove();
 });
 
+$('.upper-row').each(function() {
+  var freeEmployees = $(this).data('free-employees');
+  if (freeEmployees.length === 0) {
+    $(this).find('.ppl-image-green').addClass('no-display');
+  } else {
+    $(this).find('.ppl-image').addClass('no-display');
+  }
+});
+
+
+$('.ppl-image-green').hover(function() {
+// Get the value of the data-bubble attribute and parse it into a JavaScript array
+const freeEmployeesStr = $(this).closest('.upper-row').data('free-employees');
+const bubbleList = JSON.parse(freeEmployeesStr.replace(/'/g, '"'));
+
+// Create an empty bubble element
+const bubble = $('<div>').addClass('bubble');
+// Loop through the array and create a new <div> element for each item
+for (let i = 0; i < bubbleList.length; i++) {
+  const bubbleItem = $('<div>').text(bubbleList[i]);
+  // Append the bubbleItem to the bubble
+  bubble.append(bubbleItem);
+}
+// Append the bubble to the icon
+$(this).append(bubble);
+
+}, function() {
+// Remove the bubble when the mouse leaves the icon
+$(this).find('.bubble').remove();
+});
+
+
 });
 
