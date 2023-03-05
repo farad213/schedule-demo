@@ -225,3 +225,7 @@ input[type="date"]{
 .js_form{
     margin: 5px;
 }
+
+.greyed-out{
+    color: grey;
+}
