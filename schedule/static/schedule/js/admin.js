@@ -4,12 +4,18 @@ function isMobile() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
-     $('.icons > div').on('click', function(event) {
-  if (isMobile()) {
-    event.preventDefault();
-  }
+ $('.icons > div').on('click', function(event) {
+if (isMobile()) {
+event.preventDefault();
+}
 });
 
+
+ $('.ppl-image-green, .ppl-image').on('click', function(event) {
+if (isMobile()) {
+event.preventDefault();
+}
+});
 
     $('.icons > div').hover(function() {
   if (this.classList.contains('true')) {
