@@ -38,8 +38,8 @@ class Subproject(models.Model):
     customer = models.CharField(max_length=100, null=True)
 
     class Meta:
-        verbose_name = "Süllyedésmérés projekt"
-        verbose_name_plural = "Süllyedésmérés projektek"
+        verbose_name = "Süllyedésmérés iktatószám"
+        verbose_name_plural = "Süllyedésmérés iktatószámok"
 
     def __str__(self):
         return self.subproject
@@ -60,14 +60,14 @@ class Artifact(models.Model):
 class Profile(models.Model):
     artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE)
     profile = models.CharField(max_length=50, verbose_name="Szelvény", null=True)
-    length = models.IntegerField(null=True)
-    measurement_side = models.CharField(max_length=10, null=True)
-    longitude = models.FloatField(null=True)
-    latitude = models.FloatField(null=True)
+    length = models.IntegerField(null=True, blank=True)
+    measurement_side = models.CharField(max_length=10, null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    latitude = models.FloatField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "Cölöp"
-        verbose_name_plural = "Cölöpök"
+        verbose_name = "Süllyedésmérő cső"
+        verbose_name_plural = "Süllyedésmérő csövek"
 
     def __str__(self):
         return self.profile
@@ -92,6 +92,10 @@ class Date(models.Model):
 
     def __str__(self):
         return self.date.strftime("%Y.%m.%d")
+
+    class Meta:
+        verbose_name = "Dátum"
+        verbose_name_plural = "Dátumok"
 
 
 class DateBoundWithProject(models.Model):
