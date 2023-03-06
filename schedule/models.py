@@ -58,12 +58,12 @@ class Artifact(models.Model):
 
 
 class Profile(models.Model):
-    artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE)
+    artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE, verbose_name="Műtárgy")
     profile = models.CharField(max_length=50, verbose_name="Szelvény", null=True)
-    length = models.IntegerField(null=True, blank=True)
-    measurement_side = models.CharField(max_length=10, null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
-    latitude = models.FloatField(null=True, blank=True)
+    length = models.IntegerField(null=True, blank=True, verbose_name="Csőhossz")
+    measurement_side = models.CharField(max_length=10, null=True, blank=True, verbose_name="Mérési oldal")
+    longitude = models.FloatField(null=True, blank=True, verbose_name="Földrajzi hosszúság")
+    latitude = models.FloatField(null=True, blank=True, verbose_name="Földrajzi szélesség")
 
     class Meta:
         verbose_name = "Süllyedésmérő cső"
