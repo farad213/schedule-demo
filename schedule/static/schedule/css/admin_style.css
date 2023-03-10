@@ -308,6 +308,7 @@ input[type="date"]{
 
 .user-selection{
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     padding-bottom: 50px;
 }
@@ -323,3 +324,4 @@ input[type="date"]{
 .nav_buttons_user_selection button{
     width: 180px;
 }
+
