@@ -11,11 +11,13 @@ Fugro - Beosztás - Admin
 <link rel="stylesheet" href="{% static 'schedule/css/admin_style.css' %}">
 
 <section class="background">
-    <div class="date_title_wrapper"><p class="date_title">Admin - {{request.resolver_match.kwargs.year}}.{{request.resolver_match.kwargs.month}}</p></div>
+    <div class="date_title_wrapper"><p class="date_title">Admin -
+        {{ year }}.{{ month_str }}</p></div>
     <div class="toggle-days-displayed">
         <input class="cyan-button" type="button" name="toggle-days-displayed" value="5 nap">
         <input class="cyan-button" type="button" name="toggle-days-displayed" value="7 nap">
     </div>
+
     <div class="calendar">
         <div class="month">
             <div class="weekdays">
@@ -28,91 +30,111 @@ Fugro - Beosztás - Admin
                 <div class="weekend"><span>Vasárnap</span></div>
             </div>
             {% for week in cal %}
-                <div class="week">
-                    {% for day in week %}
-                        {% if day.7 == month_str %}
-                            {% if day.3 in dates_in_database %}
-                                <a class="day_wrap {{day.1}}-display" href="{% url 'date' year=day.6 month=day.5 day=day.4 %}">
-                                    <div class="day current_month {{day.1}} {{day.9.state}}">
-                                        <div class="text">
-                                            <div class="upper-row"  data-free-employees="{{ free_employees|get_item:day.3 }}">
-                                                <div class="date">{{ day.0 }}</div>
-                                                <div class="ppl-image"></div>
-                                                <div class="ppl-image-green"></div>
-                                            </div>
-                                            <div class="icons">
-                                                <div class="probaterheles {{day.9.hasProject.Próbaterhelés}}" data-bubble="{{day.10.Próbaterhelés}}"></div>
-                                                <div class="sullyedesmeres {{day.9.hasProject.Süllyedésmérés}}" data-bubble="{{day.10.Süllyedésmérés}}"></div>
-                                                <div class="integritasvizsgalat {{day.9.hasProject.Integritásvizsgálat}}" data-bubble="{{day.10.Integritásvizsgálat}}"></div>
-                                                <div class="inklinometer {{day.9.hasProject.Inklinométer}}" data-bubble="{{day.10.Inklinométer}}"></div>
-                                                <div class="other {{day.9.hasProject.Other}}" data-bubble="{{day.10.Other}}"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            {% else %}
-                                 <div class="day_wrap day current_month {{day.1}}">
-                                    <div class="text">
-                                        <div class="date">{{ day.0 }}</div>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% else %}
-                            {% if day.3 in dates_in_database %}
-                                <a class="day_wrap {{day.1}}-display" href="{% url 'date' year=day.6 month=day.5 day=day.4 %}">
-                                    <div class="day not_current_month {{day.1}} {{day.9.state}}">
-                                        <div class="text">
-                                            <div class="upper-row"  data-free-employees="{{ free_employees|get_item:day.3 }}">
-                                                <div class="date">{{ day.0 }}</div>
-                                                <div class="ppl-image"></div>
-                                                <div class="ppl-image-green"></div>
-                                            </div>
-                                            <div class="icons">
-                                                <div class="probaterheles {{day.9.hasProject.Próbaterhelés}}" data-bubble="{{day.10.Próbaterhelés}}"></div>
-                                                <div class="sullyedesmeres {{day.9.hasProject.Süllyedésmérés}}" data-bubble="{{day.10.Süllyedésmérés}}"></div>
-                                                <div class="integritasvizsgalat {{day.9.hasProject.Integritásvizsgálat}}" data-bubble="{{day.10.Integritásvizsgálat}}"></div>
-                                                <div class="inklinometer {{day.9.hasProject.Inklinométer}}" data-bubble="{{day.10.Inklinométer}}"></div>
-                                                <div class="other {{day.9.hasProject.Other}}" data-bubble="{{day.10.Other}}"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            {% else %}
-                                 <div class="day_wrap day not_current_month {{day.1}}">
-                                    <div class="text">
-                                        <div class="date">{{ day.0 }}</div>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
+            <div class="week">
+                {% for day in week %}
+                {% if day.7 == month_str %}
+                {% if day.3 in dates_in_database %}
+                <a class="day_wrap {{day.1}}-display" href="{% url 'date' year=day.6 month=day.5 day=day.4 %}">
+                    <div class="day current_month {{day.1}} {{day.9.state}}">
+                        <div class="text">
+                            <div class="upper-row" data-free-employees="{{ free_employees|get_item:day.3 }}">
+                                <div class="date">{{ day.0 }}</div>
+                                <div class="ppl-image"></div>
+                                <div class="ppl-image-green"></div>
+                            </div>
+                            <div class="icons">
+                                <div class="probaterheles {{day.9.hasProject.Próbaterhelés}}"
+                                     data-bubble="{{day.10.Próbaterhelés}}"></div>
+                                <div class="sullyedesmeres {{day.9.hasProject.Süllyedésmérés}}"
+                                     data-bubble="{{day.10.Süllyedésmérés}}"></div>
+                                <div class="integritasvizsgalat {{day.9.hasProject.Integritásvizsgálat}}"
+                                     data-bubble="{{day.10.Integritásvizsgálat}}"></div>
+                                <div class="inklinometer {{day.9.hasProject.Inklinométer}}"
+                                     data-bubble="{{day.10.Inklinométer}}"></div>
+                                <div class="other {{day.9.hasProject.Other}}" data-bubble="{{day.10.Other}}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% else %}
+                <div class="day_wrap day current_month {{day.1}}">
+                    <div class="text">
+                        <div class="date">{{ day.0 }}</div>
+                    </div>
                 </div>
-            {% endfor %}
-             <div class="nav_buttons">
-                 <div class="nav_button">
-                     <form method="GET">
-                         <input type="text" name="previous_month" id="previous_month" hidden value="true">
-                         <button class="button-69 backwards"><span>&#10229;</span></button>
-                     </form>
-                 </div>
-                 <div class="nav_button">
-                     <form method="GET">
-                         <input type="text" name="next_month" id="next_month" hidden value="true">
-                         <button class="button-68 forwards"><span>&#10230;</span></button>
-                     </form>
-                 </div>
+                {% endif %}
+                {% else %}
+                {% if day.3 in dates_in_database %}
+                <a class="day_wrap {{day.1}}-display" href="{% url 'date' year=day.6 month=day.5 day=day.4 %}">
+                    <div class="day not_current_month {{day.1}} {{day.9.state}}">
+                        <div class="text">
+                            <div class="upper-row" data-free-employees="{{ free_employees|get_item:day.3 }}">
+                                <div class="date">{{ day.0 }}</div>
+                                <div class="ppl-image"></div>
+                                <div class="ppl-image-green"></div>
+                            </div>
+                            <div class="icons">
+                                <div class="probaterheles {{day.9.hasProject.Próbaterhelés}}"
+                                     data-bubble="{{day.10.Próbaterhelés}}"></div>
+                                <div class="sullyedesmeres {{day.9.hasProject.Süllyedésmérés}}"
+                                     data-bubble="{{day.10.Süllyedésmérés}}"></div>
+                                <div class="integritasvizsgalat {{day.9.hasProject.Integritásvizsgálat}}"
+                                     data-bubble="{{day.10.Integritásvizsgálat}}"></div>
+                                <div class="inklinometer {{day.9.hasProject.Inklinométer}}"
+                                     data-bubble="{{day.10.Inklinométer}}"></div>
+                                <div class="other {{day.9.hasProject.Other}}" data-bubble="{{day.10.Other}}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% else %}
+                <div class="day_wrap day not_current_month {{day.1}}">
+                    <div class="text">
+                        <div class="date">{{ day.0 }}</div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
             </div>
-                 <form action="{% url 'export_dates' %}" class="export_wrapper">
-                    {{export_dates.start}}
-                    {{export_dates.end}}
-                     <div class="export-line">
-                         <button class="cyan-button" id="export" type="submit" data-check-sit-url="{% url 'ajax_check_SIT' %}">Export</button>
-                         <span id="warning" class="feedback">&#9888;</span>
-                         <span id="check" class="feedback">&#10003;</span>
-                     </div>
-                </form>
+            {% endfor %}
+            <div class="nav_buttons">
+                <div class="nav_button">
+                    <form method="GET">
+                        <input type="text" name="previous_month" id="previous_month" hidden value="true">
+                        <button class="button-69 backwards"><span>&#10229;</span></button>
+                    </form>
+                </div>
+                <div class="nav_button">
+                    <form method="GET">
+                        <input type="text" name="next_month" id="next_month" hidden value="true">
+                        <button class="button-68 forwards"><span>&#10230;</span></button>
+                    </form>
+                </div>
+            </div>
+            <form action="{% url 'export_dates' %}" class="export_wrapper">
+                {{export_dates.start}}
+                {{export_dates.end}}
+                <div class="export-line">
+                    <button class="cyan-button" id="export" type="submit"
+                            data-check-sit-url="{% url 'ajax_check_SIT' %}">Export
+                    </button>
+                    <span id="warning" class="feedback">&#9888;</span>
+                    <span id="check" class="feedback">&#10003;</span>
+                </div>
+            </form>
         </div>
 
+    </div>
+
+    <div class="user-selection" data-user-selection-url="{% url 'user-selection' %}"
+         data-year="{{request.resolver_match.kwargs.year}}" data-month="{{request.resolver_match.kwargs.month}}">
+        <input type="radio" name="user-selection" id="admin-selection" value="Admin" checked>
+        <label class="cyan-button" for="admin-selection">Admin</label>
+        {% for employee in employees %}
+        <input type="radio" name="user-selection" id="{{ employee.id }}-selection" value="{{ employee.id }}">
+        <label class="cyan-button" for="{{ employee.id }}-selection">{{ employee.first_name }} {{ employee.last_name}}</label>
+        {% endfor %}
     </div>
 
 

@@ -306,3 +306,20 @@ input[type="date"]{
     gap: 10px;
 }
 
+.user-selection{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 50px;
+}
+
+.user-selection input{
+    display: none;
+}
+
+.user-selection input[type="radio"]:checked+label{
+    border-bottom: 4px solid crimson;
+}
+
+.nav_buttons_user_selection button{
+    width: 180px;
+}

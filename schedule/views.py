@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.http import FileResponse, HttpResponse, JsonResponse
+from django.urls import reverse
+
 from .models import Date, Project, DateBoundWithProject, Subproject, Artifact, Profile, SIT_with_date, SIT_project
 from .forms import DateBoundWithProjectForm, ExportDates, SIT_with_date_form
 import datetime
@@ -110,7 +112,7 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
     end = start + datetime.timedelta(days=6)
     export_dates = ExportDates(initial={"start": start, "end": end})
     context = {"cal": cal, "dates_in_database": dates_in_database, "year": year, "month_str": month_str,
-               "export_dates": export_dates, "free_employees": free_employees}
+               "export_dates": export_dates, "free_employees": free_employees, "employees": all_possible_employees}
     return render(request=request, template_name="schedule/admin.html", context=context)
 
 
@@ -129,7 +131,8 @@ def check_SIT(request):
 
     return JsonResponse(dates_without_sit_details, safe=False)
 
-
+@user_passes_test(Monitoring_group_check)
+@login_required
 def export_dates(request):
     start = datetime.datetime.strptime(request.GET["start"], "%Y-%m-%d")
     end = datetime.datetime.strptime(request.GET["end"], "%Y-%m-%d")
@@ -589,7 +592,7 @@ def get_calendar(year, month):
             week[i] = [date_str, day, month_str, full_date_str, day_int, month_int, year_int, month_str_from_int, date]
     return dates
 
-
+@user_passes_test(Monitoring_group_check)
 @login_required
 def repeat_project(request):
     year = int(request.GET["year"])
@@ -666,7 +669,8 @@ def repeat_project(request):
 
     return redirect("date", year, month, day)
 
-
+@user_passes_test(Monitoring_group_check)
+@login_required
 def SIT_details(request):
     year = int(request.GET["year"])
     month = int(request.GET["month"])
@@ -688,3 +692,83 @@ def SIT_details(request):
             sit_object.save()
 
     return redirect("date", year, month, day)
+
+
+def user_selection(request, year=datetime.date.today().year, month=datetime.date.today().month, id=None):
+    print(id)
+    if "id" in request.GET.keys():
+        if "Admin" in request.GET["id"]:
+            return HttpResponse(reverse("admin", args=[year, month]))
+        else:
+            id = request.GET["id"]
+    user = User.objects.get(pk=int(id))
+
+    cal = get_calendar(year, month)
+
+    active_days = []
+    for week in cal:
+        for day in week:
+            if Date.objects.filter(date=day[8]):
+                date = Date.objects.get(date=day[8])
+                projects_for_specific_day = DateBoundWithProject.objects.filter(date=date)
+                for project in projects_for_specific_day:
+                    if user in project.employee.all():
+                        active_days.append(day[3])
+
+    month_str = str(month)
+    context = {"cal": cal, "year": year, "month_str": month_str, "active_days": active_days, "id": id}
+    return render(request=request, template_name="schedule/ajax/user_selection.html", context=context)
+
+
+def user_selection_date(request, year, month, day, id):
+    context_list = []
+    user = User.objects.get(pk=id)
+    date = Date.objects.get(date=datetime.date(year, month, day))
+    projects_for_that_day = DateBoundWithProject.objects.filter(date=date)
+    for project in projects_for_that_day:
+        if user in project.employee.all():
+            project_name = project.project
+            vehicles = project.vehicle.all()
+            employees = project.employee.all()
+            comment = project.comment
+            if project.project.hasSubproject():
+                artifacts = set()
+                subprojects = set()
+                for profile in project.profile.all():
+                    artifacts.add(profile.artifact)
+                    subprojects.add(profile.artifact.subproject)
+                context = {}
+                for subproject in subprojects:
+                    context[subproject] = {}
+                for artifact in artifacts:
+                    context[artifact.subproject].update({artifact: {}})
+                for profile in project.profile.all():
+                    context[profile.artifact.subproject][profile.artifact].update({profile: "active"})
+                for artifact in artifacts:
+                    for profile in artifact.profile_set.all():
+                        if profile not in context[artifact.subproject][artifact]:
+                            context[artifact.subproject][artifact].update({profile: "inactive"})
+                mini_context = {"project_name": project_name, "vehicles": vehicles, "employees": employees,
+                                "comment": comment, "hasSubproject": context}
+            else:
+                mini_context = {"project_name": project_name, "vehicles": vehicles, "employees": employees,
+                                "comment": comment}
+            context_list.append(mini_context)
+    context = {"context": context_list, "date": date}
+
+    return render(request=request, template_name="schedule/calendar_date.html", context=context)
+
+
+def month_change_user_selection(request):
+    year = int(request.GET["year"])
+    month = int(request.GET["month"])
+    id = int(request.GET["id"])
+    date = datetime.date(year, month, 1)
+    if request.GET["direction"] == "forwards":
+        new_date = date + datetime.timedelta(40)
+    else:
+        new_date = date - datetime.timedelta(1)
+    year = new_date.year
+    month = new_date.month
+
+    return user_selection(request, year, month, id)

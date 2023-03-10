@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+{% load static %}
+
+
+<link rel="stylesheet" href="{% static 'schedule/css/user_calendar_style.css' %}">
+<div class="month">
+    <div class="weekdays">
+        <div><span>Hétfő</span></div>
+        <div><span>Kedd</span></div>
+        <div><span>Szerda</span></div>
+        <div><span>Csütörtök</span></div>
+        <div><span>Péntek</span></div>
+        <div class="weekend"><span>Szombat</span></div>
+        <div class="weekend"><span>Vasárnap</span></div>
+    </div>
+    {% for week in cal %}
+    <div class="week">
+        {% for day in week %}
+        {% if day.7 == month_str %}
+        {% if day.3 in active_days %}
+        {% with id as user_id %}
+        <a class="day_wrap {{day.1}}-display"
+           href="{% url 'user_selection_date' year=day.6 month=day.5 day=day.4 id=user_id%}">
+            {% endwith %}
+            <div class="day current_month {{day.1}} active">
+                <div class="text">
+                    <div class="date">{{ day.0 }}</div>
+                </div>
+            </div>
+        </a>
+        {% else %}
+        <a class="day_wrap {{day.1}}-display disabled_a">
+            <div class="day {{day.1}} current_month">
+                <div class="text">
+                    <div class="date">{{ day.0 }}</div>
+                </div>
+            </div>
+        </a>
+        {% endif %}
+        {% else %}
+        {% if day.3 in active_days %}
+        {% with id as user_id %}
+        <a class="day_wrap {{day.1}}-display" href="{% url 'user_selection_date' year=day.6 month=day.5 day=day.4 id=user_id%}">
+        {% endwith %}
+            <div class="day {{day.1}} not_current_month active">
+                <div class="text">
+                    <div class="date">{{ day.0 }}</div>
+                </div>
+            </div>
+        </a>
+        {% else %}
+        <a class="day_wrap {{day.1}}-display disabled_a">
+            <div class="day {{day.1}} not_current_month">
+                <div class="text">
+                    <div class="date">{{ day.0 }}</div>
+                </div>
+            </div>
+        </a>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+        <div class="nav_buttons nav_buttons_user_selection" data-month-change-url="{% url 'month_change_user_selection' %}" data-year="{{ year }}" data-month="{{ month_str }}">
+            <button class="button-69 backwards" id="backwards" value="backwards"><span>&#10229;</span></button>
+            <button class="button-68 forwards" id="forwards" value="forwards"><span>&#10230;</span></button>
+        </div>
+
+</div>

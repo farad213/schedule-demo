@@ -164,5 +164,53 @@ $(this).find('.bubble').remove();
 });
 
 
+$(".user-selection input").each(function(){
+   $(this).change(function(){
+
+        var url = $(".user-selection").data("user-selection-url");
+        var id = $(this).val();
+        $.ajax({
+          url: url,
+          data: {
+            "id": id
+          },
+          success: function(response) {
+               if (id !== "Admin") {
+                  $(".calendar").html(response);
+               } else {
+                  window.location.href = response;
+               }
+          }
+        });
+
+   });
+});
+
+$(document).on('click', '.nav_buttons button', function(){
+   var url = $(".nav_buttons").data("month-change-url");
+   var direction = $(this).val();
+   var year = $(".nav_buttons").data("year");
+   var month = $(".nav_buttons").data("month");
+   var id = $("input[name=user-selection]:checked").val();
+   console.log(url, direction);
+    $.ajax({
+      url: url,
+      data: {
+        "direction": direction,
+        "year": year,
+        "month": month,
+        "id": id
+      },
+      success: function(response) {
+        var $response = $(response);
+        var month = $response.find('.nav_buttons').data('month');
+        var year = $response.find('.nav_buttons').data('year');
+        $(".date_title").text("Admin - " + year + "." + month);
+
+        $(".calendar").html(response);
+      }
+    });
+});
+
 });
 
