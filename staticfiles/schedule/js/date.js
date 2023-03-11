@@ -17,7 +17,6 @@ $(document).ready(function() {
     });
 
     var SIT_forms = $('.sit-form');
-    console.log(SIT_forms);
 
     SIT_forms.each(function(index){
     $(this).find('[name="project_no"]').attr("id", $(this).find('[name="project_no"]').attr("id") + index);
@@ -84,7 +83,6 @@ $(document).ready(function() {
 
     // Set up event listeners for clicks on elements with the 'icon' class
     $(this).on('click', '.icon', function(){
-    console.log($(this))
       var project_id = $(this).closest(".js_form").find("[name='project_id']").val();
       var id = $(this).attr("id");
       var r_type = "add or remove";
@@ -114,7 +112,6 @@ partialSaveButton.click(function () {
   var project_name = partialSaveButton.data("project-name");
   var project_id = $(this).closest(".project").find("[name='project_id']").val();
   var url = $(this).closest('.project').find('.js_form').data('partial_save-url');
-  console.log(url);
   var subprojectId = subproject.val();
   var artifactId = artifact.val();
   var profileId = profile.val();
@@ -152,7 +149,6 @@ if (partialSaveButton.data("project-name")) {
   var project_name = partialSaveButton.data("project-name");
   var project_id = $(this).find("[name='project_id']").val();
 
-  console.log(url)
 
   $.ajax({
     url: url,
@@ -163,7 +159,6 @@ if (partialSaveButton.data("project-name")) {
     },
     success: function (data) {
       response_table.html(data);
-      console.log(response_table)
     }
   });
 }
@@ -172,11 +167,35 @@ if (partialSaveButton.data("project-name")) {
 $("input[name='employee']:checked, input[name='vehicle']:checked").each(function() {
   var id = $(this).attr("id");
   var labelText = $("label[for='" + id + "']").text().trim();
-  console.log(labelText);
   $("label").filter(function() {
     return $(this).text().trim() === labelText;
   }).add($("label[for='" + id + "']")).addClass("greyed-out");
 });
+
+$(".unsaved_project").each(function(){
+    $(this).addClass("no-display");
+
+});
+
+$('.checkbox').change(function() {
+    var checkedValues = $('.checkbox:checked').map(function() {
+      return this.value;
+    }).get();
+    $('.unsaved_project').each(function() {
+      var classes = $(this).attr('class').split(' ');
+      if (checkedValues.some(val => classes.includes(val))) {
+      $(this).removeClass('no-display');
+    } else {
+      $(this).addClass('no-display');
+}
+
+    });
+    $('.checkbox:not(:checked)').each(function() {
+      var value = $(this).val();
+      $('.unsaved_project.' + value + ':not(.no-display)').addClass('no-display');
+    });
+  });
+
 
 });
 

@@ -212,5 +212,7 @@ $(document).on('click', '.nav_buttons button', function(){
     });
 });
 
+
+
 });
 
