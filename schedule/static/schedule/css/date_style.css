@@ -229,3 +229,22 @@ input[type="date"]{
 .greyed-out{
     color: grey;
 }
+
+.no-display{
+    display: none;
+}
+
+.project-selection-wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.checkbox{
+    display: none;
+}
+
+.checkbox:checked+label{
+    border-bottom: 4px solid crimson;
+    margin-bottom: -4px;
+}

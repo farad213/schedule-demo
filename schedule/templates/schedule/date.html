@@ -17,130 +17,141 @@ Fugro - Beosztás - Dátum
         <div class="title" date="{{ year_ }}.{{ month_ }}.{{ day_ }}">{{ year_ }}.{{ month_ }}.{{ day_ }}</div>
     </div>
 
-<div class="nav_menu">
-      <form method="GET">
-        <input type="text" name="previous_day" id="previous_day" hidden value="true">
-        <button class="button-69 backwards"><span>&#10229;</span></button>
-    </form>
-    <form method="GET">
-        <input type="text" name="next_day" id="next_day" hidden value="true">
-        <button class="button-68 forwards"><span>&#10230;</span></button>
-    </form>
-</div>
-<div class="title_parent">
-    <p id="ajax_done_show"></p>
-</div>
+    <div class="nav_menu">
+        <form method="GET">
+            <input type="text" name="previous_day" id="previous_day" hidden value="true">
+            <button class="button-69 backwards"><span>&#10229;</span></button>
+        </form>
+        <form method="GET">
+            <input type="text" name="next_day" id="next_day" hidden value="true">
+            <button class="button-68 forwards"><span>&#10230;</span></button>
+        </form>
+    </div>
+
+    <div class="project-selection-wrapper">
+    {% for project in untouched_projects %}
+        <input type="checkbox" id="{{ project }}_checkbox" class="checkbox" value="{{ project }}">
+        <label for="{{ project }}_checkbox" class="checkbox-label cyan-button">{{ project }}</label>
+    {% endfor %}
+    </div>
+
 
     <div class="projects">
-    {% for project, project_form in saved_projects_and_forms %}
-    <div class="saved_project project">
-        <div class="form_table_wrapper">
-        <div class="project_title"><span>{{ project.project.project }}</span></div>
-            <form class="re_date" action="{% url 're_date_project' %}">
-                <input type="hidden" name="project_id" value="{{project.id}}">
-                <input type="hidden" name="year" value="{{ year_ }}">
-                <input type="hidden" name="month" value="{{ month_ }}">
-                <input type="hidden" name="day" value="{{ day_ }}">
-                <input type="date" name="new_date">
-                <button type="submit" class="cyan-button">Átdátumoz</button>
-            </form>
-            <form class="repeat_project" action="{% url 'repeat_project' %}">
-                <select id="repeat" name="repeat">
-                    <option value="Soha">Soha</option>
-                    <option value="Egy hétig">Egy hétig</option>
-                    <option value="Hetente">Hetente</option>
-                    <option value="Kéthetente">Kéthetente</option>
-                    <option value="Havonta">Havonta</option>
-                </select>
-                <input type="hidden" name="project_id" value="{{project.id}}">
-                <input type="hidden" name="year" value="{{ year_ }}">
-                <input type="hidden" name="month" value="{{ month_ }}">
-                <input type="hidden" name="day" value="{{ day_ }}">
-                <button type="submit" class="cyan-button">Ismétlés</button>
-            </form>
+        {% for project, project_form in saved_projects_and_forms %}
+        <div class="saved_project project">
+            <div class="form_table_wrapper">
+                <div class="project_title"><span>{{ project.project.project }}</span></div>
+                <form class="re_date" action="{% url 're_date_project' %}">
+                    <input type="hidden" name="project_id" value="{{project.id}}">
+                    <input type="hidden" name="year" value="{{ year_ }}">
+                    <input type="hidden" name="month" value="{{ month_ }}">
+                    <input type="hidden" name="day" value="{{ day_ }}">
+                    <input type="date" name="new_date">
+                    <button type="submit" class="cyan-button">Átdátumoz</button>
+                </form>
+                <form class="repeat_project" action="{% url 'repeat_project' %}">
+                    <select id="repeat" name="repeat">
+                        <option value="Soha">Soha</option>
+                        <option value="Egy hétig">Egy hétig</option>
+                        <option value="Hetente">Hetente</option>
+                        <option value="Kéthetente">Kéthetente</option>
+                        <option value="Havonta">Havonta</option>
+                    </select>
+                    <input type="hidden" name="project_id" value="{{project.id}}">
+                    <input type="hidden" name="year" value="{{ year_ }}">
+                    <input type="hidden" name="month" value="{{ month_ }}">
+                    <input type="hidden" name="day" value="{{ day_ }}">
+                    <button type="submit" class="cyan-button">Ismétlés</button>
+                </form>
 
-            {% if project.project.project == "Integritásvizsgálat" %}
-            <form class="sit-form" action="{% url 'SIT_details' %}">
-                <input type="hidden" name="project_id" value="{{project.id}}">
-                <input type="hidden" name="year" value="{{ year_ }}">
-                <input type="hidden" name="month" value="{{ month_ }}">
-                <input type="hidden" name="day" value="{{ day_ }}">
-                <div class="sit-wrapper">
-                    {% if project.pk in saved_SIT_forms %}
+                {% if project.project.project == "Integritásvizsgálat" %}
+                <form class="sit-form" action="{% url 'SIT_details' %}">
+                    <input type="hidden" name="project_id" value="{{project.id}}">
+                    <input type="hidden" name="year" value="{{ year_ }}">
+                    <input type="hidden" name="month" value="{{ month_ }}">
+                    <input type="hidden" name="day" value="{{ day_ }}">
+                    <div class="sit-wrapper">
+                        {% if project.pk in saved_SIT_forms %}
                         {% for field in saved_SIT_forms|get_item:project.pk %}
-                            <div class="field-sit field-{{ field.label }}">{{ field }}</div>
+                        <div class="field-sit field-{{ field.label }}">{{ field }}</div>
                         {% endfor %}
-                    {% else %}
+                        {% else %}
                         {% for field in SIT_form %}
-                            <div class="field-sit field-{{ field.label }}">{{ field }}</div>
+                        <div class="field-sit field-{{ field.label }}">{{ field }}</div>
                         {% endfor %}
+                        {% endif %}
+                    </div>
+                    <button id="save-sit" type="submit" class="cyan-button">Ment</button>
+                </form>
+                {% endif %}
+
+                <form method="POST" class="project_form js_form" data-hasSubproject="{{project.project.hasSubproject}}"
+                      data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}"
+                      data-partial_save-url="{% url 'ajax_partial_save' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="saved">
+                    <input type="hidden" name="project_name" value="{{project.project}}">
+                    <input type="hidden" name="project_id" value="{{project.id}}">
+
+                    {% if project.project.hasSubproject %}
+                    <div class="label">{{ project_form.subproject.label }}</div>
+                    <div class="field">{{ project_form.subproject|add_class:"select2" }}</div>
+                    <div class="label">{{ project_form.artifact.label }}</div>
+                    <div class="field">{{ project_form.artifact|add_class:"select2" }}</div>
+                    <div class="label">{{ project_form.profile.label }}</div>
+                    <div class="field">{{ project_form.profile|add_class:"select2" }}</div>
                     {% endif %}
-                </div>
-                <button id="save-sit" type="submit" class="cyan-button">Ment</button>
-            </form>
-            {% endif %}
-
-        <form method="POST" class="project_form js_form" data-hasSubproject="{{project.project.hasSubproject}}" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}" data-partial_save-url="{% url 'ajax_partial_save' %}">
-            {% csrf_token %}
-            <input type="hidden" name="saved">
-            <input type="hidden" name="project_name" value="{{project.project}}">
-            <input type="hidden" name="project_id" value="{{project.id}}">
-
-            {% if project.project.hasSubproject %}
-                <div class="label">{{ project_form.subproject.label }}</div>
-                <div class="field">{{ project_form.subproject|add_class:"select2" }}</div>
-                <div class="label">{{ project_form.artifact.label }}</div>
-                <div class="field">{{ project_form.artifact|add_class:"select2" }}</div>
-                <div class="label">{{ project_form.profile.label }}</div>
-                <div class="field">{{ project_form.profile|add_class:"select2" }}</div>
-            {% endif %}
-            <div class="label">{{ project_form.employee.label }}</div>
-            <div class="field employee-field">{{ project_form.employee }}</div>
-            <div class="label">{{ project_form.vehicle.label }}</div>
-            <div class="field vehicle-field">{{ project_form.vehicle }}</div>
-            <div class="label">{{ project_form.comment.label }}</div>
-            <div class="field">{{ project_form.comment }}</div>
+                    <div class="label">{{ project_form.employee.label }}</div>
+                    <div class="field employee-field">{{ project_form.employee }}</div>
+                    <div class="label">{{ project_form.vehicle.label }}</div>
+                    <div class="field vehicle-field">{{ project_form.vehicle }}</div>
+                    <div class="label">{{ project_form.comment.label }}</div>
+                    <div class="field">{{ project_form.comment }}</div>
 
 
-            {% if project.project.hasSubproject %}
-                <div id="response_table"></div>
-            {% endif %}
+                    {% if project.project.hasSubproject %}
+                    <div id="response_table"></div>
+                    {% endif %}
             </div>
-                <div class="buttons_flex">
-            {% if not project.project.hasSubproject %}
+            <div class="buttons_flex">
+                {% if not project.project.hasSubproject %}
                 <button class="button-68 project_save" type="submit">Save</button>
+                {% endif %}
+                </form>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="delete" value="{{project.project}}">
+                    <input type="hidden" name="project_id" value="{{project.id}}">
+                    <button class="button-69 project_save delete_button" type="submit">Delete</button>
+            </div>
+            </form>
+            {% if project.project.hasSubproject %}
+            <button name="update" id="partial_save" class="button-68 project_save" type="submit"
+                    data-project-name="{{project.project}}">Update
+            </button>
             {% endif %}
-        </form>
-
-        <form method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="delete" value="{{project.project}}">
-            <input type="hidden" name="project_id" value="{{project.id}}">
-            <button class="button-69 project_save delete_button" type="submit">Delete</button></div>
-        </form>
-        {% if project.project.hasSubproject %}
-          <button name="update" id="partial_save" class="button-68 project_save" type="submit" data-project-name="{{project.project}}">Update</button>
-        {% endif %}
-    </div>
-    <br>
-    {% endfor %}
+        </div>
+        <br>
+        {% endfor %}
 
 
-
-    {% for project in untouched_projects %}
-    <div class="unsaved_project project">
-        <div class="project_title"><span>{{ project.project }}</span></div>
-        <form method="POST" class="project_form js_form" data-hasSubproject="{{project.hasSubproject}}" data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}" data-partial_save-url="{% url 'ajax_partial_save' %}">
-            {% csrf_token %}
+        {% for project in untouched_projects %}
+        <div class="unsaved_project project {{ project.project }}">
+            <div class="project_title"><span>{{ project.project }}</span></div>
+            <form method="POST" class="project_form js_form" data-hasSubproject="{{project.hasSubproject}}"
+                  data-artifacts-url="{% url 'ajax_artifacts' %}" data-profiles-url="{% url 'ajax_profiles' %}"
+                  data-partial_save-url="{% url 'ajax_partial_save' %}">
+                {% csrf_token %}
                 <input type="hidden" name="untouched">
-                <input type="hidden" name="project_name"  value="{{project}}">
-                 {% if project.hasSubproject %}
-                    <div class="label">{{ date_bound_project_form.subproject.label }}</div>
-                    <div class="field">{{ date_bound_project_form.subproject|add_class:"select2" }}</div>
-                    <div class="label">{{ date_bound_project_form.artifact.label }}</div>
-                    <div class="field">{{ date_bound_project_form.artifact|add_class:"select2" }}</div>
-                    <div class="label">{{ date_bound_project_form.profile.label }}</div>
-                    <div class="field">{{ date_bound_project_form.profile|add_class:"select2" }}</div>
+                <input type="hidden" name="project_name" value="{{project}}">
+                {% if project.hasSubproject %}
+                <div class="label">{{ date_bound_project_form.subproject.label }}</div>
+                <div class="field">{{ date_bound_project_form.subproject|add_class:"select2" }}</div>
+                <div class="label">{{ date_bound_project_form.artifact.label }}</div>
+                <div class="field">{{ date_bound_project_form.artifact|add_class:"select2" }}</div>
+                <div class="label">{{ date_bound_project_form.profile.label }}</div>
+                <div class="field">{{ date_bound_project_form.profile|add_class:"select2" }}</div>
                 {% endif %}
                 <div class="label">{{ date_bound_project_form.employee.label }}</div>
                 <div class="field employee-field">{{ date_bound_project_form.employee }}</div>
@@ -149,12 +160,12 @@ Fugro - Beosztás - Dátum
                 <div class="label">{{ date_bound_project_form.comment.label }}</div>
                 <div class="field">{{ date_bound_project_form.comment }}</div>
 
-            <button class="button-68 project_save" type="submit">Save</button>
-        </form>
+                <button class="button-68 project_save" type="submit">Save</button>
+            </form>
+        </div>
+        <br>
+        {% endfor %}
     </div>
-    <br>
-    {% endfor %}
-</div>
 
 </section>
 
