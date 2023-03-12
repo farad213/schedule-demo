@@ -69,6 +69,15 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
                 free_employees[day[3]] = free_employees_on_date
 
     for date in dates_in_database:
+
+        if DateBoundWithProject.objects.filter(date=date):
+            if date.state == "untouched":
+                date.state = "done"
+                date.save()
+        else:
+            date.state = "untouched"
+            date.save()
+
         # if Date has DateBoundWithProject, updating Date with DateBoundWithProject's info
         if DateBoundWithProject.objects.filter(date=date):
             for project in DateBoundWithProject.objects.filter(date=date):
