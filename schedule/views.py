@@ -67,16 +67,8 @@ def admin(request, year=datetime.date.year, month=datetime.date.month):
                     in available_employees if
                     employee not in employees_working]
                 free_employees[day[3]] = free_employees_on_date
-    # updating project status
-    for date in dates_in_database:
-        if DateBoundWithProject.objects.filter(date=date):
-            if date.state == "untouched":
-                date.state = "done"
-                date.save()
-        else:
-            date.state = "untouched"
-            date.save()
 
+    for date in dates_in_database:
         # if Date has DateBoundWithProject, updating Date with DateBoundWithProject's info
         if DateBoundWithProject.objects.filter(date=date):
             for project in DateBoundWithProject.objects.filter(date=date):
@@ -424,10 +416,10 @@ def partial_save(request):
         context[subproject] = {}
     for artifact in artifacts:
         context[artifact.subproject].update({artifact: {}})
-    for profile in project.profile.all():
+    for profile in project.profile.all().order_by("profile"):
         context[profile.artifact.subproject][profile.artifact].update({profile: "active"})
     for artifact in artifacts:
-        for profile in artifact.profile_set.all():
+        for profile in artifact.profile_set.all().order_by("profile"):
             if profile not in context[artifact.subproject][artifact]:
                 context[artifact.subproject][artifact].update({profile: "inactive"})
     return render(request, 'schedule/ajax/partial_save.html', context={"context": context})
@@ -508,10 +500,10 @@ def user_date(request, year, month, day):
                     context[subproject] = {}
                 for artifact in artifacts:
                     context[artifact.subproject].update({artifact: {}})
-                for profile in project.profile.all():
+                for profile in project.profile.all().order_by("profile"):
                     context[profile.artifact.subproject][profile.artifact].update({profile: "active"})
                 for artifact in artifacts:
-                    for profile in artifact.profile_set.all():
+                    for profile in artifact.profile_set.all().order_by("profile"):
                         if profile not in context[artifact.subproject][artifact]:
                             context[artifact.subproject][artifact].update({profile: "inactive"})
                 mini_context = {"project_name": project_name, "vehicles": vehicles, "employees": employees,
@@ -742,10 +734,10 @@ def user_selection_date(request, year, month, day, id):
                     context[subproject] = {}
                 for artifact in artifacts:
                     context[artifact.subproject].update({artifact: {}})
-                for profile in project.profile.all():
+                for profile in project.profile.all().order_by("profile"):
                     context[profile.artifact.subproject][profile.artifact].update({profile: "active"})
                 for artifact in artifacts:
-                    for profile in artifact.profile_set.all():
+                    for profile in artifact.profile_set.all().order_by("profile"):
                         if profile not in context[artifact.subproject][artifact]:
                             context[artifact.subproject][artifact].update({profile: "inactive"})
                 mini_context = {"project_name": project_name, "vehicles": vehicles, "employees": employees,
