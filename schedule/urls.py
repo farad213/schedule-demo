@@ -19,5 +19,6 @@ urlpatterns = [
     path("ajax/user_selection/", views.user_selection, name="user-selection"),
     path("user_selection_date/<int:year>/<int:month>/<int:day>/<int:id>", views.user_selection_date,
          name="user_selection_date"),
-    path("ajax/month_change_user_selection", views.month_change_user_selection, name="month_change_user_selection")
+    path("ajax/month_change_user_selection", views.month_change_user_selection, name="month_change_user_selection"),
+    path("day_nav_user_date", views.day_nav_user_date, name="day_nav_user_date")
 ]

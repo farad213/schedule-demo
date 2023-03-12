@@ -754,7 +754,7 @@ def user_selection_date(request, year, month, day, id):
                 mini_context = {"project_name": project_name, "vehicles": vehicles, "employees": employees,
                                 "comment": comment}
             context_list.append(mini_context)
-    context = {"context": context_list, "date": date}
+    context = {"context": context_list, "date": date, "id": id}
 
     return render(request=request, template_name="schedule/calendar_date.html", context=context)
 
@@ -772,3 +772,22 @@ def month_change_user_selection(request):
     month = new_date.month
 
     return user_selection(request, year, month, id)
+
+
+def day_nav_user_date(request):
+    date = request.GET["date"]
+    date = [int(item) for item in date.split(".")]
+    date = datetime.date(date[0], date[1], date[2])
+
+    if request.GET["day_selection"] == "forwards":
+        date = date + datetime.timedelta(1)
+    else:
+        date = date - datetime.timedelta(1)
+
+    if request.GET["user_id"]:
+        id = request.GET["user_id"]
+
+        return user_selection_date(request, date.year, date.month, date.day, id)
+
+    return user_date(request, date.year, date.month, date.day)
+

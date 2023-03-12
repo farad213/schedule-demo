@@ -11,75 +11,100 @@ Fugro - Beosztás - {{ user }}
 
 
 <section class="background">
-    <div class="date">{{ date }}</div>
+
+    <div class="date-nav-wrapper">
+        <div class="date">{{ date }}</div>
+
+        <div class="nav_menu">
+            <form method="GET" action="{% url 'day_nav_user_date' %}">
+                <input type="text" name="day_selection" value="backwards" hidden="">
+                <input type="text" name="date" value="{{ date }}" hidden>
+                <input type="text" name="user_id" value="{{ id }}" hidden>
+                <button class="button-69 backwards"><span>⟵</span></button>
+            </form>
+            <form method="GET" action="{% url 'day_nav_user_date' %}">
+                <input type="text" name="day_selection" value="forwards" hidden="">
+                <input type="text" name="date" value="{{ date }}" hidden>
+                <input type="text" name="user_id" value="{{ id }}" hidden>
+                <button class="button-68 forwards"><span>⟶</span></button>
+            </form>
+        </div>
+    </div>
+
     <div class="projects_wrapper">
         {% for c in context %}
-            <div class="project">
-                {% if c.project_name %}
-                    <div class="project_title">
-                    {{ c.project_name }}
-                    </div>
-                {% endif %}
-                {% if c.vehicles %}
-                    <div class="vehicles info">
-                        <label>Autó:</label>
-                        <span>
+        <div class="project">
+            {% if c.project_name %}
+            <div class="project_title">
+                {{ c.project_name }}
+            </div>
+            {% endif %}
+            {% if c.vehicles %}
+            <div class="vehicles info">
+                <label>Autó:</label>
+                <span>
                             {% for vehicle in c.vehicles %}
                                 <li>{{ vehicle }} ({{ vehicle.license_plate }})</li>
                             {% endfor %}
                         </span>
-                    </div>
-                {% endif %}
-                {% if c.employees %}
-                    <div class="employees info">
-                        <label>Alkalmazottak:</label>
-                        <span>
+            </div>
+            {% endif %}
+            {% if c.employees %}
+            <div class="employees info">
+                <label>Alkalmazottak:</label>
+                <span>
                             {% for employee in c.employees %}
                                 <li>{{ employee.first_name }} {{employee.last_name}}</li>
                             {% endfor %}
                         </span>
-                    </div>
-                {% endif %}
-                {% if c.comment %}
-                    <div class="comment info">
-                        <label>Megjegyzés:</label>
-                        <p>{{ c.comment }}</p>
-                    </div>
-                {% endif %}
-
-                <table>
-{% for subproject, subproject_info in c.hasSubproject.items %}
-
-<tr class="project_data">
-    <th>{{ subproject }}</th>
-    <th colspan="2">{{ subproject.name }}</th>
-    <th colspan="2">{{ subproject.customer }}</th>
-</tr>
-<tr class="categories">
-    <th>műtárgy</th>
-    <th>szelvény</th>
-    <th>hossz</th>
-    <th>mérési oldal</th>
-</tr>
-    {% for artifact, artifact_info in subproject_info.items %}
-    <tr>
-        <td class="artifact" rowspan="{{ artifact_info|length|add:'1' }}">{{ artifact }}</td>
-        </tr>
-
-        {% for profile, profile_info in artifact_info.items %}
-        <tr class="{{ profile_info }} {% cycle 'odd' 'even' %}">
-                <td class="profile">{{ profile }}</td>
-                <td class="profile_length">{{ profile.length }}</td>
-                <td class="profile_measurement_side">{{ profile.measurement_side }}</td>
-        </tr>
-
-        {% endfor %}
-
-    {% endfor %}
-
-{% endfor %}
-</table>
             </div>
+            {% endif %}
+            {% if c.comment %}
+            <div class="comment info">
+                <label>Megjegyzés:</label>
+                <p>{{ c.comment }}</p>
+            </div>
+            {% endif %}
+
+            <table>
+                {% for subproject, subproject_info in c.hasSubproject.items %}
+
+                <tr class="project_data">
+                    <th>{{ subproject }}</th>
+                    <th colspan="2">{{ subproject.name }}</th>
+                    <th colspan="2">{{ subproject.customer }}</th>
+                </tr>
+                <tr class="categories">
+                    <th>műtárgy</th>
+                    <th>szelvény</th>
+                    <th>hossz</th>
+                    <th>mérési oldal</th>
+                </tr>
+                {% for artifact, artifact_info in subproject_info.items %}
+                <tr>
+                    <td class="artifact" rowspan="{{ artifact_info|length|add:'1' }}">{{ artifact }}</td>
+                </tr>
+
+                {% for profile, profile_info in artifact_info.items %}
+                <tr class="{{ profile_info }} {% cycle 'odd' 'even' %}">
+                    <td class="profile">{{ profile }}</td>
+                    <td class="profile_length">{{ profile.length }}</td>
+                    <td class="profile_measurement_side">{{ profile.measurement_side }}</td>
+                </tr>
+
+                {% endfor %}
+
+                {% endfor %}
+
+                {% endfor %}
+            </table>
+        </div>
+
+        {% empty %}
+
+        <div class="empty">Nincs rögzítve semmi számodra a mai napra.</div>
+
+
         {% endfor %}
     </div>
 </section>
