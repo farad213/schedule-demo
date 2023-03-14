@@ -15,7 +15,7 @@ from io import BytesIO
 
 
 def Monitoring_group_check(user):
-    return user.groups.filter(name='Schedule - Monitoring').exists() or user.is_superuser
+    return user.groups.filter(name='Schedule - Monitoring').exists() or user.is_superuser or user.is_staff
 
 
 @user_passes_test(Monitoring_group_check)
