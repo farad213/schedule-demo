@@ -248,3 +248,10 @@ input[type="date"]{
     border-bottom: 4px solid crimson;
     margin-bottom: -4px;
 }
+
+.add{
+    color: transparent !important;
+    text-shadow: 0 0 0 green;
+    font-size: 13px;
+    text-align: center;
+}
