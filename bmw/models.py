@@ -5,28 +5,28 @@ class BuildingsGMO(models.Model):
     szerkezeti_hossz = models.FloatField()
 
     def __str__(self):
-        return f"TMO -{self.sorszam} - {self.szerkezeti_hossz}"
+        return f"GMO -{self.sorszam} - {self.szerkezeti_hossz}"
 
 class BuildingsGKB(models.Model):
     sorszam = models.IntegerField()
     szerkezeti_hossz = models.FloatField()
 
     def __str__(self):
-        return f"TKB - {self.sorszam} - {self.szerkezeti_hossz}"
+        return f"GKB - {self.sorszam} - {self.szerkezeti_hossz}"
 
 class BuildingsGU(models.Model):
     sorszam = models.IntegerField()
     szerkezeti_hossz = models.FloatField()
 
     def __str__(self):
-        return f"TU - {self.sorszam} - {self.szerkezeti_hossz}"
+        return f"GU - {self.sorszam} - {self.szerkezeti_hossz}"
 
 class BuildingsGEM(models.Model):
     sorszam = models.IntegerField()
     szerkezeti_hossz = models.FloatField()
 
     def __str__(self):
-        return f"TEM - {self.sorszam} - {self.szerkezeti_hossz}"
+        return f"GEM - {self.sorszam} - {self.szerkezeti_hossz}"
 
 class JelkodCCS(models.Model):
     notation = models.CharField(max_length=5)
