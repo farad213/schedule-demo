@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .forms import Length_form, Buildings_form, QuickReportForm
-from .models import JelkodVVS, JelkodCCS, Technician, Customer, BuildingsTU, BuildingsTMO, BuildingsTEM, BuildingsTKB
+from .models import JelkodVVS, JelkodCCS, Technician, Customer, BuildingsGU, BuildingsGMO, BuildingsGEM, BuildingsGKB
 from django.contrib.auth.decorators import user_passes_test, login_required
 import datetime, shutil, os
 from docxtpl import DocxTemplate, InlineImage
